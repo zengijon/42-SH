@@ -2,7 +2,7 @@
 #include <stddef.h>
 #include <err.h>
 
-#include "utils/file2buf.h"
+#include "../utils/file2buf.h"
 
 int main(int argc, char **argv)
 {

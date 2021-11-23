@@ -7,7 +7,7 @@ enum lex
     ELSE,
     ELIF,
     VAR,
-  }
+  };
 
 struct fifo_lex
 {
@@ -15,7 +15,7 @@ struct fifo_lex
   char *data;
   struct fifo_lex *l_true;
   struct fifo_lex *r_false;
-}
+};
 
 void add_fifo(struct fifo_lex *fifo, enum lex type, char *data);
 
