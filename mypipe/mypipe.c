@@ -11,12 +11,12 @@
 ///
 #include <stdio.h>
 
-int exec_pipe(char **argv_left, char **argv_right)
+int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
 {
     pid_t child_pid;
     pid_t child_pid2;
 
-    char *buf;
+    char buf[2048] = { '0' };
 
     int pipefd[2];
     pipe(pipefd);
@@ -24,7 +24,7 @@ int exec_pipe(char **argv_left, char **argv_right)
     child_pid = fork();
 
     if (child_pid == -1)
-        return 0;
+        errx(1, "fork failed");
 
     if (child_pid == 0)
     {
@@ -34,7 +34,7 @@ int exec_pipe(char **argv_left, char **argv_right)
         close(pipefd[0]); // Close read pipe du child
 
         if (execvp(argv_left[0], argv_left) == -1)
-            return 0;
+            errx(1, "execvp failed");
 
         exit(EXIT_SUCCESS);
     }
@@ -42,11 +42,14 @@ int exec_pipe(char **argv_left, char **argv_right)
     {
         int wstatus;
         int val = waitpid(child_pid, &wstatus, 0);
+        if (val == -1)
+            errx(1, "Waitpid failed");
+
 
         child_pid2 = fork();
 
         if (child_pid2 == -1)
-            return 0;
+            errx(1, "fork 2 failed");
 
         if (child_pid2 == 0)
         {
@@ -54,20 +57,26 @@ int exec_pipe(char **argv_left, char **argv_right)
             close(pipefd[0]); // Close read pipe du parent
             close(pipefd[1]);
 
-            if(execvp(argv_right[0], argv_right)) == -1)
-                return 0;
+            if(execvp(argv_right[0], argv_right) == -1)
+                errx(1, "execvp 2 failed");
             exit(EXIT_SUCCESS);
         }
+        else
+        {
+            close(pipefd[1]);
+            int wstatus2;
+            int val2 = waitpid(child_pid2, &wstatus2, 0);
 
-        int wstatus;
-        int val = waitpid(child_pid2, &wstatus, 0);
+            if (val2 == -1)
+                errx(1, "Waitpid 2 failed");
 
-        while((read(pipefd[0], buf, 0)) > 0)
-            printf("%s", buf);
+            //while ((read(pipefd[0], buf, 0)) > 0)
+                //printf("%s", buf);
 
-        close(pipefd[0]);
-        close(pipefd[1]);
-        return 1;
+            close(pipefd[0]);
+            close(pipefd[1]);
+            exit(EXIT_SUCCESS);
+        }
     }
 }
 
@@ -77,5 +86,4 @@ int main(void)
     const char *argv_right[4] = {"tr", "a", "e", NULL};
     printf("%d\n", exec_pipe(argv_left, argv_right));
     return 0;
-
 }
