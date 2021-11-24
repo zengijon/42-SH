@@ -27,13 +27,13 @@ struct element *build_element(struct lexer *lex);
 
 struct compound_list *build_compound_list(struct lexer *lex);
 
-struct rule_for *build_rule_for(struct lexer *lex);
+struct rule_for *build_rule_for(struct lexer *lex); // for later
 
-struct rule_while *build_while(struct lexer *lex);
+struct rule_while *build_while(struct lexer *lex); // for later
 
-struct rule_until *build_until(struct lexer *lex);
+struct rule_until *build_until(struct lexer *lex); // for later
 
-struct rule_case *build_case(struct lexer *lex);
+struct rule_case *build_case(struct lexer *lex); // for later
 
 struct rule_if *build_rule_if(struct lexer *lex);
 
@@ -41,6 +41,6 @@ struct else_clause *build_else_clause(struct lexer *lex);
 
 struct do_group *build_do_group(struct lexer *lex);
 
-struct case_clause *build_case_clause(struct lexer *lex);
+struct case_clause *build_case_clause(struct lexer *lex); // for later
 
-struct case_item *build_case_item(struct lexer *lex);
+struct case_item *build_case_item(struct lexer *lex); // for later
