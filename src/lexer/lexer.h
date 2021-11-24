@@ -1,11 +1,33 @@
 #pragma once
 
-#include "../struct/fifo_lex.h"
+#include "token.h"
 
-struct fifo_lex *build_node(char **buffer);
+struct lexer
+{
+    const char *input; ///< The input data
+    size_t pos; ///< The current offset inside the input data
+    struct token *current_tok; ///< The next token, if processed
+};
 
-int get_end(char *buffer);
+/**
+ * \brief Creates a new lexer given an input string.
+ */
+struct lexer *lexer_new(const char *input);
 
-enum lex get_type(char *buffer, int len);
+/**
+ ** \brief Free the given lexer, but not its input.
+ */
+void lexer_free(struct lexer *lexer);
 
-struct fifo_lex *build_if(char **buffer);
+/**
+ * \brief Returns the next token, but doesn't move forward: calling lexer_peek
+ * multiple times in a row always returns the same result. This functions is
+ * meant to help the parser check if the next token matches some rule.
+ */
+struct token *lexer_peek(struct lexer *lexer);
+
+/**
+ * \brief Returns the next token, and removes it from the stream:
+ *   calling lexer_pop in a loop will iterate over all tokens until EOF.
+ */
+struct token *lexer_pop(struct lexer *lexer);
