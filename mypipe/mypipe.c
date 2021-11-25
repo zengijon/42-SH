@@ -3,7 +3,6 @@
 //
 #include <err.h>
 #include <sys/wait.h>
-#include <sys/types.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
@@ -31,8 +30,10 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
         close(pipefd[1]); // Close write pipe du child
         close(pipefd[0]); // Close read pipe du child
 
+        /// execute la commande de left_side
         if (execvp(argv_left[0], (char * const*) argv_left) == -1)
             errx(1, "execvp failed");
+        ///
 
         exit(EXIT_SUCCESS);
     }
@@ -55,8 +56,11 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
             close(pipefd[0]); // Close read pipe du parent
             close(pipefd[1]);
 
+            /// execute la commande de right_side
             if(execvp(argv_right[0], (char * const*) argv_right) == -1)
                 errx(1, "execvp 2 failed");
+            ///
+
             exit(EXIT_SUCCESS);
         }
         else
@@ -68,8 +72,7 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
             if (val2 == -1)
                 errx(1, "Waitpid 2 failed");
 
-            close(pipefd[0]);
-            close(pipefd[1]);
+            close(pipefd[0]); // Re close ?
             exit(EXIT_SUCCESS);
         }
     }
