@@ -12,7 +12,6 @@ size_t skipspace(const char *input)
   while (input[i] != 0 && (input[i] == '\t' || input[i] == ' '))
     ++i;
   return i;
- 
 }
 
 int isnumber(const char *s)
@@ -35,7 +34,7 @@ int get_number(const char *s)
   return i;
 }
 
-struct lexer *gestion_quote(struct lexer *lexer, char *input)
+struct lexer *gestion_quote(struct lexer *lexer, const char *input)
 {
   size_t i = 1;
   size_t j = 0;
@@ -50,43 +49,43 @@ struct lexer *gestion_quote(struct lexer *lexer, char *input)
       lexer->current_tok->value = str;
     }
   else
-    lexer->current_tok_>type = TOKEN_ERROR;
+    lexer->current_tok->type = TOKEN_ERROR;
   return lexer;
 }
 
 struct lexer *lexer_new(const char *input)
 {
-  struct lexer *res = calloc(1, sizeof(struct lexer));
-  res->input = input;
-  res->pos = skipspace(input);
-  res->current_tok = calloc(1, sizeof(struct token));
-  if (strncmp(input[res->pos], "if", 2) == 0)
-    res->current_tok->type = TOKEN_IF;
-  else if (strncmp(input[res->pos], "then", 4) == 0)
-      res->current_tok->type = TOKEN_THEN;
-  else if (strncmp(input[res->pos], "elif", 4) == 0)
-      res->current_tok->type = TOKEN_ELIF;
-  else if (strncmp(input[res->pos], "else", 4) == 0)
-      res->current_tok->type = TOKEN_ELSE;
-  else if (strncmp(input[res->pos], "fi", 2) == 0)
-      res->current_tok->type = TOKEN_FI;
-  else if (strncmp(input[res->pos], ";", 1) == 0)
-      res->current_tok->type = TOKEN_PTCOMA;
-  else if (strncmp(input[res->pos], "\n", 1) == 0)
-      res->current_tok->type = TOKEN_NEWLINE;
-  else if (strncmp(input[res->pos], "'", 1) == 0)
-    res = gestion_quote(res, &input[res->pos]);
-  else
+    struct lexer *res = calloc(1, sizeof(struct lexer));
+    res->input = input;
+    res->pos = skipspace(input);
+    res->current_tok = calloc(1, sizeof(struct token));
+    if (strncmp(&input[res->pos], "if", 2) == 0)
+        res->current_tok->type = TOKEN_IF;
+    else if (strncmp(&input[res->pos], "then", 4) == 0)
+        res->current_tok->type = TOKEN_THEN;
+    else if (strncmp(&input[res->pos], "elif", 4) == 0)
+        res->current_tok->type = TOKEN_ELIF;
+    else if (strncmp(&input[res->pos], "else", 4) == 0)
+        res->current_tok->type = TOKEN_ELSE;
+    else if (strncmp(&input[res->pos], "fi", 2) == 0)
+        res->current_tok->type = TOKEN_FI;
+    else if (strncmp(&input[res->pos], ";", 1) == 0)
+        res->current_tok->type = TOKEN_PTCOMA;
+    else if (strncmp(&input[res->pos], "\n", 1) == 0)
+        res->current_tok->type = TOKEN_NEWLINE;
+    else if (strncmp(&input[res->pos], "'", 1) == 0)
+        res = gestion_quote(res, &input[res->pos]);
+    else
     {
-      size_t j = 0
-      size_t k = res->pos;
-      char *value = malloc(sizeof(char) * strlen(input));
-      while (input[k] != '\0' && input[k] != '\n' && input[k] != ' ')
-	  value[j++] = input[k++];
-      res->current_tok->type = TOKEN_WORDS;
-      res->current_tok->value = value;
+        size_t j = 0;
+        size_t k = res->pos;
+        char *value = malloc(sizeof(char) * strlen(input));
+        while (input[k] != '\0' && input[k] != '\n' && input[k] != ' ')
+            value[j++] = input[k++];
+        res->current_tok->type = TOKEN_WORDS;
+        res->current_tok->value = value;
     }
-  return res;
+    return res;
 }
 
 
@@ -107,7 +106,7 @@ struct token *lexer_peek(struct lexer *lexer)
     {
       return token_new(TOKEN_ERROR);
     }
-  i += skipspace(&input[i]);
+  i += skipspace(&lexer->input[i]);
   struct lexer *tmp = lexer_new(lexer->input + i);
   return tmp->current_tok;
 }
@@ -128,31 +127,48 @@ struct token *lexer_pop(struct lexer *res)
   res->pos = i;
   if (res->current_tok == NULL)
     res->current_tok = calloc(1, sizeof(struct token));
-  if (strncmp(input[res->pos], "if", 2) == 0)
+  if (strncmp(&input[res->pos], "if", 2) == 0)
     res->current_tok->type = TOKEN_IF;
-  else if (strncmp(input[res->pos], "then", 4) == 0)
+  else if (strncmp(&input[res->pos], "then", 4) == 0)
     res->current_tok->type = TOKEN_THEN;
-  else if (strncmp(input[res->pos], "elif", 4) == 0)
+  else if (strncmp(&input[res->pos], "elif", 4) == 0)
     res->current_tok->type = TOKEN_ELIF;
-  else if (strncmp(input[res->pos], "else", 4) == 0)
+  else if (strncmp(&input[res->pos], "else", 4) == 0)
     res->current_tok->type = TOKEN_ELSE;
-  else if (strncmp(input[res->pos], "fi", 2) == 0)
+  else if (strncmp(&input[res->pos], "fi", 2) == 0)
     res->current_tok->type = TOKEN_FI;
-  else if (strncmp(input[res->pos], ";", 1) == 0)
+  else if (strncmp(&input[res->pos], ";", 1) == 0)
     res->current_tok->type = TOKEN_PTCOMA;
-  else if (strncmp(input[res->pos], "\n", 1) == 0)
+  else if (strncmp(&input[res->pos], "\n", 1) == 0)
     res->current_tok->type = TOKEN_NEWLINE;
-  else if (strncmp(input[res->pos], "'", 1) == 0)
+  else if (strncmp(&input[res->pos], "'", 1) == 0)
     res = gestion_quote(res, &input[res->pos]);
   else
-    {
-      size_t j = 0
-	size_t k = res->pos;
+  {
+      size_t j = 0;
+      size_t k = res->pos;
       char *value = malloc(sizeof(char) * strlen(input));
       while (input[k] != '\0' && input[k] != '\n' && input[k] != ' ')
-	value[j++] = input[k++];
+          value[j++] = input[k++];
       res->current_tok->type = TOKEN_WORDS;
       res->current_tok->value = value;
-    }
+  }
   return tmp;
+}
+
+
+int main(void)
+{
+    struct lexer *lexer = lexer_new("echo 'ceci est un test'");
+    printf("%s\n", lexer->current_tok->value);
+    struct token *tok = lexer_peek(lexer);
+    printf("%s\n", tok->value);
+    /* printf("==================================\n"); */
+    /* tok = lexer_pop(lexer); */
+    /* printf("%s\n", tok->value); */
+    /* tok = lexer_peek(lexer); */
+    /* printf("%s\n", tok->value); */
+    /* printf("====================================\n"); */
+    /* printf("%s\n", lexer->current_tok->value); */
+    return 0;
 }

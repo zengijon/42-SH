@@ -12,7 +12,7 @@ enum token_type
     TOKEN_PTCOMA, ///< ';'
     TOKEN_NEWLINE, ///< '\n'
     TOKEN_QUOTE, ///< '''
-    TOKEN_WORDS ///< every words
+    TOKEN_WORDS, ///< every words
     TOKEN_ERROR ///< tt's not a real token, it's returned in case of invalid
 };
 
