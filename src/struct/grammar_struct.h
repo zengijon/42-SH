@@ -110,30 +110,36 @@ struct redirection{
 
 struct prefix{ // one of the two only
     char *assignment_word;
-    struct redirection *re;
+    struct redirection *redirect;
 };
 
 struct element {
     char *word;
-    struct redirection *re;
+    struct redirection *redirect;
+};
+
+struct compound_next
+{
+    separator sep;
+    struct compound_next; // as many we want
+    ///* optional
+    separator sep_op;
+    // \n infini
+    ////* end optional
 };
 
 struct compound_list{
     // any \n we want
     struct and_or *and_or;
-    struct compound_next{
-        enum separator;
-        struct compound_list *next;
-        //any \n we want
-    };
-    //the following is optional
-    enum separator;
+
+    struct compound_next *next;
     // any \n we want
 };
 
 struct rule_for{
     // for = word detected
     char *word;
+    separator sep; // only ;
     ///*******   can be remplace by ';' semi col
         // any \n we want
         // in token
@@ -194,15 +200,23 @@ struct do_group{
     // done token
 };
 
+struct case_clause_bis
+{
+    int is_double_semi;
+    //any \n we want
+    struct case_item *case_it;
+};
+
 struct case_clause{
     struct case_item *case_it;
-    // ';;' toekn   // last tyhree are optianal but must stay in order
-    // any \n we want
-    struct case_clause *next;
+    struct case_clause_bis *next;
+    //optional ;;
+    int is_double_semi;
+    //any \n we want
 };
 
 struct case_item{
-    // optional '('
+    int is_open_bracket;
     char *word;
     // '|; carac
     char **word_list; // can be NULL but need to be preceded by a '|' carat

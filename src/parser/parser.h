@@ -3,6 +3,8 @@
 #include "../struct/grammar_struct.h"
 #include "../lexer/?" //travaille de robin
 
+#include <stdlib.h>
+
 int parse_input(char *buffer);
 
 struct list_next *build_list_next(struct lexer *lex);
