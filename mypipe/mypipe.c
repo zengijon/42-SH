@@ -16,8 +16,6 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
     pid_t child_pid;
     pid_t child_pid2;
 
-    char buf[2048] = { '0' };
-
     int pipefd[2];
     pipe(pipefd);
 
@@ -33,7 +31,7 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
         close(pipefd[1]); // Close write pipe du child
         close(pipefd[0]); // Close read pipe du child
 
-        if (execvp(argv_left[0], argv_left) == -1)
+        if (execvp(argv_left[0], (char * const*) argv_left) == -1)
             errx(1, "execvp failed");
 
         exit(EXIT_SUCCESS);
@@ -57,7 +55,7 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
             close(pipefd[0]); // Close read pipe du parent
             close(pipefd[1]);
 
-            if(execvp(argv_right[0], argv_right) == -1)
+            if(execvp(argv_right[0], (char * const*) argv_right) == -1)
                 errx(1, "execvp 2 failed");
             exit(EXIT_SUCCESS);
         }
@@ -70,9 +68,6 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
             if (val2 == -1)
                 errx(1, "Waitpid 2 failed");
 
-            //while ((read(pipefd[0], buf, 0)) > 0)
-                //printf("%s", buf);
-
             close(pipefd[0]);
             close(pipefd[1]);
             exit(EXIT_SUCCESS);
@@ -83,7 +78,7 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
 int main(void)
 {
     const char *argv_left[3] = {"echo", "Hallo", NULL};
-    const char *argv_right[4] = {"tr", "a", "e", NULL};
+    const char *argv_right[4] = {"tr", "a", "d", NULL};
     printf("%d\n", exec_pipe(argv_left, argv_right));
     return 0;
 }
