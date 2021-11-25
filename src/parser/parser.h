@@ -3,6 +3,8 @@
 #include "../struct/grammar_struct.h"
 #include "../lexer/?" //travaille de robin
 
+#include <stdlib.h>
+
 int parse_input(char *buffer);
 
 struct list *build_list(struct lexer *lex);
@@ -19,7 +21,7 @@ struct shell_command *build_shell_command(struct lexer *lex);
 
 struct funcdec *build_funcdec(struct lexer *lex);
 
-struct redirection *redirection(struct lexer *lex);
+struct redirection *redirection(struct lexer *lex); ///////
 
 struct prefix *build_prefix(struct lexer *lex);
 
