@@ -6,7 +6,14 @@ struct lexer
 {
     const char *input; ///< The input data
     size_t pos; ///< The current offset inside the input data
+    size_t end; ///< end ok the token
     struct token *current_tok; ///< The next token, if processed
+};
+
+struct separator
+{
+    size_t nb_separator; ///< number of separators
+    char **separators; ///< array of separators
 };
 
 /**
@@ -25,6 +32,7 @@ void lexer_free(struct lexer *lexer);
  * meant to help the parser check if the next token matches some rule.
  */
 struct token *lexer_peek(struct lexer *lexer);
+struct token *lexer_peek_rec(struct lexer *lexer, int n);
 
 /**
  * \brief Returns the next token, and removes it from the stream:
