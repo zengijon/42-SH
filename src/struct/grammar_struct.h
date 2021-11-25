@@ -35,28 +35,32 @@ struct input{
     // linebreak '\n' or EOF
 };
 
-struct list{
-    struct and_or;
-    struct list_next{
-        enum separator sep; // !!!!!!! \n pas autorise
-        struct  and_or *next;
-    };
-    enum separator sep; //optionel !!!!! \n pas autorise
+struct list_next{ //optional
+    separator sep; // !!!!!!! \n pas autorise
+    struct list *next;
 };
+
+struct list{
+    struct and_or a_o;
+    struct list_next *next; // optional
+    separator sep; //optionel !!!!! \n pas autorise
+};
+
+struct and_or_next
+{ // optional
+    operator_ *op;
+    // autant qu'on en veut de new line
+    struct and_or *next; //optional
+}
 
 struct and_or{
     struct pipeline *pipeline;
-    struct and_or_next{
-        enum operator_ *op;
-        // autant qu'on en veut de new line
-        struct and_or *next;
-    };
+    struct and_or_next *next; //optional
 };
 
 struct pipeline{
     int negation; //is there an '!'
     struct command *cmd;
-    // any number of space
     //optional block{
         //    |  (single pipe)
         //any \n we want
@@ -66,29 +70,30 @@ struct pipeline{
 };
 
 struct command{
-    union choose{
+    union {
         struct simple_command *cmd;
-        struct shell_command *sh_cmd;
+        union shell_command *sh_cmd;
         struct funcdec *fun;
-    };
-    struct redirection **list; //possibly null
+    }choose;
+    struct redirection *redir; //possibly null
 };
 
 struct simple_command{ // both lists can not be NULL !
+    int size_pre; //one of them != 0
+    int size_elt;
     struct prefix **list_pre;
     struct element **list_elt;
 };
 
-struct shell_command{
-    union choose{
-        struct compound_list; // with () or {}
-        struct rule_for;
-        struct rule_while;
-        struct rule_until;
-        struct rule_case;
-        struct rule_if;
-    };
+union shell_command{
+    struct compound_list *c_p; // with () or {}
+    struct rule_for *r_f;
+    struct rule_while *r_w;
+    struct rule_until *r_u;
+    struct rule_case *r_c;
+    struct rule_if *r_i;
 };
+
 struct funcdec{
     char *funct_name;
     // str = ()
@@ -100,6 +105,7 @@ struct redirection{
     int IONUMBER; // optional
     enum redirect_op re_op;
     char *word; // possibly HEREDOC  for << or <<
+    struct redirection *next;
 };
 
 struct prefix{ // one of the two only
