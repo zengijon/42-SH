@@ -1,15 +1,14 @@
 #pragma once
 
 #include "../struct/grammar_struct.h"
-#include "../lexer/?" //travaille de robin
+#include "../lexer/lexer.h"
+#include "../lexer/token.h"
 
 #include <stdlib.h>
 
-int parse_input(char *buffer);
-
 struct list_next *build_list_next(struct lexer *lex);
 
-struct list *build_list(struct lexer *lex);
+struct list *build_list(const char *buffer);
 
 struct and_or_next *build_and_or_next(struct lexer *lex);
 

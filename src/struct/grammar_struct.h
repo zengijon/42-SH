@@ -6,19 +6,19 @@
 #define INC_42_SH_GRAMAR_STRUCT_H
 
 enum separator{
-    Semi = 0,
+    Semi = 1,
     Espe,
     BackS
 };
 
 enum operator_{
-    AND = 0,
+    AND = 1,
     OR,
     PIPE
 };
 
 enum redirect_op{
-    RLESS = 0,
+    RLESS = 1,
     RDGREAT,
     RDLESS,
     RDLESSD,

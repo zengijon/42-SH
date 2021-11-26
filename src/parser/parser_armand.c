@@ -2,30 +2,48 @@
 // Created by clousty8 on 24/11/2021.
 //
 
+#include "../memory/hmalloc.h"
 #include "../struct/grammar_struct.h"
 #include "parser.h"
-#include "../memory/hmalloc.h"
 
 struct list_next *build_list_next(struct lexer *lex)
 {
-    struct list_next* res = hcalloc(1, sizeof(struct list_next));
-    if (/*lexer | seek | reçu != separtor */ )
-        return NULL;
-    res->sep = 0; //lexer | pop | attendu : separtor
+    struct list_next *res = hcalloc(1, sizeof(struct list_next));
+    if (lex->current_tok->type == TOKEN_PTCOMA)
+    {
+        res->sep = 1;
+        lexer_pop(lex);
+    }
+    //    else if (lex->current_tok->type == '&')
+    {
+        //        res->sep = 2;
+        //    lexer_pop(lex);
+    }
+    else return NULL;
     res->next = build_list(lex);
     if (res->next == NULL)
         return NULL;
     return res;
 }
 
-struct list *build_list(struct lexer *lex)
+struct list *build_list(const char *buffer)
 {
-    struct list* res = hcalloc(1, sizeof(struct list));
+    struct lexer *lex = lexer_new(buffer) struct list *res =
+        hcalloc(1, sizeof(struct list));
     res->a_o = build_and_or(lex);
     if (res->a_o == NULL)
         return NULL;
-    if (/*lexer | seek | reçu == separtor */ )
-        res->sep = 0; //lexer | pop | attendu : separtor
+    if (lex->current_tok->type == TOKEN_PTCOMA)
+    {
+        res->sep = 1;
+        lexer_pop(lex);
+    }
+    //    if (lex->current_tok->type == '&')
+    //    {
+    //        res->sep = 2;
+    //        lexer_pop(lex);
+    //    }
+    lexer_pop(lex);
     return res;
 }
 
@@ -35,8 +53,8 @@ struct and_or_next *build_and_or_next(struct lexer *lex)
     if (/*lexer | seek | reçu != operator */)
         return NULL;
     res->op = 0; /*lexer | pop | attendu : separtor */
-    while (/*lexer | seek | reçu == '/n' */)
-        /*lexer | pop | linebreak '\n' */;
+    while (lex->current_tok->type == TOKEN_NEWLINE)
+        lexer_pop(lex);
     res->next = build_and_or(lex);
     if (res->next == NULL)
         errx(1, "missing expression after operator");
@@ -101,14 +119,16 @@ struct simple_command *build_simple_command(struct lexer *lex)
     struct prefix *tmp = NULL;
     while ((tmp = build_prefix(lex)) != NULL)
     {
-        res->list_pre = hrealloc(res->list_pre, ++(res->size_pre) * sizeof(struct prefix *));
+        res->list_pre = hrealloc(res->list_pre,
+                                 ++(res->size_pre) * sizeof(struct prefix *));
         res->list_pre[res->size_pre - 1] = tmp;
     }
 
-    struct element tmp2= NULL;
+    struct element tmp2 = NULL;
     while ((tmp2 = build_element(lex)) != NULL)
     {
-        res->list_elt = hrealloc(res->list_elt, ++(res->size_elt) * sizeof(struct element *));
+        res->list_elt = hrealloc(res->list_elt,
+                                 ++(res->size_elt) * sizeof(struct element *));
         res->list_elt[res->size_elt - 1] = tmp;
     }
 
@@ -159,7 +179,8 @@ struct funcdec *build_funcdec(struct lexer *lex)
 {
     struct funcdec *res = hcalloc(1, sizeof(struct funcdec));
 
-    if ( /* lexer | seek | reçu == word */ && /* lexer | peek | reçu == '(' */ && /* lexer | seek + 1 | reçu == ')' */)
+    if (/* lexer | seek | reçu == word */ &&/* lexer | peek | reçu == '(' */
+        &&/* lexer | seek + 1 | reçu == ')' */)
         res->funct_name = NULL; // lexer | pop |
     while (/* lexer | seek | reçu == word */)
         /* lexer | pop */;
@@ -171,12 +192,12 @@ struct redirection *build_redirection(struct lexer *lex)
 {
     struct redirection *res = hcalloc(1, sizeof(struct funcdec));
     if (/* lexer | seek | reçu == io_nb */)
-        res->IONUMBER = 0; //lexer | pop
+        res->IONUMBER = 0; // lexer | pop
     if (/* lexer | seek | redir != op*/)
         return NULL;
     res->re_op = 0; // lexer | pop
     if (/* lexer | pop | reçu != word  */)
-        errx (1, "hello world");
+        errx(1, "hello world");
     res->next = build_redirection();
     return res;
 }

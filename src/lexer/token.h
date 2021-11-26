@@ -15,6 +15,7 @@ enum token_type
     TOKEN_WORDS, ///< every words -> 8
     TOKEN_EOF, ///< EOF -> 9
     TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 10
+    // '&'
 };
 
 struct token
