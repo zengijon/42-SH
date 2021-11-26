@@ -26,6 +26,7 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
     {
         str[j++] = input[i++];
     }
+    lexer->end = lexer->pos + i + 1;
     if (input[i] == '\'')
     {
         lexer->current_tok->type = TOKEN_WORDS;

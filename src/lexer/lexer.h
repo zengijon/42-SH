@@ -32,6 +32,8 @@ void lexer_free(struct lexer *lexer);
  * meant to help the parser check if the next token matches some rule.
  */
 struct token *lexer_peek(struct lexer *lexer);
+
+//return the n ieme token(n = 1 is equql to lexer_peak)
 struct token *lexer_peek_rec(struct lexer *lexer, int n);
 
 /**
