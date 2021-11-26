@@ -13,8 +13,7 @@ enum separator{
 
 enum operator_{
     AND = 1,
-    OR,
-    PIPE
+    OR
 };
 
 enum redirect_op{
@@ -30,7 +29,8 @@ enum redirect_op{
 
 struct list_next{ //optional
     separator sep; // !!!!!!! \n pas autorise
-    struct list *next;
+    struct and_or a_o;
+    struct list_next *next;
 };
 
 struct list{
@@ -52,14 +52,19 @@ struct and_or{
     struct and_or_next *next; //optional
 };
 
+struct pipeline_next
+{
+    // |
+    // any \n we want
+    struct command *cmd;
+    struct pipeline_next *next;
+};
+
 struct pipeline{
     int negation; //is there an '!'
     struct command *cmd;
-    //optional block{
-        //    |  (single pipe)
-        //any \n we want
-        struct pipeline *pipe_l;
-    //};
+    //optional block
+    struct pipeline_next *next;
 
 };
 
