@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="42sheeee"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="clang"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/home/robin.jannes/afs/42-SH/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/home/robin.jannes/afs/42-SH/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/home/robin.jannes/afs/42-SH/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="42sheee">
+				<Option output="/home/robin.jannes/afs/42-SH/cmake-build-debug/42sheee" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robin.jannes/afs/42-SH/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/run/current-system/sw/include"/>
+					<Add directory="/nix/store/bwa5qgvyk898w7n47j2chmgc3gsjg207-clang-wrapper-12.0.1/resource-root/include"/>
+					<Add directory="/nix/store/q141hd8jl7in5223jmf7kmx9h517km4p-glibc-2.32-54-dev/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 42sheee"/>
+					<CompileFile command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="42sheee/fast">
+				<Option output="/home/robin.jannes/afs/42-SH/cmake-build-debug/42sheee" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/home/robin.jannes/afs/42-SH/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="clang"/>
+				<Compiler>
+					<Add directory="/run/current-system/sw/include"/>
+					<Add directory="/nix/store/bwa5qgvyk898w7n47j2chmgc3gsjg207-clang-wrapper-12.0.1/resource-root/include"/>
+					<Add directory="/nix/store/q141hd8jl7in5223jmf7kmx9h517km4p-glibc-2.32-54-dev/include"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 42sheee/fast"/>
+					<CompileFile command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/run/current-system/sw/bin/make -j12 -f &quot;/home/robin.jannes/afs/42-SH/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/lexer/lexer.c">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/lexer/lexer.h">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/lexer/test_lexer.c">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/lexer/token.c">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/lexer/token.h">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/lexer/utils.c">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/lexer/utils.h">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/memory/free_list.c">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/memory/free_list.h">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/memory/hmalloc.c">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/src/memory/hmalloc.h">
+			<Option target="42sheee"/>
+		</Unit>
+		<Unit filename="/home/robin.jannes/afs/42-SH/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
