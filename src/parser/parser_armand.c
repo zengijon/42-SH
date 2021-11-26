@@ -18,9 +18,10 @@ struct list_next *build_list_next(struct lexer *lex)
     return res;
 }
 
-struct list *build_list(struct lexer *lex)
+struct list *build_list(char *buffer)
 {
     struct list* res = hcalloc(1, sizeof(struct list));
+
     res->a_o = build_and_or(lex);
     if (res->a_o == NULL)
         return NULL;
@@ -172,11 +173,138 @@ struct redirection *build_redirection(struct lexer *lex)
     struct redirection *res = hcalloc(1, sizeof(struct funcdec));
     if (/* lexer | seek | reçu == io_nb */)
         res->IONUMBER = 0; //lexer | pop
-    if (/* lexer | seek | redir != op*/)
+    if (/* lexer | seek | redir != op */)
         return NULL;
     res->re_op = 0; // lexer | pop
     if (/* lexer | pop | reçu != word  */)
-        errx (1, "hello world");
+        errx (1, "missing file name to redirect to");
     res->next = build_redirection();
     return res;
+}
+
+struct prefix *build_prefix(struct lexer *lex)
+{
+    struct prefix *res = hcalloc(1, sizeof(struct prefix));
+
+    if (/*lexer | seek | attendu : char *assignement_word*/)
+    {
+        res->assignment_word = ""; /* lexer | pop | attendu : char * word*/
+        return res;
+    }
+
+    res->redirect = build_redirection(lex);
+    if (res->redirect == NULL)
+        return NULL;
+    return res;
+}
+
+struct element *build_element(struct lexer *lex)
+{
+    struct element *res = hcalloc(1, sizeof(struct element));
+
+    if (/*lexer | seek | attendu : char *word*/)
+    {
+        res->word =  ""; /* lexer | pop | attendu : char * word*/
+        return res;
+    }
+
+    res->redirect = build_redirection(lex);
+    if (res->redirect == NULL)
+        return NULL;
+    return res;
+}
+
+static struct compound_next *build_compound_next(struct lexer *lex) // pb * (a faire a l'infini)
+{
+    struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
+
+    if (/*lexer | seek | attendu : separator*/)
+    {
+        res->sep = 0; /*lexer |pop */
+        while (/* lexer | seek | reçu == \n*/)
+            ; /* lexer | pop */
+
+        res->a_o = build_and_or(lex);
+        if (res->a_o == NULL)
+            return res;
+
+        res->next = build_compound_next(lex);
+        return res;
+    }
+    return NULL;
+}
+
+struct compound_list *build_compound_list(struct lexer *lex)
+{
+    struct compound_list *res = hcalloc(1, sizeof(struct compound_list));
+
+    while (/*lexer | seek | attendu : \n*/)  //possibly problematic pop
+        ;/*lexer | pop */
+
+    res->and_or *temp = build_and_or(lex);
+
+    if (res->and_or != NULL)
+    {
+        struct compound_next *next = build_compound_next(lex);
+    }
+    return NULL;
+}
+
+struct rule_if *build_rule_if(struct lexer *lex)
+{
+    struct rule_if *res = hcalloc(1, sizeof(struct rule_if));
+
+    if (/* lexer | seek | attendu != if*/)
+        return NULL;
+    // lexer | pop
+
+    res->cp_list = build_compound_list(lex);
+
+    if (res->cp_list == NULL)
+        errx(1, "Missing compound_list in if");
+
+    if (/*lexer |seek | reçu != then */)
+        errx(1, "then token is missing");
+    // lexer | pop
+
+    if ((res->cp_list2 = build_compound_list(lex) == NULL))
+        errx(1, "missing compound_list in if");
+
+    res->else_cl = build_else_clause(lex);
+
+    if (/* lexer | seek | if != token fi*/)
+        errx(1, "missing fi");
+    // lexer | pop
+    return res;
+}
+
+struct else_clause *build_else_clause(struct lexer *lex)
+{
+    struct else_clause *res = hcalloc(1, sizeof(union else_clause));
+
+    if (/* lexer |seek |attendu : else */)
+    {
+        if ((res->cp_list = build_compound_list(lex) != NULL))
+            return res;
+        errx(1, "Missing compound_list");
+    }
+    if (/*lexer |seek | attendu : elif*/)
+    {
+        res->elif.cp_list2 = build_compound_list(lex);
+
+        if (res->elif.cp_list2 == NULL)
+            errx(1, "Missing compound_list in if");
+
+        if (/*lexer |seek | reçu != then */)
+            errx(1, "then token is missing");
+        // lexer | pop
+
+        if ((res->elif.cp_list2bis = build_compound_list(lex) == NULL))
+            errx(1, "missing compound_list in if");
+
+        res->elif.next = build_else_clause(lex);
+
+        return res;
+    }
+    return NULL;
 }

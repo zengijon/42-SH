@@ -5,11 +5,9 @@
 
 #include <stdlib.h>
 
-int parse_input(char *buffer);
-
 struct list_next *build_list_next(struct lexer *lex);
 
-struct list *build_list(struct lexer *lex);
+struct list *build_list(char *buffer);
 
 struct and_or_next *build_and_or_next(struct lexer *lex);
 
@@ -45,7 +43,7 @@ struct rule_if *build_rule_if(struct lexer *lex);
 
 struct else_clause *build_else_clause(struct lexer *lex);
 
-struct do_group *build_do_group(struct lexer *lex);
+struct do_group *build_do_group(struct lexer *lex); // for later
 
 struct case_clause *build_case_clause(struct lexer *lex); // for later
 

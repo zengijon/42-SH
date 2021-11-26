@@ -10,129 +10,33 @@
 #include <string.h>
 #include <err.h>
 
-struct prefix *build_prefix(struct lexer *lex)
-{
-    struct prefix *res = hcalloc(1, sizeof(struct prefix));
 
-    if (res == NULL)
-        errx(1, "calloc failed");
 
-    if (/*lexer | seek | attendu : char *assignement_word*/)
-    {
-        res->assignment_word = strdup(" "); /* lexer | pop | attendu : char * word*/
-        return res;
-    }
-    else if (/*lexer | seek | attendu : redirection*/)
-    {
-        struct redirection *redirect = redirection(lex);
-
-        if (redirect == NULL)
-            errx(1, "Failed build_redirection");
-
-        res->redirect = redirect;
-        return res;
-    }
-    return NULL;
-}
-
-struct element *build_element(struct lexer *lex)
-{
-    struct element *res = hcalloc(1, sizeof(struct element));
-
-    if (res == NULL)
-        errx(1, "calloc failed");
-
-    if (/*lexer | seek | attendu : char *word*/)
-    {
-        res->word = strdup(" "); /* lexer | pop | attendu : char * word*/
-        return res;
-    }
-    else if (/*lexer | seek | attendu : redirection*/)
-    {
-        struct redirection *redirect = redirection(lex);
-
-        if (redirect == NULL)
-            errx(1, "Failed build_redirection");
-
-        res->redirect = redirect;
-        return res;
-    }
-    return NULL;
-}
-
-static struct compound_next *build_compound_next(struct lexer *lex) // pb * (a faire a l'infini)
-{
-    struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
-    if (res == NULL)
-        errx(1, "calloc failed");
-
-    if (/*lexer | seek | attendu : separator*/)
-    {
-        res->sep = 0; /*lexer |pop */
-
-        while (/* lexer | seek | attendu : \n*/)
-            ; /* lexer | pop */
-
-        if (/* lexer | seek | attendu : and_or*/)
-        {
-            res->and_or = 0; /*lexer | pop */
-        }
-        errx(1, "and_or missing in build_compound_next");
-    }
-    return NULL;
-}
-
-struct compound_list *build_compound_list(struct lexer *lex)
-{
-    struct compound_list *res = hcalloc(1, sizeof(struct compound_list));
-    if (res == NULL)
-        errx(1, "calloc failed");
-
-    struct and_or *temp = build_and_or(lex);
-
-    if (temp != NULL)
-    {
-        res->and_or = temp; /*lexer | pop */
-
-        struct compound_next *next = build_compound_next(lex);
-
-        if (next == NULL) // que next soit NULL ou pas on s'en fout c'est optionnel
-            errx(1, "Failed build_copmpound_next");
-
-        res->next = next;
-
-        if (/*lexer | seek | attendu : separator*/) /// partie optionelle
-        {
-            res->sep_op = 0; /*lexer | seek | attendu separator*/
-
-            while (/*lexer | seek | attendu : \n*/)
-                ;/*lexer | pop */
-        }
-        return res;
-
-    }
-    return NULL;
-}
-
+// weird grammar not chou
 struct rule_for *build_rule_for(struct lexer *lex)
 {
     struct rule_for *res = hcalloc(1, sizeof(struct relu_for));
 
-    if (res == NULL)
-        errx(1, "calloc failed");
-
-    if ( ! /*lexer | seek | attendu : for */)
+    if ( ! /*lexer | seek | reçu == for */)
         return NULL;
+    // lexer | pop
 
-    if ( ! /*lexer | seek | attendu : char *word*/)
-        errx(1, "missing word");
+    if ( ! /*lexer | seek | reçu != char *word*/)
+        errx(1, "missing word after for");
 
-    res->word = strdup(" "); /* lexer | pop | attendu : char *word*/
+    res->word = ""; /* lexer | pop | attendu : char *word*/
 
-    int is_good = 0;
-    if (/*lexer | seek | attendu : char **word_list*/)
+    if (/*lexer | seek | attendu : ;*/)
     {
-        // calloc le char **
+        res->sep = Semi; /* lexer | pop | attendu : ;*/
+        is_good = 1;
+    }
+    else if (/*lexer | seek | attendu : char **word_list*/)
+    {
+        while (/*lexer | seek | attendu : \n*/)
+            ;/*lexer | pop */
+
+
         res->word_list = NULL; /*lexer | pop | attendu : char * word_list*/
         if ( /*lexer | seek | attendu : sep_op not &*/)
         {
@@ -142,11 +46,7 @@ struct rule_for *build_rule_for(struct lexer *lex)
         else
             errx(1, "not got sep_op which is not &");
     }
-    else if (/*lexer | seek | attendu : ;*/)
-    {
-        res->sep = Semi; /* lexer | pop | attendu : ;*/
-        is_good = 1;
-    }
+
 
     if (is_good)
     {
@@ -269,88 +169,59 @@ struct rule_if *build_rule_if(struct lexer *lex)
 {
     struct rule_if *res = hcalloc(1, sizeof(struct rule_if));
 
-    if (res == NULL)
-        errx(1, "Calloc failed");
-
-    if (! /* lexer | seek | attendu : if*/)
+    if (/* lexer | seek | attendu != if*/)
         return NULL;
+    // lexer | pop
 
-    if (/* lexer | seek | attendu : compound-list*/)
-    {
-        res->cp_list = build_compound_list(lex); //lexer |pop
+    res->cp_list = build_compound_list(lex);
 
-        if (res->cp_list == NULL)
-            errx(1, "failed build_compound_list");
+    if (res->cp_list == NULL)
+        errx(1, "Missing compound_list in if");
 
-        if (! /*lexer |seek |attendu : then*/)
-            errx(1, "then token is missing");
+    if (/*lexer |seek | reçu != then */)
+        errx(1, "then token is missing");
+    // lexer | pop
 
-        if (!/*lexer | seek | attendu : compound_list*/)
-            errx(1, "missing compound_list in if");
-        res->cp_list2 = build_compound_list(lex); // lexer | pop
+    if ((res->cp_list2 = build_compound_list(lex) == NULL))
+        errx(1, "missing compound_list in if");
 
-        if (res->cp_list2 == NULL)
-            errx(1, "build_compound_list failed");
+    res->else_cl = build_else_clause(lex);
 
-        if (! /*lexer | seek | attendu : else_clause*/)
-        {
-            res->else_cl = build_else_clause(lex);
-
-            if (res->else_cl == NULL)
-                errx(1, "else_clause building failed");
-
-        }
-
-        if (! /* lexer | seek | attendu : token fi*/)
-            errx(1, "missing fi");
-    }
-    errx(1, "Missing compound_list in if");
+    if (/* lexer | seek | if != token fi*/)
+        errx(1, "missing fi");
+    // lexer | pop
+    return res;
 }
 
 struct else_clause *build_else_clause(struct lexer *lex)
 {
-    struct else_clause 8res = hcalloc(1, sizeof(union else_clause));
-    if (res == NULL)
-        errx(1, "calloc failed");
+    struct else_clause *res = hcalloc(1, sizeof(union else_clause));
 
     if (/* lexer |seek |attendu : else */)
     {
-        if (/*lexer | seek| attendu : compound_list*/)
-        {
-            res->cp_list = build_compound_list(lex); // lexer |pop
-
-            if (res->cp_list == NULL)
-                errx(1, "build_compound_list failed");
-
+        if ((res->cp_list = build_compound_list(lex) != NULL))
             return res;
-        }
         errx(1, "Missing compound_list");
     }
     if (/*lexer |seek | attendu : elif*/)
     {
-        if (/*lexer | seek | attendu : compound list*/)
-        {
-            res->cp_list2 = build_compound_list(lex); // lexer | pop
+        res->elif.cp_list2 = build_compound_list(lex);
 
-            if (res->cp_list2 == NULL)
-                errx(1, "build_compound_list failed");
+        if (res->elif.cp_list2 == NULL)
+            errx(1, "Missing compound_list in if");
 
-            if (! /* lexer | seek | attendu : then*/)
-                errx(1, "Missing then token ");
+        if (/*lexer |seek | reçu != then */)
+            errx(1, "then token is missing");
+        // lexer | pop
 
-            res->cp_list2bis = build_compound_list(lex); // lex | pop
+        if ((res->elif.cp_list2bis = build_compound_list(lex) == NULL))
+            errx(1, "missing compound_list in if");
 
-            if (res->cp_list2bis == NULL)
-                errx(1, "build_compound_List failed");
+        res->elif.next = build_else_clause(lex);
 
-            if (/* lexer | seek | attendu : else_clause*/)
-                res->next = build_elese_clause(lex);//lexer | pop
-
-            return res;
-        }
-        errx(1, "Missing compound_list after elif");
+        return res;
     }
-    errx(1, "Missing else or elif");
+    return NULL;
 }
 
 struct do_group *build_do_group(struct lexer *lex)

@@ -6,7 +6,7 @@
 #define INC_42_SH_GRAMAR_STRUCT_H
 
 enum separator{
-    Semi = 0,
+    Semi = 1,
     Espe,
     BackS
 };
@@ -28,13 +28,6 @@ enum redirect_op{
     RDSENS,
 };
 
-
-
-struct input{
-    struct list l; // optinal (obviously)
-    // linebreak '\n' or EOF
-};
-
 struct list_next{ //optional
     separator sep; // !!!!!!! \n pas autorise
     struct list *next;
@@ -50,7 +43,8 @@ struct and_or_next
 { // optional
     operator_ *op;
     // autant qu'on en veut de new line
-    struct and_or *next; //optional
+    struct pipeline *pipeline; // pas mis avant et avant c'etait and_or *next mais pose pb pour l'implementation
+    struct and_or_next *next; //optional
 }
 
 struct and_or{
@@ -113,7 +107,7 @@ struct prefix{ // one of the two only
     struct redirection *redirect;
 };
 
-struct element {
+struct element { // one of the two only
     char *word;
     struct redirection *redirect;
 };
@@ -121,11 +115,9 @@ struct element {
 struct compound_next
 {
     separator sep;
-    struct compound_next; // as many we want
-    ///* optional
-    separator sep_op;
-    // \n infini
-    ////* end optional
+    // any \n we want
+    struct and_or *a_o;
+    struct compound_next *next; // as many we want
 };
 
 struct compound_list{
@@ -133,7 +125,6 @@ struct compound_list{
     struct and_or *and_or;
 
     struct compound_next *next;
-    // any \n we want
 };
 
 struct rule_for{
@@ -186,12 +177,12 @@ union else_clause{
     //else token
     struct compound_list *cp_list;
     //elif token
-    struct elif {
+    struct {
         struct compound_list *cp_list2;
         // then token
         struct compound_list *cp_list2bis;
         struct else_clause *next;
-    };
+    } elif ;
 };
 
 struct do_group{
