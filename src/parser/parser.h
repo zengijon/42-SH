@@ -44,7 +44,7 @@ struct rule_if *build_rule_if(struct lexer *lex);
 
 struct else_clause *build_else_clause(struct lexer *lex);
 
-struct do_group *build_do_group(struct lexer *lex);
+struct do_group *build_do_group(struct lexer *lex); // for later
 
 struct case_clause *build_case_clause(struct lexer *lex); // for later
 
