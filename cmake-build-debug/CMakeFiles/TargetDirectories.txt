@@ -1,3 +1,0 @@
-/home/robin.jannes/afs/42-SH/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/home/robin.jannes/afs/42-SH/cmake-build-debug/CMakeFiles/edit_cache.dir
-/home/robin.jannes/afs/42-SH/cmake-build-debug/CMakeFiles/42sheee.dir
