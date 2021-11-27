@@ -7,7 +7,7 @@
 
 int main(void)
 {
-    struct list *res = build_list("echo lol");
+    struct list *res = build_list("if echo lol \n then \n cat hello -e \n else \n echo truc fi");
     print_list(res);
     return 0;
 }

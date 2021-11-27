@@ -5,6 +5,8 @@
 
 #include "../memory/hmalloc.h"
 
+struct free_list *list_malloc = NULL;
+
 char *file2buf(char *filename)
 {
     size_t len;

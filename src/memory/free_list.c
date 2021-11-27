@@ -22,7 +22,6 @@ void list_remove(void *ptr)
     if (tmp->ptr == ptr)
     {
         list_malloc = list_malloc->next;
-        free(tmp->ptr);
         free(tmp);
         return;
     }
@@ -34,7 +33,6 @@ void list_remove(void *ptr)
     {
         struct free_list *t = tmp->next;
         tmp->next = tmp->next->next;
-        free(t->ptr);
         free(t);
     }
 }

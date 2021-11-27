@@ -68,7 +68,7 @@ struct and_or *build_and_or(struct lexer *lex)
     if (res->pipeline == NULL)
         return NULL;
 
-    res->next = build_and_or_next(lex);
+    //res->next = build_and_or_next(lex);
     return res;
 }
 
@@ -310,6 +310,7 @@ struct compound_list *build_compound_list(struct lexer *lex)
     if ((res->and_or = build_and_or(lex)) != NULL)
     {
         res->next = build_compound_next(lex);
+        return res;
     }
     return NULL;
 }
@@ -321,8 +322,6 @@ struct rule_if *build_rule_if(struct lexer *lex)
     if (lex->current_tok->type != TOKEN_IF)
         return NULL;
     lexer_pop(lex);
-
-    (res->cp_list = build_compound_list(lex));
 
     if ((res->cp_list = build_compound_list(lex)) == NULL)
         errx(1, "Missing compound_list in if");
