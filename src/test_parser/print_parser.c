@@ -169,3 +169,25 @@ void print_prefix(struct prefix *p)
 {
     if ()
 }
+
+void print_else_clause(struct else_clause *e_l)
+{
+    printf("(else_clause) [ ");
+    if (e_l == NULL)
+        return;
+    if (e_l->cp_list != NULL)
+    {
+        printf( "(else) ");
+        print_compound_list(e_l->cp_list);
+        return;
+    }
+    printf( "(elif) ");
+
+    print_compound_list(e_l->cp_list2);
+    print_compound_list(e_l->cp_list2bis);
+
+    if (e_l->next)
+        print_else_clause(e_l->next);
+}
+printf("] ");
+}

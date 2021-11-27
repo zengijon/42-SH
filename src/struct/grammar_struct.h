@@ -5,18 +5,21 @@
 #ifndef INC_42_SH_GRAMAR_STRUCT_H
 #define INC_42_SH_GRAMAR_STRUCT_H
 
-enum separator{
+enum separator
+{
     Semi = 1,
     Espe,
     BackS
 };
 
-enum operator_{
+enum operator_
+{
     AND = 1,
     OR
 };
 
-enum redirect_op{
+enum redirect_op
+{
     RLESS = 1,
     RDGREAT,
     RDLESS,
@@ -27,29 +30,33 @@ enum redirect_op{
     RDSENS,
 };
 
-struct list_next{ //optional
+struct list_next
+{ // optional
     separator sep; // !!!!!!! \n pas autorise
     struct and_or a_o;
     struct list_next *next;
 };
 
-struct list{
+struct list
+{
     struct and_or a_o;
     struct list_next *next; // optional
-    separator sep; //optionel !!!!! \n pas autorise
+    separator sep; // optionel !!!!! \n pas autorise
 };
 
 struct and_or_next
 { // optional
     operator_ *op;
     // autant qu'on en veut de new line
-    struct pipeline *pipeline; // pas mis avant et avant c'etait and_or *next mais pose pb pour l'implementation
-    struct and_or_next *next; //optional
+    struct pipeline *pipeline; // pas mis avant et avant c'etait and_or *next
+                               // mais pose pb pour l'implementation
+    struct and_or_next *next; // optional
 }
 
-struct and_or{
+struct and_or
+{
     struct pipeline *pipeline;
-    struct and_or_next *next; //optional
+    struct and_or_next *next; // optional
 };
 
 struct pipeline_next
@@ -60,31 +67,32 @@ struct pipeline_next
     struct pipeline_next *next;
 };
 
-struct pipeline{
-    int negation; //is there an '!'
+struct pipeline
+{
+    int negation; // is there an '!'
     struct command *cmd;
-    //optional block
+    // optional block
     struct pipeline_next *next;
-
 };
 
-struct command{
-    union {
-        struct simple_command *cmd;
-        union shell_command *sh_cmd;
-        struct funcdec *fun;
-    }choose;
-    struct redirection *redir; //possibly null
+struct command
+{
+    struct simple_command *cmd;
+    struct shell_command *sh_cmd;
+    struct funcdec *fun;
+    struct redirection *redir; // possibly null
 };
 
-struct simple_command{ // both lists can not be NULL !
-    int size_pre; //one of them != 0
+struct simple_command
+{ // both lists can not be NULL !
+    int size_pre; // one of them != 0
     int size_elt;
     struct prefix **list_pre;
     struct element **list_elt;
 };
 
-union shell_command{
+struct shell_command
+{
     struct compound_list *c_p; // with () or {}
     struct rule_for *r_f;
     struct rule_while *r_w;
@@ -93,26 +101,30 @@ union shell_command{
     struct rule_if *r_i;
 };
 
-struct funcdec{
+struct funcdec
+{
     char *funct_name;
     // str = ()
-    //any \n we want
+    // any \n we want
     struct shell_command *sh_cmd;
 };
 
-struct redirection{
+struct redirection
+{
     int IONUMBER; // optional
     enum redirect_op re_op;
     char *word; // possibly HEREDOC  for << or <<
     struct redirection *next;
 };
 
-struct prefix{ // one of the two only
+struct prefix
+{ // one of the two only
     char *assignment_word;
     struct redirection *redirect;
 };
 
-struct element { // one of the two only
+struct element
+{ // one of the two only
     char *word;
     struct redirection *redirect;
 };
@@ -125,24 +137,26 @@ struct compound_next
     struct compound_next *next; // as many we want
 };
 
-struct compound_list{
+struct compound_list
+{
     // any \n we want
     struct and_or *and_or;
 
     struct compound_next *next;
 };
 
-struct rule_for{
+struct rule_for
+{
     // for = word detected
     char *word;
     separator sep; // only ;
     ///*******   can be remplace by ';' semi col
-        // any \n we want
-        // in token
-        char **word_list; // possibly NULL
-        enum separator_op *sep_op; // not '&'
+    // any \n we want
+    // in token
+    char **word_list; // possibly NULL
+    enum separator_op *sep_op; // not '&'
     ///*************************************
-    //any \n we want
+    // any \n we want
     struct do_group *do_gp;
 };
 
@@ -153,23 +167,26 @@ struct rule_while
     struct do_group *do_gp;
 };
 
-struct rule_until{
-    //token until
+struct rule_until
+{
+    // token until
     struct compound_list *cp_list;
     struct do_group *do_gp;
 };
 
-struct rule_case{
+struct rule_case
+{
     // token case
     char *word;
     // any \n we want
     // in token
-    //any \n we want
+    // any \n we want
     struct case_clause *case_cl; // optional
-    //struct Esac; ?? no description of esac
+    // struct Esac; ?? no description of esac
 };
 
-struct rule_if{
+struct rule_if
+{
     // if token
     struct compound_list *cp_list;
     // then token
@@ -178,19 +195,21 @@ struct rule_if{
     // fi token
 };
 
-union else_clause{
-    //else token
+struct else_clause
+{
+    // else token
     struct compound_list *cp_list;
-    //elif token
-    struct {
-        struct compound_list *cp_list2;
-        // then token
-        struct compound_list *cp_list2bis;
-        struct else_clause *next;
-    } elif ;
+
+    // elif token
+    struct compound_list *cp_list2;
+    // then token
+    struct compound_list *cp_list2bis;
+    struct else_clause *next;
+
 };
 
-struct do_group{
+struct do_group
+{
     // do token
     struct compound_list *cp_list;
     // done token
@@ -199,25 +218,27 @@ struct do_group{
 struct case_clause_bis
 {
     int is_double_semi;
-    //any \n we want
+    // any \n we want
     struct case_item *case_it;
 };
 
-struct case_clause{
+struct case_clause
+{
     struct case_item *case_it;
     struct case_clause_bis *next;
-    //optional ;;
+    // optional ;;
     int is_double_semi;
-    //any \n we want
+    // any \n we want
 };
 
-struct case_item{
+struct case_item
+{
     int is_open_bracket;
     char *word;
     // '|; carac
     char **word_list; // can be NULL but need to be preceded by a '|' carat
     // ')' carac
     // any \n we want
-    struct compound_list *cp_list; //optional
+    struct compound_list *cp_list; // optional
 };
-#endif //INC_42_SH_GRAMAR_STRUCT_H
+#endif // INC_42_SH_GRAMAR_STRUCT_H
