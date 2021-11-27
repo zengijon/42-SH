@@ -114,11 +114,11 @@ struct pipeline *build_pipeline(struct lexer *lex)
 struct command *build_command(struct lexer *lex)
 {
     struct command *res = hcalloc(1, sizeof(struct command));
-    if ((res->choose.cmd = build_simple_command(lex)) != NULL)
+    if ((res->cmd = build_simple_command(lex)) != NULL)
         return res;
-    else if ((res->choose.sh_cmd = build_shell_command(lex)) != NULL)
+    else if ((res->sh_cmd = build_shell_command(lex)) != NULL)
         ;
-//    else if ((res->choose.fun = build_funcdec(lex)) != NULL)
+//    else if ((res->fun = build_funcdec(lex)) != NULL)
 //        ;
     else
         return NULL;
@@ -151,7 +151,7 @@ struct simple_command *build_simple_command(struct lexer *lex)
     return res;
 }
 
-union shell_command *build_shell_command(struct lexer *lex, int flag)
+struct shell_command *build_shell_command(struct lexer *lex, int flag)
 {
     struct shell_command *res = hcalloc(1, sizeof(struct shell_command));
 
@@ -334,7 +334,7 @@ struct rule_if *build_rule_if(struct lexer *lex)
 
 struct else_clause *build_else_clause(struct lexer *lex)
 {
-    struct else_clause *res = hcalloc(1, sizeof(union else_clause));
+    struct else_clause *res = hcalloc(1, sizeof(struct else_clause));
 
     if (lex->current_tok->type == TOKEN_ELSE)
     {

@@ -27,7 +27,6 @@ void print_list(struct list *l)
             printf("(separator : %d )", l->sep);
     }
     printf("] ");
-    return;
 }
 void print_and_or_next(struct and_or_next *a_o_n)
 {
@@ -384,4 +383,26 @@ void print_case_item(struct case_item *c_i)
     }
     printf("]");
     return;
+}
+
+void print_else_clause(struct else_clause *e_l)
+{
+    printf("(else_clause) [ ");
+    if (e_l == NULL)
+        return;
+    if (e_l->cp_list != NULL)
+    {
+        printf( "(else) ");
+        print_compound_list(e_l->cp_list);
+        return;
+    }
+    printf( "(elif) ");
+
+    print_compound_list(e_l->cp_list2);
+    print_compound_list(e_l->cp_list2bis);
+
+    if (e_l->next)
+        print_else_clause(e_l->next);
+}
+printf("] ");
 }
