@@ -240,16 +240,21 @@ struct shell_command *build_shell_command(struct lexer *lex)
 
 struct prefix *build_prefix(struct lexer *lex)
 {
-    struct prefix *res = hcalloc(1, sizeof(struct prefix));
+    /// A enlever
+    if (lex != NULL)
+        return NULL;
+    return NULL;
+    ///
+    //struct prefix *res = hcalloc(1, sizeof(struct prefix));
 
     // if (lex->current_tok->type != assignement_word)
-    return NULL;
-    res->assignment_word = lexer_pop(lex)->value;
+        //return NULL;
+    //res->assignment_word = lexer_pop(lex)->value;
 
     // res->redirect = build_redirection(lex);
     // if (res->redirect == NULL)
     //     return NULL;
-    return res;
+    //return res;
 }
 
 struct element *build_element(struct lexer *lex)
