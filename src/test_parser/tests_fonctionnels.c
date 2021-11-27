@@ -18,7 +18,7 @@ int main(void)
     //struct list * res2 = build_list("echo machin \n echo truct \n");
     //print_list(res2);
 
-    //struct list *res = build_list("if [ echo 1 && echo 3 ] \n then echo 2 fi"); PB !!!
+    //struct list *res = build_list("if [ echo 1 && false ] \n then echo 2 fi"); PB !!!
     //struct list *res = build_list("echo 1 && echo 2"); ne marche pas
     printf("==============Test===============\n");
     struct list *res = build_list("\n\n\n\n\n\n\n\necho lol;\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n"); //marche pas
@@ -34,6 +34,11 @@ int main(void)
     printf("==============Test===============\n");
     struct list *res2 = build_list("echo 1  \n\n\n\n\n\n\n\n\n"); //marche pas
     print_list(res2);
+    printf("\n\n\n");
+
+    printf("==============Test===============\n");
+    struct list *a = build_list("echo if if echo truc \n then \n asd fi \n then \n asd \n fi"); //marche pas
+    print_list(a);
     printf("\n\n\n");
 
     printf("==============Test===============\n");
