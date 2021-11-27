@@ -319,7 +319,27 @@ void print_rule_if(struct rule_if *r_i)
     return;
 }
 
-// void else_clause
+void print_else_clause(struct else_clause *e_l)
+    {
+    printf("(else_clause) [ ");
+    if (e_l == NULL)
+        return;
+    if (e_l->cp_list != NULL)
+    {
+        printf( "(else) ");
+        print_compound_list(e_l->cp_list);
+        return;
+    }
+    printf( "(elif) ");
+
+    print_compound_list(e_l->cp_list2);
+    print_compound_list(e_l->cp_list2bis);
+
+    if (e_l->next)
+        print_else_clause(e_l->next);
+    }
+    printf("] ");
+}
 
 void print_do_group(struct do_group *d_g)
 {
@@ -383,26 +403,4 @@ void print_case_item(struct case_item *c_i)
     }
     printf("]");
     return;
-}
-
-void print_else_clause(struct else_clause *e_l)
-{
-    printf("(else_clause) [ ");
-    if (e_l == NULL)
-        return;
-    if (e_l->cp_list != NULL)
-    {
-        printf( "(else) ");
-        print_compound_list(e_l->cp_list);
-        return;
-    }
-    printf( "(elif) ");
-
-    print_compound_list(e_l->cp_list2);
-    print_compound_list(e_l->cp_list2bis);
-
-    if (e_l->next)
-        print_else_clause(e_l->next);
-}
-printf("] ");
 }
