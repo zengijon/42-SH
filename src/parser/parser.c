@@ -273,7 +273,12 @@ struct element *build_element(struct lexer *lex)
 
 static struct compound_next *build_compound_next(struct lexer *lex)
 {
-    struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
+    /// a enlever
+    if (lex != NULL)
+        return NULL;
+    return NULL;
+    ///
+    //struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
 
     //    if (lex->current_tok->type == '&')
     //        res->sep = 2;
@@ -282,17 +287,17 @@ static struct compound_next *build_compound_next(struct lexer *lex)
     //    else if (lex->current_tok->type == '\n')
     //        res->sep = 3;
     //    else
-    return NULL;
-    lexer_pop(lex);
-
-    while (lex->current_tok->type == TOKEN_NEWLINE)
-        lexer_pop(lex);
-
-    res->a_o = build_and_or(lex);
-    if (res->a_o == NULL)
-        return res;
-    res->next = build_compound_next(lex);
-    return res;
+        //return NULL;
+//    lexer_pop(lex);
+//
+//    while (lex->current_tok->type == TOKEN_NEWLINE)
+//        lexer_pop(lex);
+//
+//    res->a_o = build_and_or(lex);
+//    if (res->a_o == NULL)
+//        return res;
+//    res->next = build_compound_next(lex);
+//    return res;
 }
 
 struct compound_list *build_compound_list(struct lexer *lex)
