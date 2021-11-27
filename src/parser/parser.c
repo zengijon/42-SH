@@ -263,7 +263,7 @@ struct element *build_element(struct lexer *lex)
     //    res->redirect = build_redirection(lex);
     //    if (res->redirect == NULL)
     //        return NULL;
-    //    return res;
+        return res;
 }
 
 static struct compound_next *build_compound_next(struct lexer *lex)
