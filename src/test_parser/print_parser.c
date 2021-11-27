@@ -59,7 +59,7 @@ void print_pipeline_next(struct pipeline_next *p)
 {
     if (p != NULL)
     {
-        printf(" ( | ) ");
+        printf(" ( | ) "); // ??? checker la grammaire plus tard
         //printf("( new line ) ");
         print_command(p->cmd);
         print_pipeline_next(p->next);

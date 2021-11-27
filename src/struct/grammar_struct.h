@@ -48,8 +48,7 @@ struct and_or_next
 { // optional
     enum operator_ op;
     // autant qu'on en veut de new line
-    struct pipeline *pipeline; // pas mis avant et avant c'etait and_or *next
-                               // mais pose pb pour l'implementation
+    struct pipeline *pipeline;
     struct and_or_next *next; // optional
 };
 
@@ -183,7 +182,7 @@ struct rule_case
     // in token
     // any \n we want
     struct case_clause *case_cl; // optional
-    // struct Esac; ?? no description of esac
+    // token Esac;
 };
 
 struct rule_if
