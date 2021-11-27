@@ -10,7 +10,7 @@ void print_list_next(struct list_next *l)
 {
     if (l == NULL)
         return;
-    if (sep != 0)
+    if (l->sep != 0)
         printf("(separator : %d )", l->sep);
     print_and_or(l->a_o);
     print_list_next(l->next);
@@ -23,7 +23,7 @@ void print_list(struct list *l)
     {
         print_and_or(l->a_o);
         print_list_next(l->next);
-        if (sep != 0)
+        if (l->sep != 0)
             printf("(separator : %d )", l->sep);
     }
     printf("] ");
@@ -32,12 +32,18 @@ void print_and_or_next(struct and_or_next *a_o_n)
 {
     if (a_o_n != NULL)
     {
-        printf("(operator : %d )", a_o_n->op);
+        printf("(operator : ");
+        if (a_o_n->op == AND)
+            printf("&& ");
+        else if (a_o_n->op == OR)
+            printf("|| ");
+        else
+            printf(")");
+
         printf("( new line )");
         print_pipeline(a_o_n->pipeline);
         print_and_or_next(a_o_n->next);
     }
-    return;
 }
 
 void print_and_or(struct and_or *a_o)
@@ -49,7 +55,6 @@ void print_and_or(struct and_or *a_o)
         print_and_or_next(a_o->next);
     }
     printf("] ");
-    return;
 }
 
 void print_pipeline_next(struct pipeline_next *p)
@@ -58,10 +63,9 @@ void print_pipeline_next(struct pipeline_next *p)
     {
         printf("( | )");
         printf("( new line )");
-        print_command(p->command);
+        print_command(p->cmd);
         print_pipeline_next(p->next);
     }
-    return;
 }
 
 void print_pipeline(struct pipeline *p)
@@ -75,7 +79,6 @@ void print_pipeline(struct pipeline *p)
         print_pipeline_next(p->next);
     }
     printf("]");
-    return;
 }
 
 void print_command(struct command *c)
@@ -83,21 +86,20 @@ void print_command(struct command *c)
     printf("(command) [ ");
     if (c != NULL)
     {
-        if (c->cmd != NULL)
-            print_command(c->choose.cmd);
+        if (c->s_cmd != NULL)
+            print_simple_command(c->s_cmd);
         else if (c->sh_cmd != NULL)
         {
-            print_shell_command(c->choose.sh_cmd);
+            print_shell_command(c->sh_cmd);
             print_redirection(c->redir);
         }
         else if (c->fun)
         {
-            print_funcdec(c->choose.fun);
+            print_funcdec(c->fun);
             print_redirection(c->redir);
         }
     }
     printf("]");
-    return;
 }
 
 void print_simple_command(struct simple_command *s_c)
@@ -106,12 +108,11 @@ void print_simple_command(struct simple_command *s_c)
     if (s_c != NULL)
     {
         for (int i = 0; i < s_c->size_pre; ++i)
-            print_prefix(list_pre[i]);
+            print_prefix(s_c->list_pre[i]);
         for (int j = 0; j < s_c->size_elt; ++j)
-            print_element(list_elt[j]);
+            print_element(s_c->list_elt[j]);
     }
     printf("]");
-    return;
 }
 
 void print_shell_command(struct shell_command *sh_cmd)
@@ -125,7 +126,7 @@ void print_shell_command(struct shell_command *sh_cmd)
             print_rule_for(sh_cmd->r_f);
         else if (sh_cmd->r_w != NULL)
             print_rule_while(sh_cmd->r_w);
-        else if (sh_cmd->r_u != NULl)
+        else if (sh_cmd->r_u != NULL)
             print_rule_until(sh_cmd->r_u);
         else if (sh_cmd->r_c != NULL)
             print_rule_case(sh_cmd->r_c);
@@ -133,7 +134,6 @@ void print_shell_command(struct shell_command *sh_cmd)
             print_rule_if(sh_cmd->r_i);
     }
     printf("]");
-    return;
 }
 
 void print_funcdec(struct funcdec *f)
@@ -148,7 +148,6 @@ void print_funcdec(struct funcdec *f)
         print_shell_command(f->sh_cmd);
     }
     printf("]");
-    return;
 }
 
 void print_redirection(struct redirection *r)
@@ -164,7 +163,6 @@ void print_redirection(struct redirection *r)
         print_redirection(r->next);
     }
     printf("]");
-    return;
 }
 
 void print_prefix(struct prefix *p)
@@ -178,22 +176,20 @@ void print_prefix(struct prefix *p)
             print_redirection(p->redirect);
     }
     printf("]");
-    return;
 }
 
 
 void print_element(struct element *e)
 {
     printf("(element) [");
-    if (p != NULL)
+    if (e != NULL)
     {
-        if (p->word != NULL)
-            printf("(word : %s )", p->word);
-        else if (p->redirect)
-            print_redirection(p->redirect);
+        if (e->word != NULL)
+            printf("(word : %s )", e->word);
+        else if (e->redirect)
+            print_redirection(e->redirect);
     }
     printf("]");
-    return;
 }
 
 void print_compound_next(struct compound_next *c_n)
@@ -207,7 +203,6 @@ void print_compound_next(struct compound_next *c_n)
             print_and_or(c_n->a_o);
         print_compound_next(c_n->next);
     }
-    return;
 }
 
 void print_compound_list(struct compound_list *c_l)
@@ -221,7 +216,6 @@ void print_compound_list(struct compound_list *c_l)
         print_compound_next(c_l->next);
     }
     printf("]");
-    return;
 }
 
 void print_rule_for(struct rule_for *r_f)
@@ -232,27 +226,26 @@ void print_rule_for(struct rule_for *r_f)
         printf("( for )");
         if (r_f->word != NULL)
             printf("( word : )");
-        if (r_f->sep == 1)
-            printf("(separator : %d )", r_f->sep);
+        if (r_f->sep_op == Semi)
+            printf("(separator : %d )", r_f->sep_op);
         else if (r_f->word_list != NULL)
         {
             printf("( new line )");
             printf("( in )");
             printf("(word_list :");
-            for (int i = 0; i < r_f->size_word_list; ++i)
-                printf(" &s", r_f->word_list[i]);
+            //for (int i = 0; i < r_f->size_word_list; ++i)
+                //printf(" &s", r_f->word_list[i]);
             printf(" )");
             printf("(separator : %d )", r_f->sep_op);
         }
         printf("( new line )");
         if (r_f->do_gp)
-            print_do_group(r_df->do_gp);
+            print_do_group(r_f->do_gp);
     }
     printf("]");
-    return;
 }
 
-void print_while(struct rule_while *r_w)
+void print_while(struct rule_while *r_w) // never used normal
 {
     printf("(rule while) [");
     if (r_w != NULL)
@@ -264,10 +257,9 @@ void print_while(struct rule_while *r_w)
             print_do_group(r_w->do_gp);
     }
     printf("]");
-    return;
 }
 
-void print_until(struct rule_until *r_u)
+void print_until(struct rule_until *r_u) // never used normal
 {
     printf("(rule until) [");
     if (r_u != NULL)
@@ -279,7 +271,6 @@ void print_until(struct rule_until *r_u)
             print_do_group(r_u->do_gp);
     }
     printf("]");
-    return;
 }
 
 void print_rule_case(struct rule_case *r_c)
@@ -298,7 +289,6 @@ void print_rule_case(struct rule_case *r_c)
         //printf("ESAC"); ???
     }
     printf("]");
-    return;
 }
 
 void print_rule_if(struct rule_if *r_i)
@@ -316,11 +306,10 @@ void print_rule_if(struct rule_if *r_i)
         printf("( fi )");
     }
     printf("]");
-    return;
 }
 
 void print_else_clause(struct else_clause *e_l)
-    {
+{
     printf("(else_clause) [ ");
     if (e_l == NULL)
         return;
@@ -337,9 +326,9 @@ void print_else_clause(struct else_clause *e_l)
 
     if (e_l->next)
         print_else_clause(e_l->next);
-    }
     printf("] ");
 }
+
 
 void print_do_group(struct do_group *d_g)
 {
@@ -352,7 +341,6 @@ void print_do_group(struct do_group *d_g)
         printf("( done )");
     }
     printf("]");
-    return;
 }
 
 void print_case_clause_bis(struct case_clause_bis *c)
@@ -365,7 +353,6 @@ void print_case_clause_bis(struct case_clause_bis *c)
         if (c->case_it != NULL)
             print_case_item(c->case_it);
     }
-    return;
 }
 
 void print_case_clause(struct case_clause *c_c)
@@ -382,7 +369,6 @@ void print_case_clause(struct case_clause *c_c)
         printf("( new line )");
     }
     printf("]");
-    return;
 }
 
 void print_case_item(struct case_item *c_i)
@@ -395,12 +381,11 @@ void print_case_item(struct case_item *c_i)
         if (c_i->word != NULL)
             printf("%s", c_i->word);
         printf(" |");
-        for (int i = 0; i < c_i->size_word_list; ++i)
-            printf(" %s", c_i->word_list[i]);
+        //for (int i = 0; i < c_i->size_word_list; ++i)
+            //printf(" %s", c_i->word_list[i]);
         printf(")");
         printf("( new line )");
         print_compound_list(c_i->cp_list);
     }
     printf("]");
-    return;
 }

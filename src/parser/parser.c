@@ -115,7 +115,7 @@ struct pipeline *build_pipeline(struct lexer *lex)
 struct command *build_command(struct lexer *lex)
 {
     struct command *res = hcalloc(1, sizeof(struct command));
-    if ((res->cmd = build_simple_command(lex)) != NULL)
+    if ((res->s_cmd = build_simple_command(lex)) != NULL)
         return res;
     else if ((res->sh_cmd = build_shell_command(lex)) != NULL)
         ;

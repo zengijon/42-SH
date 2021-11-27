@@ -46,7 +46,7 @@ struct list
 
 struct and_or_next
 { // optional
-    enum operator_ *op;
+    enum operator_ op;
     // autant qu'on en veut de new line
     struct pipeline *pipeline; // pas mis avant et avant c'etait and_or *next
                                // mais pose pb pour l'implementation
@@ -77,7 +77,7 @@ struct pipeline
 
 struct command
 {
-    struct simple_command *cmd;
+    struct simple_command *s_cmd; // only one of the three plus redirection if the first was not choosen
     struct shell_command *sh_cmd;
     struct funcdec *fun;
     struct redirection *redir; // possibly null
@@ -149,12 +149,13 @@ struct rule_for
 {
     // for = word detected
     char *word;
-    int flag_semi_col; // token ;
+    //int flag_semi_col; // token ;
     ///*******   can be remplace by ';' semi col
     // any \n we want
     // in token
     char **word_list; // possibly NULL
-    enum separator_ *sep_op; // not '&'
+    // / rajouter une size_word_list
+    enum separator_ sep_op; // not '&'
     ///*************************************
     // any \n we want
     struct do_group *do_gp;
@@ -237,6 +238,7 @@ struct case_item
     char *word;
     // '|; carac
     char **word_list; // can be NULL but need to be preceded by a '|' carat
+    /// rajouter une size pour la word list
     // ')' carac
     // any \n we want
     struct compound_list *cp_list; // optional

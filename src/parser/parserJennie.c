@@ -1,7 +1,6 @@
 //
 // Created by jennie on 24/11/2021.
 //
-#define _XOPEN_SOURCE >= 500
 
 #include "parser.h"
 #inbclude "???" // chemin pour le lexer
