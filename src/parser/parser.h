@@ -20,7 +20,7 @@ struct command *build_command(struct lexer *lex);
 
 struct simple_command *build_simple_command(struct lexer *lex);
 
-union shell_command *build_shell_command(struct lexer *lex);
+struct shell_command *build_shell_command(struct lexer *lex);
 
 struct funcdec *build_funcdec(struct lexer *lex);
 
