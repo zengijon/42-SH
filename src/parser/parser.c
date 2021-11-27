@@ -243,7 +243,7 @@ struct prefix *build_prefix(struct lexer *lex)
     /// A enlever
     if (lex != NULL)
         return NULL;
-    return NULL;
+    return (struct prefix *) lex;
     ///
     //struct prefix *res = hcalloc(1, sizeof(struct prefix));
 
