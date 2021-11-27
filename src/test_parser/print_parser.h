@@ -13,7 +13,7 @@ void print_list(struct list *l);
 
 void print_and_or_next(struct and_or_next *a_o_n);
 
-void print_and_or(struct and_or *a_o);
+void print_and_or(struct and_or *a_n);
 
 void print_pipeline_next(struct pipeline_next *p);
 
@@ -23,7 +23,7 @@ void print_command(struct command *c);
 
 void print_simple_command(struct simple_command *s_c);
 
-void print_shell_command(struct shell_command *s_c, int flag);
+void print_shell_command(struct shell_command *sh_cmd);
 
 void print_funcdec(struct funcdec *f);
 
@@ -32,6 +32,8 @@ void print_redirection(struct redirection *r);
 void print_prefix(struct prefix *p);
 
 void print_element(struct element *p);
+
+void print_compound_next(struct compound_next *c_n);
 
 void print_compound_list(struct compound_list *c_l);
 
