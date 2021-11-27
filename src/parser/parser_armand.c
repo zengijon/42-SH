@@ -15,10 +15,10 @@ struct list_next *build_list_next(struct lexer *lex)
         lexer_pop(lex);
     }
     //    else if (lex->current_tok->type == '&')
-    {
+    //{
         //        res->sep = 2;
         //    lexer_pop(lex);
-    }
+    //}
     else return NULL;
     res->next = build_list(lex);
     if (res->next == NULL)
@@ -193,12 +193,12 @@ struct redirection *build_redirection(struct lexer *lex)
 {
     struct redirection *res = hcalloc(1, sizeof(struct funcdec));
     if (/* lexer | seek | reçu == io_nb */)
-        res->IONUMBER = 0; //lexer | pop
+        res->IONUMBER = 0; // lexer | pop
     if (/* lexer | seek | redir != op */)
         return NULL;
     res->re_op = 0; // lexer | pop
     if (/* lexer | pop | reçu != word  */)
-        errx (1, "missing file name to redirect to");
+        errx(1, "missing file name to redirect to");
     res->next = build_redirection();
     return res;
 }
@@ -225,7 +225,7 @@ struct element *build_element(struct lexer *lex)
 
     if (/*lexer | seek | attendu : char *word*/)
     {
-        res->word =  ""; /* lexer | pop | attendu : char * word*/
+        res->word = ""; /* lexer | pop | attendu : char * word*/
         return res;
     }
 
@@ -235,7 +235,8 @@ struct element *build_element(struct lexer *lex)
     return res;
 }
 
-static struct compound_next *build_compound_next(struct lexer *lex) // pb * (a faire a l'infini)
+static struct compound_next *
+build_compound_next(struct lexer *lex) // pb * (a faire a l'infini)
 {
     struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
 
@@ -259,8 +260,8 @@ struct compound_list *build_compound_list(struct lexer *lex)
 {
     struct compound_list *res = hcalloc(1, sizeof(struct compound_list));
 
-    while (/*lexer | seek | attendu : \n*/)  //possibly problematic pop
-        ;/*lexer | pop */
+    while (/*lexer | seek | attendu : \n*/) // possibly problematic pop
+        ; /*lexer | pop */
 
     res->and_or *temp = build_and_or(lex);
 

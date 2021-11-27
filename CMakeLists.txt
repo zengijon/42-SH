@@ -4,7 +4,7 @@ add_compile_options(-Wextra -Wall -pedantic -Werror)
 set(CMAKE_C_STANDARD 99)
 
 
-file(GLOB sources src/lexer/lexer.c src/lexer/token.c src/lexer/test_lexer.c src/lexer/utils.c src/memory/hmalloc.c src/memory/free_list.c)
+file(GLOB sources src/lexer/lexer.c src/lexer/token.c src/lexer/test_lexer.c src/lexer/utils.c src/memory/hmalloc.c src/memory/free_list.c src/parser/*.c)
 
 
 add_executable(42sheee ${sources})

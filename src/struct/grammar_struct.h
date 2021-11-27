@@ -5,7 +5,7 @@
 #ifndef INC_42_SH_GRAMAR_STRUCT_H
 #define INC_42_SH_GRAMAR_STRUCT_H
 
-enum separator
+enum separator_
 {
     Semi = 1,
     Espe,
@@ -32,26 +32,26 @@ enum redirect_op
 
 struct list_next
 { // optional
-    separator sep; // !!!!!!! \n pas autorise
-    struct and_or a_o;
+    enum separator_ sep; // !!!!!!! \n pas autorise
+    struct and_or *a_o;
     struct list_next *next;
 };
 
 struct list
 {
-    struct and_or a_o;
+    struct and_or *a_o;
     struct list_next *next; // optional
-    separator sep; // optionel !!!!! \n pas autorise
+    enum separator_ sep; // optionel !!!!! \n pas autorise
 };
 
 struct and_or_next
 { // optional
-    operator_ *op;
+    enum operator_ *op;
     // autant qu'on en veut de new line
     struct pipeline *pipeline; // pas mis avant et avant c'etait and_or *next
                                // mais pose pb pour l'implementation
     struct and_or_next *next; // optional
-}
+};
 
 struct and_or
 {
@@ -131,7 +131,7 @@ struct element
 
 struct compound_next
 {
-    separator sep;
+    enum separator_ sep;
     // any \n we want
     struct and_or *a_o;
     struct compound_next *next; // as many we want
@@ -149,12 +149,12 @@ struct rule_for
 {
     // for = word detected
     char *word;
-    separator sep; // only ;
+    int flag_semi_col; // token ;
     ///*******   can be remplace by ';' semi col
     // any \n we want
     // in token
     char **word_list; // possibly NULL
-    enum separator_op *sep_op; // not '&'
+    enum separator_ *sep_op; // not '&'
     ///*************************************
     // any \n we want
     struct do_group *do_gp;

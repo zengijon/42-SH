@@ -1,10 +1,10 @@
 #pragma once
 
-#include "../struct/grammar_struct.h"
+#include <stdlib.h>
+
 #include "../lexer/lexer.h"
 #include "../lexer/token.h"
-
-#include <stdlib.h>
+#include "../struct/grammar_struct.h"
 
 struct list_next *build_list_next(struct lexer *lex);
 
@@ -14,13 +14,13 @@ struct and_or_next *build_and_or_next(struct lexer *lex);
 
 struct and_or *build_and_or(struct lexer *lex);
 
-struct pipeline *build_pipeline(struct lexer *lex, int flag);
+struct pipeline *build_pipeline(struct lexer *lex);
 
 struct command *build_command(struct lexer *lex);
 
 struct simple_command *build_simple_command(struct lexer *lex);
 
-union shell_command *build_shell_command(struct lexer *lex, int flag);
+union shell_command *build_shell_command(struct lexer *lex);
 
 struct funcdec *build_funcdec(struct lexer *lex);
 
