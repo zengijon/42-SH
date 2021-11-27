@@ -1,5 +1,5 @@
 
 cmake-build-debug/
-
+test/environnement/
 cmake-build-debug-coverage/
 .idea/
