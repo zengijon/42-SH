@@ -1,137 +1,138 @@
-#include "../struct/grammar_struct.h"
-#include "../struct/fifo_lex.h"
 #include "../parser/parser.h"
-
-
+#include "../struct/fifo_lex.h"
+#include "../struct/grammar_struct.h"
+#include "assert.h"
 
 int exec_simple_command(struct simple_command *cmd)
 {
-    //gerer prefix
-    //microshell
+    int res = 0;
+    // gerer prefix
+    for (int i = 0; i < cmd->size_elt; ++i)
+        if (cmd->list_elt[i]->redirect != NULL)
+            if ((res = exec_redir(cmd->list_elt[i]->redirect)) != 0)
+                return res;
+    for (int i = 0; i < cmd->size_elt; ++i)
+        printf("%s",cmd->list_elt[i]->word);
     return 0;
 }
 
 int exec_shell_command(struct shell_command *cmd)
 {
     if (cmd->c_p != NULL)
-        return exec_c_p(cmd->c_p);
+        return exec_compound_list(cmd->c_p);
     if (cmd->r_c != NULL)
-        return exec_r_c(cmd->r_c);
+        return exec_rule_case(cmd->r_c);
     if (cmd->r_f != NULL)
-        return exec_r_f(cmd->r_f);
+        return exec_rule_for(cmd->r_f);
     if (cmd->r_i != NULL)
-        return exec_r_i(cmd->r_i);
+        return exec_rule_if(cmd->r_i);
     if (cmd->r_w != NULL)
-        return exec_r_w(cmd->r_w);
+        return exec_rule_while(cmd->r_w);
     if (cmd->r_u != NULL)
-        return  exec_r_u(cmd->r_u);
-    return 1;
+        return exec_rule_until(cmd->r_u);
+    assert(0);
 }
 
 int exec_fundec(struct funcdec *cmd)
 {
-    //a faire
+    // a faire
     return 0;
 }
 
 int exec_redir(struct redirection *cmd)
 {
-    //a faire
+    // a faire
     return 0;
 }
 
 int exec_cmd(struct command *cmd)
 {
+    if (cmd->redir != NULL)
+    {
+        int res = exec_redir(cmd->redir)
+        if (res != 0)
+            return res;
+    }
     if (cmd->cmd != NULL)
         return exec_simple_command(cmd->cmd);
     if (cmd->sh_cmd != NULL)
         return exec_shell_command(cmd->sh_cmd);
     if (cmd->fun != NULL)
         return exec_fundec(cmd->fun);
-    if (cmd->redir != NULL)
-        return exec_redir(cmd->redir);
-    return 1;
+    assert(0);
 }
 
-int exec_pipeline_next(struct pipeline_next *pipenext)
+int exec_pipeline_next(struct pipeline_next *p) //argmument possibly missing
 {
-    struct pipeline_next *tmp = pipenext;
-    while (tmp != NULL)
+    if (p->next != NULL)
     {
-        if (exec_cmd(tmp->cmd) != 0)
-            return 1;
-        tmp = tmp->next;
+        //pipe exec
     }
-    return 0;
-}
 
-int exec_pipeline(struct pipeline *pipe)
-{
-    if (pipe->next == NULL)
-    {
-        if (pipe->negation == 1)
-            //pas sur ici
-            return !exec_cmd(pipe->cmd);
-        return exec_cmd(pipe->cmd);
-    }
+    int res = exec_command(p->cmd);
+    if (p->next == NULL)
+        return res;
     else
-    {
-        if (pipe->negation == 1)
-            return !exec_pipeline_next(pipe->next);
-        return exec_pipeline_next(pipe->next);
-    }
+        return exec_pipeline_next(p->next); //argmument possibly missing
+
 }
 
-int exec_and_or_next(struct pipeline *pipe, struct and_or_next *andornext)
+int exec_pipeline(struct pipeline *p)
 {
-    if (andornext->next == NULL)
+    if (p->next != NULL)
     {
-        if (andornext->op == AND)
-            return (exec_pipeline(pipe) && exec_pipeline(andornext->pipeline));
-        else
-            return (exec_pipeline(pipe) || exec_pipeline(andornext->pipeline));
+        //pipe exec
     }
+
+    int res = exec_command(p->cmd);
+    if (p->next == NULL)
+        return res && p->negation;
     else
-    {
-        //pas sur ici
-        if (andornext->op == AND)
-            return  (exec_pipeline(pipe) && exec_and_or_next(andornext->pipeline), andornext->next);
-        else
-            return  (exec_pipeline(pipe) || exec_and_or_next(andornext->pipeline), andornext->next);
-    }
+        return exec_pipeline_next(p->next) && p->negation; //argmument possibly missing
 }
 
-int exec_and_or(struct and_or *andor)
+int exec_and_or_next(struct and_or_next *a_o, int p_res)
 {
-    if (andor->next == NULL)
-        return exec_pipeline;
+    int res;
+    if (a_o->op == AND)
+        res = p_res || exec_pipeline(a_o->pipeline);
     else
-        return exec_and_or_next(andor->pipeline, andor->next);
+        res = p_res && exec_pipeline(a_o->pipeline);
+
+    if (a_o->next == NULL)
+        return res;
+    else
+        return exec_and_or_next(andor->next, res);
 }
 
-int exec_list_next(struct list_next *list_next)
+int exec_and_or(struct and_or *a_o)
 {
-    if (list_next == NULL)
-        return 0;
-    int k = exec_and_or(list_next->a_o); //return ???
-    if (list_next != NULL)
-        exec_list_next(list_next->next);
-    return k;
+    int res = exec_pipeline(a_o->pipeline);
+    if (a_o->next == NULL)
+        return res;
+    else
+        return exec_and_or_next(andor->next, res);
 }
 
-
-int exec_list(struct list *list)
+int exec_list_next(struct list_next *l_n)
 {
-    if (list == NULL)
-        return 0;
-    exec_and_or(list->a_o); // return????
-    if (list_next != NULL)
-        int k = exec_list_next(list->next);
-    return 0;
-    //gerer sep
+    int res = exec_and_or(l_n->a_o);
+    if (l_n->next == NULL)
+        return res;
+    else
+        return = exec_list_next(l_n->next);
+    // handel sep
 }
 
+int exec_list(struct list *l)
+{
+    assert(l != NULL);
+    int res = exec_and_or(l->a_o) if (l->next == NULL) return res;
+    else return = exec_list_next(l->next);
+    // gerer sep
+}
 
+// not really usefull
 int exec(char *buffer)
 {
     struct list *begin = build_list(buffer);
@@ -139,6 +140,3 @@ int exec(char *buffer)
         return 0;
     return exec_list(begin);
 }
-
-
-
