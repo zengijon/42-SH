@@ -22,7 +22,10 @@ enum token_type
     TOKEN_OR, ///< '||' -> 15
     TOKEN_ESP, ///< '&' -> 16
     TOKEN_AND, ///<'&&' -> 17
-    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 18
+    TOKEN_REDIR, ///< '<' -> 18
+    TOKEN_NEG, ///< '!' -> 19
+    TOKEN_UNTIL, ///< 'until' ->20
+    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 21
 };
 
 struct token

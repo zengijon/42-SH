@@ -107,3 +107,51 @@ struct lexer *gestion_and_or(struct lexer *lexer, const char *input)
     }
     return lexer;
 }
+
+struct lexer *gestion_redir(struct lexer *lexer, const char *input)
+{
+    int i = 0;
+    char *tmp = hcalloc(strlen(input), sizeof(char));
+    while (input[i] != '<' && input[i] != '>')
+    {
+        tmp[i] = input[i];
+        ++i;
+    }
+    tmp[i] = input[i];
+    if ((input[i + 1] == '<' || input[i + 1] == '>') && input[i] != input[i + 1])
+    {
+        lexer->end =lexer->pos + i + 1;
+    }
+    else if (input[i + 1] == '<' || input[i + 1] == '>' || input[i + 1] == '|' || input[i + 1] == '&')
+    {
+        tmp[i + 1] = input[i + 1];
+        lexer->end = lexer->pos + i + 2;
+    }
+    else
+    {
+        lexer->end =lexer->pos + i + 1;
+    }
+    lexer->current_tok->type = TOKEN_REDIR;
+    lexer->current_tok->value = tmp;
+    return lexer;
+}
+
+struct lexer *gestion_double_quote(struct lexer *lexer, const char *input)
+{
+    size_t i = 1;
+    size_t j = 0;
+    char *str = hcalloc(strlen(input), sizeof(char));
+    while (input[i] != '\0' && (input[i] == '\\' || input[i] != '"'))
+    {
+        str[j++] = input[i++];
+    }
+    lexer->end = lexer->pos + i + 1;
+    if (input[i] == '"')
+    {
+        lexer->current_tok->type = TOKEN_WORDS;
+        lexer->current_tok->value = str;
+    }
+    else
+        lexer->current_tok->type = TOKEN_ERROR;
+    return lexer;
+}
