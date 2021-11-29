@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <err.h>
+#include "unistd.h"
 
 char *replace_newline(char *token)
 {
@@ -35,7 +36,7 @@ char *replace_newline(char *token)
     return tmp;
 }
 
-void my_echo(char *cmd)
+int my_echo(char *cmd)
 {
     int first = 0;
     int n_flag = 0;
@@ -45,7 +46,10 @@ void my_echo(char *cmd)
     char *res = calloc(strlen(cmd) * 2, sizeof(char));
     char *token = strtok(cmd, separators);
     if (strcmp(token, "echo") != 0)
-        errx(1, "not an echo command");
+    {
+        write(2,"not an echo command",35);
+        return 127;
+    }
     token = strtok(NULL, separators);
     while (token != NULL)
     {
@@ -83,6 +87,7 @@ void my_echo(char *cmd)
     free(res);
     if (n_flag == 0)
         printf("\n");
+    return 0;
 }
 
 //int main(void)

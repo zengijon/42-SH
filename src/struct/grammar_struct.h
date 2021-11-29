@@ -130,16 +130,17 @@ struct element
 
 struct compound_next
 {
-    enum separator_ sep;
     // any \n we want
     struct and_or *a_o;
     struct compound_next *next; // as many we want
+    enum separator_ sep; // optional
 };
 
 struct compound_list
 {
     // any \n we want
     struct and_or *and_or;
+    enum separator_ sep; // optional
 
     struct compound_next *next;
 };

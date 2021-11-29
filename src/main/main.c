@@ -1,14 +1,14 @@
-#include <stdio.h>
-#include <stddef.h>
 #include <err.h>
 #include <getopt.h>
 #include <stddef.h>
-#include <stdio.h>
 #include <string.h>
+#include "stdio.h"
 
+#include "../exec/exec.h"
 #include "../memory/hmalloc.h"
-#include "../utils/file2buf.h"
 #include "../parser/parser.h"
+#include "../test/test_parser/print_parser.h"
+#include "../utils/file2buf.h"
 
 struct free_list *list_malloc = NULL;
 
@@ -24,7 +24,8 @@ int main(int argc, char **argv)
     int index;
     int opt;
     char *buffer;
-    while ((opt = getopt_long(argc, argv, optString, longOpts, &index)) && opt != -1)
+    while ((opt = getopt_long(argc, argv, optString, longOpts, &index))
+           && opt != -1)
     {
         switch (opt)
         {
@@ -42,7 +43,12 @@ int main(int argc, char **argv)
     }
     if (optind == 1)
         buffer = file2buf(argv[1]);
-    while ((struct list *list = build_list(buffer)) != NULL)
-        //exec
+    struct list *list;
+    struct lexer *lex = lexer_new(buffer);
+    while ((list = build_list(lex)) != NULL)
+    {
+        //print_list(list);
+        exec_list(list);
+    }
     return 0;
 }

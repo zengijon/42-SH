@@ -10,7 +10,7 @@
 #include "../memory/hmalloc.h"
 #include "../memory/free_list.h"
 
-struct free_list *list_malloc = NULL;
+//struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
@@ -291,30 +291,30 @@ struct token *lexer_pop(struct lexer *res)
     return tmp;
 }
 
-int main(void)
-{
-    struct lexer *lexer = lexer_new("if echo; fi");
-    //    printf("%d\n", lexer->current_tok->type);
-    //    struct token *tok = lexer_peek(lexer);
-    //    printf("%d\n", tok->type);
-    struct token *tok = lexer_pop(lexer);
-    printf("%d\n", tok->type);
-    tok = lexer_pop(lexer);
-    printf("%d\n", tok->type);
-    tok = lexer_pop(lexer);
-    printf("%d\n", tok->type);
-    tok = lexer_pop(lexer);
-    printf("%d\n", tok->type);
-    tok = lexer_pop(lexer);
-    printf("%d\n", tok->type);
-    tok = lexer_pop(lexer);
-    printf("%d\n", tok->type);
-    //    printf("==================================\n");
-    //    tok = lexer_pop(lexer);
-    //    printf("%s\n", tok->value);
-    //    tok = lexer_peek(lexer);
-    //    printf("%s\n", tok->value);
-    //    printf("====================================\n");
-    //    printf("%s\n", lexer->current_tok->value);
-    return 0;
-}
+//int main(void)
+//{
+//    struct lexer *lexer = lexer_new("if echo; fi");
+//    //    printf("%d\n", lexer->current_tok->type);
+//    //    struct token *tok = lexer_peek(lexer);
+//    //    printf("%d\n", tok->type);
+//    struct token *tok = lexer_pop(lexer);
+//    printf("%d\n", tok->type);
+//    tok = lexer_pop(lexer);
+//    printf("%d\n", tok->type);
+//    tok = lexer_pop(lexer);
+//    printf("%d\n", tok->type);
+//    tok = lexer_pop(lexer);
+//    printf("%d\n", tok->type);
+//    tok = lexer_pop(lexer);
+//    printf("%d\n", tok->type);
+//    tok = lexer_pop(lexer);
+//    printf("%d\n", tok->type);
+//    //    printf("==================================\n");
+//    //    tok = lexer_pop(lexer);
+//    //    printf("%s\n", tok->value);
+//    //    tok = lexer_peek(lexer);
+//    //    printf("%s\n", tok->value);
+//    //    printf("====================================\n");
+//    //    printf("%s\n", lexer->current_tok->value);
+//    return 0;
+//}

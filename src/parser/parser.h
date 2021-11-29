@@ -8,7 +8,7 @@
 
 struct list_next *build_list_next(struct lexer *lex);
 
-struct list *build_list(const char *buffer);
+struct list *build_list(struct lexer *lex);
 
 struct and_or_next *build_and_or_next(struct lexer *lex);
 

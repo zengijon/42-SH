@@ -32,12 +32,11 @@ struct list_next *build_list_next(struct lexer *lex)
     return res;
 }
 
-struct list *build_list(const char *buffer)
+struct list *build_list(struct lexer *lex)
 {
-    struct lexer *lex = lexer_new(buffer);
+    struct list *res = hcalloc(1, sizeof(struct list));
     while (lex->current_tok->type == TOKEN_NEWLINE)
         lexer_pop(lex);
-    struct list *res = hcalloc(1, sizeof(struct list));
     res->a_o = build_and_or(lex);
     if (res->a_o == NULL)
         return NULL;
@@ -70,7 +69,7 @@ struct and_or *build_and_or(struct lexer *lex)
     if (res->pipeline == NULL)
         return NULL;
 
-    //res->next = build_and_or_next(lex);
+    // res->next = build_and_or_next(lex);
     return res;
 }
 
@@ -109,7 +108,7 @@ struct pipeline *build_pipeline(struct lexer *lex)
         else
             errx(1, "missing command after negation mark '!' ");
     }
-    //res->next = build_pipeline_next(lex);
+    // res->next = build_pipeline_next(lex);
 
     return res;
 }
@@ -245,18 +244,18 @@ struct prefix *build_prefix(struct lexer *lex)
     /// A enlever
     if (lex != NULL)
         return NULL;
-    return (struct prefix *) lex;
+    return (struct prefix *)lex;
     ///
-    //struct prefix *res = hcalloc(1, sizeof(struct prefix));
+    // struct prefix *res = hcalloc(1, sizeof(struct prefix));
 
     // if (lex->current_tok->type != assignement_word)
-        //return NULL;
-    //res->assignment_word = lexer_pop(lex)->value;
+    // return NULL;
+    // res->assignment_word = lexer_pop(lex)->value;
 
     // res->redirect = build_redirection(lex);
     // if (res->redirect == NULL)
     //     return NULL;
-    //return res;
+    // return res;
 }
 
 struct element *build_element(struct lexer *lex)
@@ -270,13 +269,21 @@ struct element *build_element(struct lexer *lex)
     //    res->redirect = build_redirection(lex);
     //    if (res->redirect == NULL)
     //        return NULL;
-        return res;
+    return res;
 }
+
+#include "stdio.h"
+
 
 static struct compound_next *build_compound_next(struct lexer *lex)
 {
     struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
 
+    while (lex->current_tok->type == TOKEN_NEWLINE)
+        lexer_pop(lex);
+
+    if ((res->a_o = build_and_or(lex)) == NULL)
+        return NULL;
     //    if (lex->current_tok->type == '&')
     //        res->sep = 2;
     //    else if (lex->current_tok->type == ';')
@@ -284,28 +291,30 @@ static struct compound_next *build_compound_next(struct lexer *lex)
     //    else if (lex->current_tok->type == '\n')
     //        res->sep = 3;
     //    else
-        //return NULL;
-//    lexer_pop(lex);
-//
-    while (lex->current_tok->type == TOKEN_NEWLINE)
-       lexer_pop(lex);
-
-    res->a_o = build_and_or(lex);
-    if (res->a_o == NULL)
-        return res;
+    // return NULL;
+    //    lexer_pop(lex);
+    //
     res->next = build_compound_next(lex);
     return res;
 }
-
 struct compound_list *build_compound_list(struct lexer *lex)
 {
     struct compound_list *res = hcalloc(1, sizeof(struct compound_list));
 
     while (lex->current_tok->type == TOKEN_NEWLINE)
         lexer_pop(lex);
-
     if ((res->and_or = build_and_or(lex)) != NULL)
     {
+        //    if (lex->current_tok->type == '&')
+        //        res->sep = 2;
+        //    else if (lex->current_tok->type == ';')
+        //        res->sep = 1;
+        //    else if (lex->current_tok->type == '\n')
+        //        res->sep = 3;
+        //    else
+        // return res;
+        //    lexer_pop(lex);
+        //
         res->next = build_compound_next(lex);
         return res;
     }

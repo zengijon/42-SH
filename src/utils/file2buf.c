@@ -5,7 +5,7 @@
 
 #include "../memory/hmalloc.h"
 
-struct free_list *list_malloc = NULL;
+//struct free_list *list_malloc = NULL;
 
 char *file2buf(char *filename)
 {
@@ -15,7 +15,7 @@ char *file2buf(char *filename)
         errx(1, "file doesnt exist");
     char *buffer = hcalloc(101 ,sizeof(char));
     size_t le = 0;
-    while((len = fread(buffer + le, 1, 100, fd)) && len != 0)
+    while((len = fread(buffer + le, 1, 100, fd)) && (int) len != 0)
     {
         le += len;
         buffer = hrealloc(buffer, le + len);
