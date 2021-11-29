@@ -45,6 +45,26 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_FI;
         res->end = res->pos + 2;
     }
+    else if (is_token(&input[res->pos], "while ", 6) == 0)
+    {
+        res->current_tok->type = TOKEN_WHILE;
+        res->end = res->pos + 5;
+    }
+    else if (is_token(&input[res->pos], "for ", 4) == 0)
+    {
+        res->current_tok->type = TOKEN_FOR;
+        res->end = res->pos + 3;
+    }
+    else if (is_token(&input[res->pos], "do ", 3) == 0)
+    {
+        res->current_tok->type = TOKEN_DO;
+        res->end = res->pos + 2;
+    }
+    else if (is_token(&input[res->pos], "done ", 5) == 0)
+    {
+        res->current_tok->type = TOKEN_DONE;
+        res->end = res->pos + 4;
+    }
     else if (strncmp(&input[res->pos], ";", 1) == 0)
     {
         res->current_tok->type = TOKEN_PTCOMA;
@@ -169,6 +189,26 @@ struct token *lexer_pop(struct lexer *res)
     {
         res->current_tok->type = TOKEN_FI;
         res->end = res->pos + 2;
+    }
+    else if (is_token(&input[res->pos], "while ", 6) == 0)
+    {
+        res->current_tok->type = TOKEN_WHILE;
+        res->end = res->pos + 5;
+    }
+    else if (is_token(&input[res->pos], "for ", 4) == 0)
+    {
+        res->current_tok->type = TOKEN_FOR;
+        res->end = res->pos + 3;
+    }
+    else if (is_token(&input[res->pos], "do ", 3) == 0)
+    {
+        res->current_tok->type = TOKEN_DO;
+        res->end = res->pos + 2;
+    }
+    else if (is_token(&input[res->pos], "done ", 5) == 0)
+    {
+        res->current_tok->type = TOKEN_DONE;
+        res->end = res->pos + 4;
     }
     else if (strncmp(&input[res->pos], ";", 1) == 0)
     {

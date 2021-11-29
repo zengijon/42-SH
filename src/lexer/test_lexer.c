@@ -187,3 +187,13 @@ Test(peek_rec_0, exit_code, .init = redirect_all_stdout)
     cr_assert_eq(lexer_peek_rec(test, 5)->type, TOKEN_EOF);
     free(test);
 }
+
+Test(while_1, exit_code, .init = redirect_all_stdout)
+{
+    const char *input = strdup("while chocolat");
+    struct lexer *test = lexer_new(input);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WHILE);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WORDS);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_EOF);
+    free(test);
+}
