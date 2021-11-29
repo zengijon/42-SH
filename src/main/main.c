@@ -6,7 +6,7 @@
 
 #include "../memory/hmalloc.h"
 #include "../utils/file2buf.h"
-
+#include "../parser/parser.h"
 
 struct free_list *list_malloc = NULL;
 
@@ -40,6 +40,7 @@ int main(int argc, char **argv)
     }
     if (optind == 1)
         buffer = file2buf(argv[1]);
-    printf("%s\n", buffer);
+    while ((struct list *list = build_list(buffer)) != NULL)
+        //exec
     return 0;
 }

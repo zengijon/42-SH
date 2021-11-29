@@ -14,3 +14,6 @@ int is_separator(const char *input, struct separator *separator);
 
 //determine if a string is a token or not
 int is_token(const char *input, char *token, int n);
+
+//determine if a string is a simple '&', a simple '|', a 'or' or a 'and'
+struct lexer *gestion_and_or(struct lexer *lexer, const char *input);

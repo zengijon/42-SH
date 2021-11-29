@@ -80,6 +80,10 @@ struct lexer *lexer_new(const char *input)
         res = gestion_quote(res, &input[res->pos]);
         res->end = res->pos + 1;
     }
+    else if (strncmp(&input[res->pos], "&",1) == 0 || strncmp(&input[res->pos], "|",1) == 0)
+    {
+        res = gestion_and_or(res, &input[res->pos]);
+    }
     else
     {
         struct separator *separator = build_separator_list();
@@ -168,46 +172,91 @@ struct token *lexer_pop(struct lexer *res)
     if (is_token(&input[res->pos], "if ", 3) == 0)
     {
         res->current_tok->type = TOKEN_IF;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "if";
+        }
         res->end = res->pos + 2;
     }
     else if (is_token(&input[res->pos], "then ", 5) == 0)
     {
         res->current_tok->type = TOKEN_THEN;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "then";
+        }
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "elif ", 5) == 0)
     {
         res->current_tok->type = TOKEN_ELIF;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "elif";
+        }
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "else ", 5) == 0)
     {
         res->current_tok->type = TOKEN_ELSE;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "else";
+        }
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "fi ", 3) == 0)
     {
         res->current_tok->type = TOKEN_FI;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "fi";
+        }
         res->end = res->pos + 2;
     }
     else if (is_token(&input[res->pos], "while ", 6) == 0)
     {
         res->current_tok->type = TOKEN_WHILE;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "while";
+        }
         res->end = res->pos + 5;
     }
     else if (is_token(&input[res->pos], "for ", 4) == 0)
     {
         res->current_tok->type = TOKEN_FOR;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "for";
+        }
         res->end = res->pos + 3;
     }
     else if (is_token(&input[res->pos], "do ", 3) == 0)
     {
         res->current_tok->type = TOKEN_DO;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "do";
+        }
         res->end = res->pos + 2;
     }
     else if (is_token(&input[res->pos], "done ", 5) == 0)
     {
         res->current_tok->type = TOKEN_DONE;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "done";
+        }
         res->end = res->pos + 4;
     }
     else if (strncmp(&input[res->pos], ";", 1) == 0)
@@ -224,6 +273,10 @@ struct token *lexer_pop(struct lexer *res)
     {
         res = gestion_quote(res, &input[res->pos]);
     }
+    else if (strncmp(&input[res->pos], "&",1) == 0 || strncmp(&input[res->pos], "|",1) == 0)
+    {
+        res = gestion_and_or(res, &input[res->pos]);
+    }
     else
     {
         size_t j = 0;
@@ -238,30 +291,30 @@ struct token *lexer_pop(struct lexer *res)
     return tmp;
 }
 
-//int main(void)
-//{
-//    struct lexer *lexer = lexer_new("echo '' ''");
-//    //    printf("%d\n", lexer->current_tok->type);
-//    //    struct token *tok = lexer_peek(lexer);
-//    //    printf("%d\n", tok->type);
-//    struct token *tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    //    printf("==================================\n");
-//    //    tok = lexer_pop(lexer);
-//    //    printf("%s\n", tok->value);
-//    //    tok = lexer_peek(lexer);
-//    //    printf("%s\n", tok->value);
-//    //    printf("====================================\n");
-//    //    printf("%s\n", lexer->current_tok->value);
-//    return 0;
-//}
+int main(void)
+{
+    struct lexer *lexer = lexer_new("if echo; fi");
+    //    printf("%d\n", lexer->current_tok->type);
+    //    struct token *tok = lexer_peek(lexer);
+    //    printf("%d\n", tok->type);
+    struct token *tok = lexer_pop(lexer);
+    printf("%d\n", tok->type);
+    tok = lexer_pop(lexer);
+    printf("%d\n", tok->type);
+    tok = lexer_pop(lexer);
+    printf("%d\n", tok->type);
+    tok = lexer_pop(lexer);
+    printf("%d\n", tok->type);
+    tok = lexer_pop(lexer);
+    printf("%d\n", tok->type);
+    tok = lexer_pop(lexer);
+    printf("%d\n", tok->type);
+    //    printf("==================================\n");
+    //    tok = lexer_pop(lexer);
+    //    printf("%s\n", tok->value);
+    //    tok = lexer_peek(lexer);
+    //    printf("%s\n", tok->value);
+    //    printf("====================================\n");
+    //    printf("%s\n", lexer->current_tok->value);
+    return 0;
+}

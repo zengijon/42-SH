@@ -1,9 +1,7 @@
 #include <string.h>
 #include <stdlib.h>
-#include <string.h>
 #include <stdio.h>
 #include <err.h>
-#include <fnmatch.h>
 
 char *replace_newline(char *token)
 {

@@ -18,7 +18,11 @@ enum token_type
     TOKEN_QUOTE, ///< ''' -> 11
     TOKEN_WORDS, ///< every words -> 12
     TOKEN_EOF, ///< EOF -> 13
-    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 14
+    TOKEN_PIPE, ///<'|'-> 14
+    TOKEN_OR, ///< '||' -> 15
+    TOKEN_ESP, ///< '&' -> 16
+    TOKEN_AND, ///<'&&' -> 17
+    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 18
 };
 
 struct token
@@ -36,3 +40,4 @@ struct token *token_new(enum token_type type);
  * \brief Frees a token
  */
 void token_free(struct token *token);
+
