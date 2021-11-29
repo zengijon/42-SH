@@ -4,8 +4,8 @@
 
 #include <stdio.h>
 
-#include "../parser/parser.h"
-#include "../test_parser/print_parser.h"
+#include "../../parser/parser.h"
+#include "print_parser.h"
 
 int main(void)
 {

@@ -5,7 +5,7 @@
 #ifndef INC_42SHEEEE_PRINT_PARSER_H
 #define INC_42SHEEEE_PRINT_PARSER_H
 
-#include "../struct/grammar_struct.h"
+#include "../../struct/grammar_struct.h"
 
 void print_list_next(struct list_next *l);
 
