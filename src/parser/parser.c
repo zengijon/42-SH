@@ -35,6 +35,8 @@ struct list_next *build_list_next(struct lexer *lex)
 struct list *build_list(const char *buffer)
 {
     struct lexer *lex = lexer_new(buffer);
+    while (lex->current_tok->type == TOKEN_NEWLINE)
+        lexer_pop(lex);
     struct list *res = hcalloc(1, sizeof(struct list));
     res->a_o = build_and_or(lex);
     if (res->a_o == NULL)
@@ -107,7 +109,7 @@ struct pipeline *build_pipeline(struct lexer *lex)
         else
             errx(1, "missing command after negation mark '!' ");
     }
-    res->next = build_pipeline_next(lex);
+    //res->next = build_pipeline_next(lex);
 
     return res;
 }
@@ -273,12 +275,7 @@ struct element *build_element(struct lexer *lex)
 
 static struct compound_next *build_compound_next(struct lexer *lex)
 {
-    /// a enlever
-    if (lex != NULL)
-        return NULL;
-    return NULL;
-    ///
-    //struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
+    struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
 
     //    if (lex->current_tok->type == '&')
     //        res->sep = 2;
@@ -290,14 +287,14 @@ static struct compound_next *build_compound_next(struct lexer *lex)
         //return NULL;
 //    lexer_pop(lex);
 //
-//    while (lex->current_tok->type == TOKEN_NEWLINE)
-//        lexer_pop(lex);
-//
-//    res->a_o = build_and_or(lex);
-//    if (res->a_o == NULL)
-//        return res;
-//    res->next = build_compound_next(lex);
-//    return res;
+    while (lex->current_tok->type == TOKEN_NEWLINE)
+       lexer_pop(lex);
+
+    res->a_o = build_and_or(lex);
+    if (res->a_o == NULL)
+        return res;
+    res->next = build_compound_next(lex);
+    return res;
 }
 
 struct compound_list *build_compound_list(struct lexer *lex)
