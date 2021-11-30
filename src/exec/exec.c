@@ -3,6 +3,7 @@
 #include <stdio.h>
 
 #include "../buItlin/echo/echo.h"
+#include "../memory/hmalloc.h"
 #include "../parser/parser.h"
 #include "assert.h"
 #include "string.h"
@@ -103,14 +104,14 @@ int exec_simple_command(struct simple_command *cmd)
         if (cmd->list_elt[i]->redirect != NULL)
             if ((res = exec_redir(cmd->list_elt[i]->redirect)) != 0)
                 return res;
-    char buffer[2048] = { 0 };
-    for (int i = 0; i < cmd->size_elt; ++i)
+    if (cmd->size_elt < 1)
+        return res;
+    char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
+    for (int i = 1 ; i < cmd->size_elt; ++i)
     {
-        strcat(buffer, cmd->list_elt[i]->word);
-        strcat(buffer, " ");
+        list[i - 1] = cmd->list_elt[i]->word;
     }
-    return my_echo(buffer);
-    // printf("%s\n",buffer);
+    return exec_command_line(cmd->list_elt[0]->word, cmd->size_elt - 1, list);
 }
 
 int exec_shell_command(struct shell_command *cmd)
