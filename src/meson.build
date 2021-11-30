@@ -1,0 +1,8 @@
+subdir('buItlin')
+subdir('exec')
+subdir('exec_builtins')
+subdir('lexer')
+subdir('main')
+subdir('memory')
+subdir('parser')
+subdir('utils')
