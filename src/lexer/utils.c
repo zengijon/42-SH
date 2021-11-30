@@ -55,6 +55,8 @@ struct separator *build_separator_list(void)
     new->separators[5] = "<";
     new->separators[6] = hcalloc(2,1);
     new->separators[6] = ">";
+    new->separators[6] = hcalloc(2,1);
+    new->separators[6] = ">";
     new->nb_separator = 7;
     return new;
 }
@@ -155,3 +157,47 @@ struct lexer *gestion_double_quote(struct lexer *lexer, const char *input)
         lexer->current_tok->type = TOKEN_ERROR;
     return lexer;
 }
+
+/* struct lexer *is_special_var(struct lexer *lexer, const char *input) */
+/* { */
+/*     if (input[1] == '@' || input[1] == '*' || input[1] == '?' || input[1] == '$' */
+/*         || input[1] == '#' || (input[1] <= '9' && input[1] >= '0')) */
+/*     { */
+/*         char *buffer = hcalloc(3,1); */
+/*         buffer[1] = input[1]; */
+/*         buffer[0] = input[0]; */
+/*         lexer->end += 2; */
+/*         lexer->current_tok->type = TOKEN_VAR; */
+/*         lexer->current_tok->value = buffer; */
+/*         return 0; */
+/*     } */
+/*     ///<gerer token end */
+/*     ///< gerer {} */
+/* } */
+
+/* struct lexer *gestion_variables(struct lexer *lexer, const char *input) */
+/* { */
+/*     if (is_special_var(lexer, input) == 0) */
+/*     { */
+/*         return lexer; */
+/*     } */
+/*     else if (fnmatch("[0-9a-zA-Z_]", &input[1], 0) == 0) */
+/*     { */
+/*         char *buffer = hcalloc(strlen(input), sizeof(char)); */
+/*         buffer[0] = '$'; */
+/*         int i = 1; */
+/*         while (fnmatch("[0-9a-zA-Z_]", &input[i], 0) == 0) */
+/*         { */
+/*             buffer[i] = input[i]; */
+/*             ++i; */
+/*         } */
+/*         lexer->end = lexer->pos + i; */
+/*         lexer->current_tok->type = TOKEN_VAR; */
+/*         lexer->current_tok->value = buffer; */
+/*         return lexer; */
+/*     } */
+/*     else */
+/*     { */
+/*         //toekn word */
+/*     } */
+/* } */

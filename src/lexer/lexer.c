@@ -27,13 +27,7 @@ struct lexer *lexer_new(const char *input)
         res->end = res->pos + 2;
     }
     else if (is_token(&input[res->pos], "then ", 5) == 0)
-    {
-        res->current_tok->type = TOKEN_THEN;
-        res->end = res->pos + 4;
-    }
-    else if (is_token(&input[res->pos], "elif ", 5) == 0)
-    {
-        res->current_tok->type = TOKEN_ELIF;
+    { TOKEN_ELIF;
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "else ", 5) == 0)
@@ -312,10 +306,7 @@ struct token *lexer_pop(struct lexer *res)
         res = gestion_and_or(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "\"", 1) == 0)
         res = gestion_double_quote(res, &input[res->pos]);
-    else if (fnmatch("[0-9][<>]*", &input[res->pos], 0) == 0
-    || fnmatch("[0-9][<>][<>|&]*", &input[res->pos], 0) == 0
-    || fnmatch("[<>][<>|&]*", &input[res->pos], 0) == 0
-    || fnmatch("[<>]*", &input[res->pos], 0) == 0)
+    else if (fnmatch("*([0-9])[<>]?([<>|&])*", &input[res->pos], FNM_EXTMATCH) == 0)
         res = gestion_redir(res, &input[res->pos]);
     else
     {
