@@ -1,7 +1,7 @@
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 
-#include "../buItlin/echo/echo.h"
+#include "../exec_builtins/echo.h"
 
 void redirect_all_stdout(void)
 {

@@ -13,6 +13,5 @@ int microshell(char *cmd)
     int child_pid = waitpid(pid, &wstatus, 0);
     if (child_pid == -1)
         errx(1, "fork error");
-    printf("process exit status: %d\n", WEXITSTATUS(wstatus));
     return 0;
 }
