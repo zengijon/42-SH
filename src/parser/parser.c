@@ -11,23 +11,18 @@
 struct list_next *build_list_next(struct lexer *lex)
 {
     struct list_next *res = hcalloc(1, sizeof(struct list_next));
-    if (lex->current_tok->type == TOKEN_PTCOMA)
-    {
-        res->sep = Semi;
-        lexer_pop(lex);
-    }
-    //    else if (lex->current_tok->type == '&')
-    //{
-    //        res->sep = 2;
-    //    lexer_pop(lex);
-    //}
-    else
-        return NULL;
-
     res->a_o = build_and_or(lex);
+    if (res->a_o == NULL)
+        return NULL;
+    if (lex->current_tok->type == TOKEN_PTCOMA)
+        ;
+    else if (lex->current_tok->type == TOKEN_ESP)
+        res->esp = 1;
+    else
+        return res;
+    lexer_pop(lex);
 
-    if (res->a_o != NULL)
-        res->next = build_list_next(lex);
+    res->next = build_list_next(lex);
 
     return res;
 }
@@ -40,6 +35,13 @@ struct list *build_list(struct lexer *lex)
     res->a_o = build_and_or(lex);
     if (res->a_o == NULL)
         return NULL;
+    if (lex->current_tok->type == TOKEN_PTCOMA)
+        ;
+    else if (lex->current_tok->type == TOKEN_ESP)
+        res->esp = 1;
+    else
+        return res;
+    lexer_pop(lex);
     res->next = build_list_next(lex);
     return res;
 }
@@ -274,7 +276,6 @@ struct element *build_element(struct lexer *lex)
 
 #include "stdio.h"
 
-
 static struct compound_next *build_compound_next(struct lexer *lex)
 {
     struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
@@ -284,16 +285,16 @@ static struct compound_next *build_compound_next(struct lexer *lex)
 
     if ((res->a_o = build_and_or(lex)) == NULL)
         return NULL;
-    //    if (lex->current_tok->type == '&')
-    //        res->sep = 2;
-    //    else if (lex->current_tok->type == ';')
-    //        res->sep = 1;
-    //    else if (lex->current_tok->type == '\n')
-    //        res->sep = 3;
-    //    else
-    // return NULL;
-    //    lexer_pop(lex);
-    //
+    if (lex->current_tok->type == TOKEN_PTCOMA)
+        res->esp = 1;
+    else if (lex->current_tok->type == TOKEN_ESP)
+        ;
+    else if (lex->current_tok->type == TOKEN_NEWLINE)
+        ;
+    else
+        return NULL;
+    lexer_pop(lex);
+
     res->next = build_compound_next(lex);
     return res;
 }
@@ -305,16 +306,16 @@ struct compound_list *build_compound_list(struct lexer *lex)
         lexer_pop(lex);
     if ((res->and_or = build_and_or(lex)) != NULL)
     {
-        //    if (lex->current_tok->type == '&')
-        //        res->sep = 2;
-        //    else if (lex->current_tok->type == ';')
-        //        res->sep = 1;
-        //    else if (lex->current_tok->type == '\n')
-        //        res->sep = 3;
-        //    else
-        // return res;
-        //    lexer_pop(lex);
-        //
+        if (lex->current_tok->type == TOKEN_ESP)
+            res->esp = 1;
+        else if (lex->current_tok->type == TOKEN_NEWLINE)
+            ;
+        else if (lex->current_tok->type == TOKEN_PTCOMA)
+            ;
+        else
+            return res;
+        lexer_pop(lex);
+
         res->next = build_compound_next(lex);
         return res;
     }

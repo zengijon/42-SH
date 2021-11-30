@@ -9,8 +9,8 @@ void print_list_next(struct list_next *l)
 {
     if (l == NULL)
         return;
-    if (l->sep != 0)
-        printf("(separator : %d ) ", l->sep);
+    if (l->esp != 0)
+        printf("(separator : & ) ");
     print_and_or(l->a_o);
     print_list_next(l->next);
 }
@@ -22,8 +22,8 @@ void print_list(struct list *l)
     {
         print_and_or(l->a_o);
         print_list_next(l->next);
-        if (l->sep != 0)
-            printf("(separator : %d ) ", l->sep);
+        if (l->esp != 0)
+            printf("(separator : & ) ");
     }
     printf("\n]");
 }
@@ -197,8 +197,8 @@ void print_compound_next(struct compound_next *c_n)
 {
     if (c_n != NULL)
     {
-        if (c_n->sep != 0)
-            printf(" (separator : %d ) ", c_n->sep);
+        if (c_n->esp != 0)
+            printf(" (separator : & ) ");
         // printf("( new line ) ");
         if (c_n->a_o != NULL)
             print_and_or(c_n->a_o);
