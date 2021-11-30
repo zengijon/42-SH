@@ -50,10 +50,11 @@ struct and_or_next *build_and_or_next(struct lexer *lex)
 {
     struct and_or_next *res = hcalloc(1, sizeof(struct and_or_next));
 
-        if (lex->current_tok->type != TOKEN_AND && lex->current_tok->type != TOKEN_OR)
-            return NULL;
-        res->op = lex->current_tok->type == TOKEN_AND ? 1 : 2;
-
+    if (lex->current_tok->type != TOKEN_AND
+        && lex->current_tok->type != TOKEN_OR)
+        return NULL;
+    res->op = lex->current_tok->type == TOKEN_AND ? 1 : 2;
+    lexer_pop(lex);
     while (lex->current_tok->type == TOKEN_NEWLINE)
         lexer_pop(lex);
 
