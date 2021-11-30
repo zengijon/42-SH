@@ -35,7 +35,7 @@ char *replace_newline(char *token)
     return tmp;
 }
 
-void my_echo(char *cmd)
+int my_echo(char *cmd)
 {
     int first = 0;
     int n_flag = 0;
@@ -83,6 +83,7 @@ void my_echo(char *cmd)
     free(res);
     if (n_flag == 0)
         printf("\n");
+    return 0;
 }
 
 //int main(void)
