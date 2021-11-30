@@ -1,5 +1,6 @@
 
 cmake-build-debug/
-test/environnement/
+test/my_moulinette/envi/**
+builddir/**
 cmake-build-debug-coverage/
 .idea/
