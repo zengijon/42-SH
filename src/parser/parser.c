@@ -100,8 +100,8 @@ struct pipeline_next *build_pipeline_next(struct lexer *lex)
 struct pipeline *build_pipeline(struct lexer *lex)
 {
     struct pipeline *res = hcalloc(1, sizeof(struct pipeline));
-//     if (lex->current_tok->type == !)
-//     res->negation = 1;
+     if (lex->current_tok->type == T)
+     res->negation = 1;
 
     if ((res->cmd = build_command(lex)) == NULL)
     {
