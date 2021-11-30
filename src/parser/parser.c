@@ -79,30 +79,29 @@ struct and_or *build_and_or(struct lexer *lex)
 struct pipeline_next *build_pipeline_next(struct lexer *lex)
 {
     struct pipeline_next *res = hcalloc(1, sizeof(struct pipeline_next));
-    //    if (lex->current_tok->type == "|")
-    //    {
-    //        lexer_pop(lex);
-
-    while (lex->current_tok->type == TOKEN_NEWLINE)
+    if (lex->current_tok->type == TOKEN_PIPE)
+    {
         lexer_pop(lex);
 
-    res->cmd = build_command(lex);
-    if (res->cmd != NULL)
-    {
-        res->next = build_pipeline_next(lex);
-        return res;
+        while (lex->current_tok->type == TOKEN_NEWLINE)
+            lexer_pop(lex);
+
+        res->cmd = build_command(lex);
+        if (res->cmd != NULL)
+        {
+            res->next = build_pipeline_next(lex);
+            return res;
+        }
+        errx(1, "Missing cmd after | and new line");
     }
-    //        errx(1, "Missing cmd after | and new line");
-    //
-    //    }
     return NULL;
 }
 
 struct pipeline *build_pipeline(struct lexer *lex)
 {
     struct pipeline *res = hcalloc(1, sizeof(struct pipeline));
-    // if (lex->current_tok->type == "!")
-    // res->negation = 1;
+//     if (lex->current_tok->type == !)
+//     res->negation = 1;
 
     if ((res->cmd = build_command(lex)) == NULL)
     {
@@ -111,7 +110,7 @@ struct pipeline *build_pipeline(struct lexer *lex)
         else
             errx(1, "missing command after negation mark '!' ");
     }
-    // res->next = build_pipeline_next(lex);
+    res->next = build_pipeline_next(lex);
 
     return res;
 }
