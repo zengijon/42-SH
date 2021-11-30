@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <fnmatch.h>
 
 #include "utils.h"
 #include "../memory/hmalloc.h"
@@ -78,6 +79,11 @@ struct lexer *lexer_new(const char *input)
     else if (strncmp(&input[res->pos], "'", 1) == 0)
     {
         res = gestion_quote(res, &input[res->pos]);
+        res->end = res->pos + 1;
+    }
+    else if (strncmp(&input[res->pos], "\"", 1) == 0)
+    {
+        res = gestion_double_quote(res, &input[res->pos]);
         res->end = res->pos + 1;
     }
     else if (strncmp(&input[res->pos], "&",1) == 0 || strncmp(&input[res->pos], "|",1) == 0)
@@ -259,6 +265,26 @@ struct token *lexer_pop(struct lexer *res)
         }
         res->end = res->pos + 4;
     }
+    else if (is_token(&input[res->pos], "until ", 6) == 0)
+    {
+        res->current_tok->type = TOKEN_UNTIL;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "until";
+        }
+        res->end = res->pos + 5;
+    }
+    else if (is_token(&input[res->pos], "! ", 2) == 0)
+    {
+        res->current_tok->type = TOKEN_NEG;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "!";
+        }
+        res->end = res->pos + 1;
+    }
     else if (strncmp(&input[res->pos], ";", 1) == 0)
     {
         res->current_tok->type = TOKEN_PTCOMA;
@@ -270,13 +296,13 @@ struct token *lexer_pop(struct lexer *res)
         res->end = res->pos + 1;
     }
     else if (strncmp(&input[res->pos], "'", 1) == 0)
-    {
         res = gestion_quote(res, &input[res->pos]);
-    }
     else if (strncmp(&input[res->pos], "&",1) == 0 || strncmp(&input[res->pos], "|",1) == 0)
-    {
         res = gestion_and_or(res, &input[res->pos]);
-    }
+    else if (strncmp(&input[res->pos], "\"", 1) == 0)
+        res = gestion_double_quote(res, &input[res->pos]);
+//    else if (fnmatch("*([0-9])[<>]?([<>|&])*", &input[res->pos], FNM_EXTMATCH) == 0)
+//        res = gestion_redir(res, &input[res->pos]);
     else
     {
         size_t j = 0;

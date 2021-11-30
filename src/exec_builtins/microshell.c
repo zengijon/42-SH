@@ -4,17 +4,11 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
-int main(int argc, char **argv)
+int microshell(char *cmd)
 {
-    if (argc != 2)
-        errx(1, "need only one parameter");
-
     int pid = fork();
     if (pid == 0)
-    {
-        execlp("/bin/sh", "supershell", "-c", argv[1]);
-    }
-
+        execlp("/bin/sh", "supershell", "-c", cmd, NULL);
     int wstatus;
     int child_pid = waitpid(pid, &wstatus, 0);
     if (child_pid == -1)

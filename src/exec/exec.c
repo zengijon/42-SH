@@ -2,7 +2,7 @@
 
 #include <stdio.h>
 
-#include "../buItlin/echo/echo.h"
+#include "../exec_builtins/exec_cmds.h"
 #include "../memory/hmalloc.h"
 #include "../parser/parser.h"
 #include "assert.h"
@@ -111,9 +111,8 @@ int exec_simple_command(struct simple_command *cmd)
     {
         list[i - 1] = cmd->list_elt[i]->word;
     }
-    printf("%s\n", cmd->list_elt[0]->word);
-    //return exec_command_line(cmd->list_elt[0]->word, cmd->size_elt - 1, list);
-    return 1;// a changer
+    //printf("%s\n", cmd->list_elt[0]->word);
+    return exec_cmds(cmd->list_elt[0]->word, cmd->size_elt - 1, list);
 }
 
 int exec_shell_command(struct shell_command *cmd)
