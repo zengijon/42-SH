@@ -5,12 +5,6 @@
 #ifndef INC_42_SH_GRAMAR_STRUCT_H
 #define INC_42_SH_GRAMAR_STRUCT_H
 
-enum separator_
-{
-    Semi = 1,
-    Espe,
-    BackS
-};
 
 enum operator_
 {
@@ -32,16 +26,16 @@ enum redirect_op
 
 struct list_next
 { // optional
-    enum separator_ sep; // !!!!!!! \n pas autorise
     struct and_or *a_o;
+    int esp; // !!!!!!! \n pas autorise
     struct list_next *next;
 };
 
 struct list
 {
     struct and_or *a_o;
+    int esp; // optionel ; ou &
     struct list_next *next; // optional
-    enum separator_ sep; // optionel !!!!! \n pas autorise
 };
 
 struct and_or_next
@@ -133,14 +127,14 @@ struct compound_next
     // any \n we want
     struct and_or *a_o;
     struct compound_next *next; // as many we want
-    enum separator_ sep; // optional
+    int esp; // optional
 };
 
 struct compound_list
 {
     // any \n we want
     struct and_or *and_or;
-    enum separator_ sep; // optional
+    int esp; // optional
 
     struct compound_next *next;
 };
@@ -155,7 +149,7 @@ struct rule_for
     // in token
     char **word_list; // possibly NULL
     // / rajouter une size_word_list
-    enum separator_ sep_op; // not '&'
+    // not '&'
     ///*************************************
     // any \n we want
     struct do_group *do_gp;
