@@ -1,17 +1,17 @@
 #include "lexer.h"
 
 #include <err.h>
+#include <fnmatch.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fnmatch.h>
 
-#include "utils.h"
-#include "../memory/hmalloc.h"
 #include "../memory/free_list.h"
+#include "../memory/hmalloc.h"
+#include "utils.h"
 
-//struct free_list *list_malloc = NULL;
+// struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
@@ -81,12 +81,13 @@ struct lexer *lexer_new(const char *input)
         res = gestion_quote(res, &input[res->pos]);
         res->end = res->pos + 1;
     }
-//    else if (strncmp(&input[res->pos], "\"", 1) == 0)
-//    {
-//        res = gestion_double_quote(res, &input[res->pos]);
-//        res->end = res->pos + 1;
-//    }
-    else if (strncmp(&input[res->pos], "&",1) == 0 || strncmp(&input[res->pos], "|",1) == 0)
+    //    else if (strncmp(&input[res->pos], "\"", 1) == 0)
+    //    {
+    //        res = gestion_double_quote(res, &input[res->pos]);
+    //        res->end = res->pos + 1;
+    //    }
+    else if (strncmp(&input[res->pos], "&", 1) == 0
+             || strncmp(&input[res->pos], "|", 1) == 0)
     {
         res = gestion_and_or(res, &input[res->pos]);
     }
@@ -130,7 +131,7 @@ struct token *lexer_peek(struct lexer *lexer)
     return tmp->current_tok;
 }
 struct token *lexer_peek_rec(struct lexer *lexer, int n)
-    {
+{
     struct separator *separator = build_separator_list();
     if (lexer->input[lexer->pos] == '\'')
     {
@@ -150,7 +151,7 @@ struct token *lexer_peek_rec(struct lexer *lexer, int n)
         return tmp->current_tok;
     else
         return lexer_peek_rec(tmp, n - 1);
-    }
+}
 
 struct token *lexer_pop(struct lexer *res)
 {
@@ -265,26 +266,26 @@ struct token *lexer_pop(struct lexer *res)
         }
         res->end = res->pos + 4;
     }
-//    else if (is_token(&input[res->pos], "until ", 6) == 0)
-//    {
-//        res->current_tok->type = TOKEN_UNTIL;
-//        if (res->current_tok->type == TOKEN_WORDS)
-//        {
-//            res->current_tok->type = TOKEN_WORDS;
-//            res->current_tok->value = "until";
-//        }
-//        res->end = res->pos + 5;
-//    }
-//    else if (is_token(&input[res->pos], "! ", 2) == 0)
-//    {
-//        res->current_tok->type = TOKEN_NEG;
-//        if (res->current_tok->type == TOKEN_WORDS)
-//        {
-//            res->current_tok->type = TOKEN_WORDS;
-//            res->current_tok->value = "!";
-//        }
-//        res->end = res->pos + 1;
-//    }
+    else if (is_token(&input[res->pos], "until ", 6) == 0)
+    {
+        res->current_tok->type = TOKEN_UNTIL;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "until";
+        }
+        res->end = res->pos + 5;
+    }
+    else if (is_token(&input[res->pos], "! ", 2) == 0)
+    {
+        res->current_tok->type = TOKEN_NEG;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "!";
+        }
+        res->end = res->pos + 1;
+    }
     else if (strncmp(&input[res->pos], ";", 1) == 0)
     {
         res->current_tok->type = TOKEN_PTCOMA;
@@ -297,19 +298,29 @@ struct token *lexer_pop(struct lexer *res)
     }
     else if (strncmp(&input[res->pos], "'", 1) == 0)
         res = gestion_quote(res, &input[res->pos]);
-    else if (strncmp(&input[res->pos], "&",1) == 0 || strncmp(&input[res->pos], "|",1) == 0)
+    else if (strncmp(&input[res->pos], "&", 1) == 0
+             || strncmp(&input[res->pos], "|", 1) == 0)
         res = gestion_and_or(res, &input[res->pos]);
-  //  else if (strncmp(&input[res->pos], "\"", 1) == 0)
- //       res = gestion_double_quote(res, &input[res->pos]);
-//    else if (fnmatch("*([0-9])[<>]?([<>|&])*", &input[res->pos], FNM_EXTMATCH) == 0)
-//        res = gestion_redir(res, &input[res->pos]);
+    //  else if (strncmp(&input[res->pos], "\"", 1) == 0)
+    //       res = gestion_double_quote(res, &input[res->pos]);
+    //    else if (fnmatch("*([0-9])[<>]?([<>|&])*", &input[res->pos],
+    //    FNM_EXTMATCH) == 0)
+    //        res = gestion_redir(res, &input[res->pos]);
     else
     {
         size_t j = 0;
         size_t k = res->pos;
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
-            value[j++] = input[k++];
+        {
+            if (input[k] == '\\')
+            {
+                value[j++] = input[k + 1];
+                k += 2;
+            }
+            else
+                value[j++] = input[k++];
+        }
         res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
         res->end = k;
@@ -317,30 +328,30 @@ struct token *lexer_pop(struct lexer *res)
     return tmp;
 }
 
-//int main(void)
+// int main(void)
 //{
-//    struct lexer *lexer = lexer_new("if echo; fi");
-//    //    printf("%d\n", lexer->current_tok->type);
-//    //    struct token *tok = lexer_peek(lexer);
-//    //    printf("%d\n", tok->type);
-//    struct token *tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    tok = lexer_pop(lexer);
-//    printf("%d\n", tok->type);
-//    //    printf("==================================\n");
-//    //    tok = lexer_pop(lexer);
-//    //    printf("%s\n", tok->value);
-//    //    tok = lexer_peek(lexer);
-//    //    printf("%s\n", tok->value);
-//    //    printf("====================================\n");
-//    //    printf("%s\n", lexer->current_tok->value);
-//    return 0;
-//}
+//     struct lexer *lexer = lexer_new("if echo; fi");
+//     //    printf("%d\n", lexer->current_tok->type);
+//     //    struct token *tok = lexer_peek(lexer);
+//     //    printf("%d\n", tok->type);
+//     struct token *tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type);
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type);
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type);
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type);
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type);
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type);
+//     //    printf("==================================\n");
+//     //    tok = lexer_pop(lexer);
+//     //    printf("%s\n", tok->value);
+//     //    tok = lexer_peek(lexer);
+//     //    printf("%s\n", tok->value);
+//     //    printf("====================================\n");
+//     //    printf("%s\n", lexer->current_tok->value);
+//     return 0;
+// }
