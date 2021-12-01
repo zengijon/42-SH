@@ -42,6 +42,7 @@ int main(int argc, char **argv)
     int opt;
     char *buffer;
     int pretty_print = 0;
+    int c = 0;
 
     while ((opt = getopt_long(argc, argv, optString, longOpts, &index))
            && opt != -1)
@@ -51,6 +52,7 @@ int main(int argc, char **argv)
         case 'c':
             buffer = hcalloc(sizeof(char), strlen(optarg) + 1);
             strcpy(buffer, optarg);
+            c = 1;
             break;
         case 'v':
             break;
@@ -74,10 +76,10 @@ int main(int argc, char **argv)
     //free_all();
     return res;
     if (argc <= optind)
+    if (!c && argc <= optind)
         errx(1, "missing argv"); // errx(1, "missing parameter"); //handel
                                  // reading stdin
-
-    buffer = file2buf(argv[optind]);
-    exec_42sh(buffer, pretty_print);
-    return 0;
+    if (!c)
+        buffer = file2buf(argv[optind]);
+    return exec_42sh(buffer, pretty_print);
 }
