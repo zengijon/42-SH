@@ -17,7 +17,8 @@ void print_list_next(struct list_next *l)
 
 void print_list(struct list *l)
 {
-    printf("(list) [ \n");
+    printf("\n============================ Print List "
+           "=========================\n(list) [ \n");
     if (l != NULL)
     {
         print_and_or(l->a_o);
@@ -25,7 +26,8 @@ void print_list(struct list *l)
         if (l->esp != 0)
             printf("(separator : & ) ");
     }
-    printf("\n]");
+    printf("\n]\n=============================================================="
+           "===\n");
 }
 void print_and_or_next(struct and_or_next *a_o_n)
 {
@@ -126,8 +128,8 @@ void print_shell_command(struct shell_command *sh_cmd)
             print_compound_list(sh_cmd->c_p);
         // else if (sh_cmd->r_f != NULL)
         // print_rule_for(sh_cmd->r_f);
-        // else if (sh_cmd->r_w != NULL)
-        // print_rule_while(sh_cmd->r_w);
+        else if (sh_cmd->r_w != NULL)
+            print_rule_while(sh_cmd->r_w);
         // else if (sh_cmd->r_u != NULL)
         // print_rule_until(sh_cmd->r_u);
         // else if (sh_cmd->r_c != NULL)
@@ -246,19 +248,19 @@ void print_compound_list(struct compound_list *c_l)
 //     printf("]");
 // }
 
-// void print_while(struct rule_while *r_w) // never used normal
-//{
-//     printf("(rule while) [");
-//     if (r_w != NULL)
-//     {
-//         printf("( while )");
-//         if (r_w->cp_list != NULL)
-//             print_compound_list(r_w->cp_list);
-//         if (r_w->do_gp != NULL)
-//             print_do_group(r_w->do_gp);
-//     }
-//     printf("]");
-// }
+void print_rule_while(struct rule_while *r_w) // never used normal
+{
+    printf(" (rule while) [ ");
+    if (r_w != NULL)
+    {
+        printf("\n( while ) ");
+        if (r_w->cp_list != NULL)
+            print_compound_list(r_w->cp_list);
+        if (r_w->do_gp != NULL)
+            print_do_group(r_w->do_gp);
+    }
+    printf(" ] ");
+}
 
 // void print_until(struct rule_until *r_u) // never used normal
 //{
@@ -332,18 +334,18 @@ void print_else_clause(struct else_clause *e_l)
     printf("]");
 }
 
-// void print_do_group(struct do_group *d_g)
-//{
-//     printf("(do group) [");
-//     if (d_g != NULL)
-//     {
-//         printf("( do )");
-//         if (d_g->cp_list != NULL)
-//             print_compound_list(d_g->cp_list);
-//         printf("( done )");
-//     }
-//     printf("]");
-// }
+void print_do_group(struct do_group *d_g)
+{
+    printf(" (do group) [ ");
+    if (d_g != NULL)
+    {
+        printf("\n( do ) ");
+        if (d_g->cp_list != NULL)
+            print_compound_list(d_g->cp_list);
+        printf("\n( done ) ");
+    }
+    printf(" ] ");
+}
 
 // void print_case_clause_bis(struct case_clause_bis *c)
 //{

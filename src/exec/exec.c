@@ -192,8 +192,9 @@ int exec_rule_for(struct rule_for *r_f)
 
 int exec_rule_while(struct rule_while *r_w)
 {
-    if (r_w)
-        return 0;
+    assert(r_w);
+    while ()
+
     return 0;
 }
 
