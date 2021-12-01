@@ -62,29 +62,16 @@ struct rule_for *build_rule_for(struct lexer *lex)
 struct rule_while *build_while(struct lexer *lex)
 {
     struct rule_while *res = hcalloc(1, sizeof(struct rule_while));
-    if (res == NULL)
-        errx(1, "Calloc failed");
 
-    if ( !/* lexer | seek | attendu : while*/)
+    if (lex->current_tok->type != TOKEN_WHILE)
         return NULL;
 
-    /* lexer | pop  */
-    if (/* lexer | seek | attendu : compound_list*/)
+    lexer_pop(lex);
+    if ((res->cp_list = build_compound_list(lex)) != NULL)
     {
-        res->cp_list = build_compound_list(lex); /* lexer | pop */
-
-        if (res->cp_list == NULL)
-            errx(1, "Failed build_compound_list");
-
-        if (/*lexer | seek | attendu : do_group */)
-        {
-            res->do_gp = build_do_group(lex); /* lexer | pop */
-
-            if (res->do_gp == NULL)
-                errx(1, "Failed build_go_group");
-
+        if ((res->do_gp = build-build_do_group(lex)) != NULL)
             return res;
-        }
+
         errx(1, "Missing do_group");
     }
     errx(1, "missing compound_list":);
@@ -226,21 +213,16 @@ struct else_clause *build_else_clause(struct lexer *lex)
 struct do_group *build_do_group(struct lexer *lex)
 {
     struct do_group *res = hcalloc(1, sizeof(struct do_group));
-    if (res == NULL)
-        errx(1, "Calloc failed");
 
-    if (!/*lexer |seek | attendu : do */)
+    if (lex->current_tok->type != TOKEN_DO)
         return NULL;
+    lexer_pop(lex);
 
-    if (/*lexer | seek | attendu : compound_list*/)
+    if ((res->cp_list = build_compound_list(lex)) != NULL)
     {
-        res->cp_list = build_compound_list(lex); // lexer | pop
-
-        if (res->cpo_list == NULL)
-            errx(1, "build_compound_list failed");
-
-        if (! /* lexer | seek | attendu : token Done*/)
+        if (lex->current_tok->type != TOKEN_DONE)
             errx(1, " Missing token done");
+        lexer_pop(lex);
         return res;
     }
     errx(1, "Missing compound_list after do for do_group");
