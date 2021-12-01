@@ -65,7 +65,7 @@ void print_pipeline_next(struct pipeline_next *p)
 {
     if (p != NULL)
     {
-        printf(" ( | ) "); // ??? checker la grammaire plus tard
+        printf(" \n\t( | )\n\t"); // ??? checker la grammaire plus tard
         // printf("( new line ) ");
         print_command(p->cmd);
         print_pipeline_next(p->next);
@@ -89,7 +89,7 @@ void print_command(struct command *c)
 {
     if (c != NULL)
     {
-        printf(" (command) [ ");
+        printf("(command) [ ");
         if (c->s_cmd != NULL)
             print_simple_command(c->s_cmd);
         else if (c->sh_cmd != NULL)

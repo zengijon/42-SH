@@ -5,6 +5,7 @@
 #include "../exec_builtins/exec_cmds.h"
 #include "../memory/hmalloc.h"
 #include "../parser/parser.h"
+#include "mypipe.h"
 #include "assert.h"
 #include "string.h"
 
@@ -55,28 +56,17 @@ int exec_and_or(struct and_or *a_o)
 int exec_pipeline_next(struct pipeline_next *p) // argmument possibly missing
 {
     if (p->next != NULL)
-    {
-        // pipe exec
-    }
-
-    int res = exec_command(p->cmd);
-    if (p->next == NULL)
-        return res;
+        return my_pipe(p->cmd, p->next);
     else
-        return exec_pipeline_next(p->next); // argmument possibly missing
+        return exec_command(p->cmd);
 }
 
 int exec_pipeline(struct pipeline *p)
 {
     if (p->next != NULL)
-    {
-        // pipe exec
-    }
-
-    int res = exec_command(p->cmd);
-    if (p->next != NULL)
-        res = exec_pipeline_next(p->next);     // argmument possibly missing
-    return p->negation == 1 ? ! res : res ;
+        return my_pipe(p->cmd, p->next);
+    else
+        return exec_command(p->cmd);
 }
 
 int exec_command(struct command *cmd)
@@ -107,11 +97,11 @@ int exec_simple_command(struct simple_command *cmd)
     if (cmd->size_elt < 1)
         return res;
     char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
-    for (int i = 1 ; i < cmd->size_elt; ++i)
+    for (int i = 1; i < cmd->size_elt; ++i)
     {
         list[i - 1] = cmd->list_elt[i]->word;
     }
-    //printf("%s\n", cmd->list_elt[0]->word);
+    // printf("%s\n", cmd->list_elt[0]->word);
     return exec_cmds(cmd->list_elt[0]->word, cmd->size_elt - 1, list);
 }
 
@@ -193,7 +183,10 @@ int exec_rule_for(struct rule_for *r_f)
 int exec_rule_while(struct rule_while *r_w)
 {
     assert(r_w);
-    return 0;
+    int res = 0;
+    while (exec_compound_list(r_w->cp_list) == 0)
+        res = exec_do_group(r_w->do_gp);
+    return res;
 }
 
 int exec_rule_until(struct rule_until *r_u)
@@ -230,9 +223,8 @@ int exec_else_clause(struct else_clause *e_c)
 
 int exec_do_group(struct do_group *do_gp)
 {
-    if (do_gp)
-        return 0;
-    return 0;
+    assert(do_gp);
+    return exec_compound_list(do_gp->cp_list);
 }
 
 int exe_case_clause(struct case_clause *c_c)
