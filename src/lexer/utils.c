@@ -63,7 +63,8 @@ int is_separator(const char *input, struct separator *separator)
 {
     for (size_t i = 0; i < separator->nb_separator; ++i)
     {
-        if(strncmp(input, separator->separators[i], strlen(separator->separators[i])) == 0)
+        if(strncmp(input, separator->separators[i], strlen(separator->separators[i])) == 0
+            || input[0] == separator->separators[i][0])
             return 0;
     }
     return 1;
