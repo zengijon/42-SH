@@ -197,3 +197,22 @@ Test(while_1, exit_code, .init = redirect_all_stdout)
     cr_assert_eq(lexer_pop(test)->type, TOKEN_EOF);
     free(test);
 }
+Test(plz, exit_code, .init = redirect_all_stdout)
+{
+    const char *input = strdup("if echo fi; then echo then; fi; echo test");
+    struct lexer *test = lexer_new(input);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_IF);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WORDS);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WORDS);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_PTCOMA);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_THEN);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WORDS);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WORDS);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_PTCOMA);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_FI);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_PTCOMA);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WORDS);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_WORDS);
+    cr_assert_eq(lexer_pop(test)->type, TOKEN_EOF);
+    free(test);
+}

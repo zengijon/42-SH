@@ -11,7 +11,7 @@
 #include "../memory/hmalloc.h"
 #include "utils.h"
 
-// struct free_list *list_malloc = NULL;
+//struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
@@ -19,6 +19,7 @@ struct lexer *lexer_new(const char *input)
     res->input = input;
     res->pos = skipspace(input);
     res->current_tok = hcalloc(1, sizeof(struct token));
+    struct separator *separator = build_separator_list();
     if (input[res->pos] == '\0')
         res->current_tok->type = TOKEN_EOF;
     if (is_token(&input[res->pos], "if ", 3) == 0)
@@ -41,7 +42,8 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_ELSE;
         res->end = res->pos + 4;
     }
-    else if (is_token(&input[res->pos], "fi ", 3) == 0)
+    else if (is_token(&input[res->pos], "fi", 2) == 0
+             && is_separator(input + res->pos + 2, separator) == 0)
     {
         res->current_tok->type = TOKEN_FI;
         res->end = res->pos + 2;
@@ -93,7 +95,6 @@ struct lexer *lexer_new(const char *input)
     }
     else
     {
-        struct separator *separator = build_separator_list();
         size_t j = 0;
         size_t k = res->pos;
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
@@ -216,7 +217,8 @@ struct token *lexer_pop(struct lexer *res)
         }
         res->end = res->pos + 4;
     }
-    else if (is_token(&input[res->pos], "fi ", 3) == 0)
+    else if (is_token(&input[res->pos], "fi", 2) == 0
+             && is_separator(input + res->pos + 2, separator) == 0)
     {
         res->current_tok->type = TOKEN_FI;
         if (tmp->type == TOKEN_WORDS)
@@ -330,22 +332,32 @@ struct token *lexer_pop(struct lexer *res)
 
 // int main(void)
 //{
-//     struct lexer *lexer = lexer_new("if echo; fi");
+//     struct lexer *lexer = lexer_new("if echo fi; then echo then; fi; echo test");
 //     //    printf("%d\n", lexer->current_tok->type);
 //     //    struct token *tok = lexer_peek(lexer);
 //     //    printf("%d\n", tok->type);
 //     struct token *tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type);
+//     printf("%d\n", tok->type); //0
 //     tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type);
+//     printf("%d\n", tok->type); //12
 //     tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type);
+//     printf("%d\n", tok->type); //12
 //     tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type);
+//     printf("%d\n", tok->type); //9
 //     tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type);
+//     printf("%d\n", tok->type); //1
 //     tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type);
+//     printf("%d\n", tok->type); //12
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //12
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //9
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //4 HERE
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //9
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //12
 //     //    printf("==================================\n");
 //     //    tok = lexer_pop(lexer);
 //     //    printf("%s\n", tok->value);
