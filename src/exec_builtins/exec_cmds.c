@@ -10,12 +10,12 @@ char *all_cmd[] = { "ls", "pwd", "exit" };
 
 int exec_builtins(char *cmd, int nb_params, char **parameters)
 {
-    char *buffer = hmalloc(strlen(cmd) + 1);
+    char *buffer = hcalloc(strlen(cmd) + 2, sizeof(char));
     strcat(buffer, cmd);
     strcat(buffer, " ");
     for (int j = 0; j < nb_params; ++j)
     {
-        buffer = hrealloc(buffer, strlen(parameters[j]) + strlen(buffer) + 1);
+        buffer = hrealloc(buffer, strlen(parameters[j]) + strlen(buffer) + 2);
         strcat(buffer, parameters[j]);
         strcat(buffer, " ");
     }
@@ -46,9 +46,11 @@ int exec_builtins(char *cmd, int nb_params, char **parameters)
 int exec_cmds(char *cmd, int nb_params, char **parameters)
 {
     int nb_cmd = 3;
+    if (strlen(cmd) == 0)
+        return 127;
     for (int i = 0; i < nb_cmd; ++i)
     {
-        char *buffer = hmalloc(strlen(cmd) + 1);
+        char *buffer = hcalloc(strlen(cmd) + 2, sizeof(char));
         strcat(buffer, cmd);
         strcat(buffer, " ");
         if (strcmp(cmd, all_cmd[i]) == 0)
@@ -56,7 +58,7 @@ int exec_cmds(char *cmd, int nb_params, char **parameters)
             for (int j = 0; j < nb_params; ++j)
             {
                 buffer = hrealloc(buffer,
-                                  strlen(parameters[j]) + strlen(buffer) + 1);
+                                  strlen(parameters[j]) + strlen(buffer) + 2);
                 strcat(buffer, parameters[j]);
                 strcat(buffer, " ");
             }

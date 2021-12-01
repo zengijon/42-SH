@@ -95,7 +95,7 @@ struct lexer *lexer_new(const char *input)
         struct separator *separator = build_separator_list();
         size_t j = 0;
         size_t k = res->pos;
-        char *value = hmalloc(sizeof(char) * strlen(input));
+        char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
             value[j++] = input[k++];
         res->current_tok->type = TOKEN_WORDS;
@@ -307,7 +307,7 @@ struct token *lexer_pop(struct lexer *res)
     {
         size_t j = 0;
         size_t k = res->pos;
-        char *value = hmalloc(sizeof(char) * strlen(input));
+        char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
             value[j++] = input[k++];
         res->current_tok->type = TOKEN_WORDS;

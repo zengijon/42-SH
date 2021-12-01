@@ -47,7 +47,7 @@ int my_echo(char *cmd)
     char *token = strtok(cmd, separators);
     if (strcmp(token, "echo") != 0)
     {
-        write(2,"not an echo command",35);
+        write(2,"not an echo command",20);
         return 127;
     }
     token = strtok(NULL, separators);

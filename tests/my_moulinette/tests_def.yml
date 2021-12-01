@@ -1,0 +1,47 @@
+# ECHO 
+
+  #BASIC TESTS
+
+- category: ECHO BASIC TESTS
+  name: simple echo
+  input: echo lol
+
+- category: ECHO BASIC TESTS  
+  name: echo with quotes
+  input: echo "lol"
+
+- category: ECHO BASIC TESTS  
+  name: echo with backslash
+  input: echo ./\*
+
+- category: ECHO BASIC TESTS  
+  name: echo -> IF FI
+  input: echo if fi
+
+- category: ECHO BASIC TESTS  
+  name: echo -> LS
+  input: echo ls
+
+- category: ECHO BASIC TESTS  
+  name: echo big spaces
+  input: echo l        o l
+
+
+
+    # MEDIUM TESTS
+
+- category: ECHO MEDIUM TESTS  
+  name: echo -n 
+  input: echo -n lol
+
+- category: ECHO MEDIUM TESTS  
+  name: ECHO SCRIPT
+  input: ./echo_test.sh
+
+
+#LS TESTS
+
+- category: LS TESTS
+  name: simple ls
+  input: ls
+
