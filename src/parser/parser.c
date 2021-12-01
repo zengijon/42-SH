@@ -225,21 +225,21 @@ struct shell_command *build_shell_command(struct lexer *lex)
 //     return NULL;
 // }
 
-/*struct redirection *build_redirection(struct lexer *lex)
-{
-    struct redirection *res = hcalloc(1, sizeof(struct funcdec));
-    if (lex->current_tok->type == io_nb)
-        res->IONUMBER = lexer_pop(lex) - '0';
-    else
-        res->IONUMBER = -1;
-    if (lex->current_tok->type != )
-        return NULL;
-    res->re_op = 0; // lexer | pop
-    if ( lexer | pop | reçu != word)
-        errx (1, "missing file name to redirect to");
-    res->next = build_redirection();
-    return res;
-}*/
+//struct redirection *build_redirection(struct lexer *lex)
+//{
+//    struct redirection *res = hcalloc(1, sizeof(struct funcdec));
+//    if (lex->current_tok->type == io_nb)
+//        res->IONUMBER = lexer_pop(lex) - '0';
+//    else
+//        res->IONUMBER = -1;
+//    if (lex->current_tok->type != )
+//        return NULL;
+//    res->re_op = 0; // lexer | pop
+//    if ( lexer | pop | reçu != word)
+//        errx (1, "missing file name to redirect to");
+//    res->next = build_redirection();
+//    return res;
+//}
 
 struct prefix *build_prefix(struct lexer *lex)
 {
