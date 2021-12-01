@@ -59,55 +59,6 @@ struct rule_for *build_rule_for(struct lexer *lex)
     errx(1, "do not got ; or word_list");
 }
 
-struct rule_while *build_while(struct lexer *lex)
-{
-    struct rule_while *res = hcalloc(1, sizeof(struct rule_while));
-
-    if (lex->current_tok->type != TOKEN_WHILE)
-        return NULL;
-
-    lexer_pop(lex);
-    if ((res->cp_list = build_compound_list(lex)) != NULL)
-    {
-        if ((res->do_gp = build-build_do_group(lex)) != NULL)
-            return res;
-
-        errx(1, "Missing do_group");
-    }
-    errx(1, "missing compound_list":);
-}
-
-struct rule_until *build_until(struct lexer *lex)
-{
-    struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
-
-    if (res == NULL)
-        errx(1, "Calloc failed");
-
-    if (!/* lexer | seek | attendu : until*/)
-        return NULL;
-
-    /* lexer | pop */
-    if (/* lexer | seek | attendu : compound_list*/)
-    {
-        res->cp_list = build_compound_list(lex); /* lexer | pop */
-        if (res->cp_list == NULL)
-            errx(1, "build_compound_list failed");
-
-        if (/* lexer | seek | attendu : do-group*/)
-        {
-            res->do_gp = build_do_group(lex); /* lexer | pop */
-
-            if (res->do_gp == NULL)
-                errx(1, "Build_do_group failed");
-
-            return res;
-        }
-        errx(1, "missing do_group in until");
-    }
-    errx(1, "compound_l;ist missing");
-}
-
 struct rule_case *build_case(struct lexer *lex)
 {
     struct rule_case 8res = hcalloc(1, sizeof(struct rule_case));
@@ -149,83 +100,6 @@ struct rule_case *build_case(struct lexer *lex)
         return res;
     }
     errx(1, "Missing word after case");
-}
-
-struct rule_if *build_rule_if(struct lexer *lex)
-{
-    struct rule_if *res = hcalloc(1, sizeof(struct rule_if));
-
-    if (/* lexer | seek | attendu != if*/)
-        return NULL;
-    // lexer | pop
-
-    res->cp_list = build_compound_list(lex);
-
-    if (res->cp_list == NULL)
-        errx(1, "Missing compound_list in if");
-
-    if (/*lexer |seek | reçu != then */)
-        errx(1, "then token is missing");
-    // lexer | pop
-
-    if ((res->cp_list2 = build_compound_list(lex) == NULL))
-        errx(1, "missing compound_list in if");
-
-    res->else_cl = build_else_clause(lex);
-
-    if (/* lexer | seek | if != token fi*/)
-        errx(1, "missing fi");
-    // lexer | pop
-    return res;
-}
-
-struct else_clause *build_else_clause(struct lexer *lex)
-{
-    struct else_clause *res = hcalloc(1, sizeof(union else_clause));
-
-    if (/* lexer |seek |attendu : else */)
-    {
-        if ((res->cp_list = build_compound_list(lex) != NULL))
-            return res;
-        errx(1, "Missing compound_list");
-    }
-    if (/*lexer |seek | attendu : elif*/)
-    {
-        res->elif.cp_list2 = build_compound_list(lex);
-
-        if (res->elif.cp_list2 == NULL)
-            errx(1, "Missing compound_list in if");
-
-        if (/*lexer |seek | reçu != then */)
-            errx(1, "then token is missing");
-        // lexer | pop
-
-        if ((res->elif.cp_list2bis = build_compound_list(lex) == NULL))
-            errx(1, "missing compound_list in if");
-
-        res->elif.next = build_else_clause(lex);
-
-        return res;
-    }
-    return NULL;
-}
-
-struct do_group *build_do_group(struct lexer *lex)
-{
-    struct do_group *res = hcalloc(1, sizeof(struct do_group));
-
-    if (lex->current_tok->type != TOKEN_DO)
-        return NULL;
-    lexer_pop(lex);
-
-    if ((res->cp_list = build_compound_list(lex)) != NULL)
-    {
-        if (lex->current_tok->type != TOKEN_DONE)
-            errx(1, " Missing token done");
-        lexer_pop(lex);
-        return res;
-    }
-    errx(1, "Missing compound_list after do for do_group");
 }
 
 static struct case_clause_bis *build_case_clause_bis(struct lexer *lex)
@@ -302,24 +176,24 @@ static char **word_list_pipe(struct lexer *lex)
 struct case_item *build_case_item(struct lexer *lex)
 {
     struct case_item *res = hcalloc(1, sizeof(struct case_item));
-    if (res == NULL)
-        errx(1, "calloc failed");
 
     int is_smth = 0;
-    if (/*lexer | seek | attendu : (*/)
+    if (lex->current_tok->type == "(")
     {
         is_smth = 1;
         res->is_open_bracket = 1;
     }
 
-    if (/*lexer |seek | attendu : word*/)
+    if (lex->current_tok->type == TOKEN_WORDS)
     {
-        res->word = strdup(" "); // lexer | pop
+        res->word = lexer_pop(lex);
 
-        res->word_list = word_list_pipe(lex);
+        while (lex->current_tok->type == "|")
+        {
+            lexer_pop(lex);
 
-        if (res->word_list == NULL)
-            errx(1, "word_list_pipe failed");
+        }
+
 
         while (/*lexer |seek | attendu : \n*/)
             ; // lexer | pop

@@ -1,16 +1,16 @@
 //
 // Created by jennie on 24/11/2021.
 //
+#include "mypipe.h"
+
 #include <err.h>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-
-///
 #include <stdio.h>
 
-int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
+int my_pipe(struct command *cmd, struct pipeline_next *next) /// mis des const
 {
     pid_t child_pid;
     pid_t child_pid2;
@@ -25,17 +25,15 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
 
     if (child_pid == 0)
     {
-        dup2(pipefd[1], STDOUT_FILENO); // sens ?
+        dup2(pipefd[1], STDOUT_FILENO);
 
         close(pipefd[1]); // Close write pipe du child
         close(pipefd[0]); // Close read pipe du child
 
         /// execute la commande de left_side
-        if (execvp(argv_left[0], (char * const*) argv_left) == -1)
-            errx(1, "execvp failed");
+        exec_command(cmd);
+        exit(0);
         ///
-
-        exit(EXIT_SUCCESS);
     }
     else
     {
@@ -57,11 +55,9 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
             close(pipefd[1]);
 
             /// execute la commande de right_side
-            if(execvp(argv_right[0], (char * const*) argv_right) == -1)
-                errx(1, "execvp 2 failed");
+            exec_pipeline_next(next);
+            exit(0);
             ///
-
-            exit(EXIT_SUCCESS);
         }
         else
         {
@@ -72,16 +68,17 @@ int exec_pipe(const char **argv_left, const char **argv_right) /// mis des const
             if (val2 == -1)
                 errx(1, "Waitpid 2 failed");
 
-            close(pipefd[0]); // Re close ?
-            exit(EXIT_SUCCESS);
+            close(pipefd[0]);
         }
     }
-}
-
-int main(void)
-{
-    const char *argv_left[3] = {"echo", "Hallo", NULL};
-    const char *argv_right[4] = {"tr", "a", "d", NULL};
-    printf("%d\n", exec_pipe(argv_left, argv_right));
     return 0;
 }
+
+//
+//int main(void)
+//{
+//    const char *argv_left[3] = {"echo", "Hallo", NULL};
+//    const char *argv_right[4] = {"tr", "a", "d", NULL};
+//    printf("%d\n", exec_pipe(argv_left, argv_right));
+//    return 0;
+//}

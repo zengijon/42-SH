@@ -6,7 +6,7 @@
 #include "echo.h"
 #include "microshell.h"
 
-char *all_cmd[] = { "ls", "pwd", "exit" };
+char *all_cmd[] = { "ls", "pwd", "exit" , "cat"};
 
 int exec_builtins(char *cmd, int nb_params, char **parameters)
 {
@@ -45,7 +45,7 @@ int exec_builtins(char *cmd, int nb_params, char **parameters)
 
 int exec_cmds(char *cmd, int nb_params, char **parameters)
 {
-    int nb_cmd = 3;
+    int nb_cmd = 4;
     for (int i = 0; i < nb_cmd; ++i)
     {
         char *buffer = hmalloc(strlen(cmd) + 1);

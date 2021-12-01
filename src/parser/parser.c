@@ -18,8 +18,10 @@ struct list_next *build_list_next(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
+    if (lex->current_tok->type == TOKEN_NEWLINE)
+        ;
     else
-        return res;
+        errx(1, "missing separator after list");
     lexer_pop(lex);
 
     res->next = build_list_next(lex);
@@ -39,8 +41,10 @@ struct list *build_list(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
+    if (lex->current_tok->type == TOKEN_NEWLINE)
+        ;
     else
-        return res;
+        errx(1, "missing separator after list");
     lexer_pop(lex);
     res->next = build_list_next(lex);
     return res;
@@ -338,6 +342,25 @@ struct rule_while *build_rule_while(struct lexer *lex)
     }
     errx(1, "missing compound_list");
 }
+
+//struct rule_until *build_rule_until(struct lexer *lex)
+//{
+//    struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
+//
+//    //if (lex->current_tok->type != TOKEN_UNTIL)
+//        return NULL;
+//
+//    lexer_pop(lex);
+//    if ((res->cp_list = build_compound_list(lex)) != NULL)
+//    {
+//        if ((res->do_gp = build_do_group(lex)) != NULL)
+//            return res;
+//
+//        errx(1, "Missing do_group");
+//    }
+//    errx(1, "missing compound_list");
+//}
+
 
 struct rule_if *build_rule_if(struct lexer *lex)
 {
