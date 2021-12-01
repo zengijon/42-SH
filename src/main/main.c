@@ -2,15 +2,29 @@
 #include <getopt.h>
 #include <stddef.h>
 #include <string.h>
-#include "stdio.h"
 
 #include "../exec/exec.h"
 #include "../memory/hmalloc.h"
 #include "../parser/parser.h"
 #include "../test/test_parser/print_parser.h"
 #include "../utils/file2buf.h"
+#include "stdio.h"
 
 struct free_list *list_malloc = NULL;
+
+int exec_42sh(char *buffer, int pretty_print)
+{
+    int res = 0;
+    struct list *list;
+    struct lexer *lex = lexer_new(buffer);
+    while ((list = build_list(lex)) != NULL)
+    {
+        if (pretty_print == 1)
+            print_list(list);
+        res = exec_list(list);
+    }
+    return res;
+}
 
 int main(int argc, char **argv)
 {
@@ -24,6 +38,8 @@ int main(int argc, char **argv)
     int index;
     int opt;
     char *buffer;
+    int pretty_print = 0;
+
     while ((opt = getopt_long(argc, argv, optString, longOpts, &index))
            && opt != -1)
     {
@@ -36,19 +52,17 @@ int main(int argc, char **argv)
         case 'v':
             break;
         case 'p':
+            pretty_print = 1;
             break;
         default:
             errx(1, "bad option");
         }
     }
+    if (argc < 2)
+        errx(1, "missing argv"); // errx(1, "missing parameter"); //handel
+                                 // reading stdin
     if (optind == 1)
         buffer = file2buf(argv[1]);
-    struct list *list;
-    struct lexer *lex = lexer_new(buffer);
-    while ((list = build_list(lex)) != NULL)
-    {
-        //print_list(list);
-        exec_list(list);
-    }
+    exec_42sh(buffer, pretty_print);
     return 0;
 }

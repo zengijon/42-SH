@@ -17,7 +17,7 @@ void print_list_next(struct list_next *l)
 
 void print_list(struct list *l)
 {
-    printf("(list) [ \n");
+    printf("\n============================ Print List =========================\n(list) [ \n");
     if (l != NULL)
     {
         print_and_or(l->a_o);
@@ -25,7 +25,7 @@ void print_list(struct list *l)
         if (l->esp != 0)
             printf("(separator : & ) ");
     }
-    printf("\n]");
+    printf("\n]\n=================================================================\n");
 }
 void print_and_or_next(struct and_or_next *a_o_n)
 {
