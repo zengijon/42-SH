@@ -59,11 +59,11 @@ int main(int argc, char **argv)
             errx(1, "bad option");
         }
     }
-    if (argc < 2)
+    if (argc <= optind)
         errx(1, "missing argv"); // errx(1, "missing parameter"); //handel
                                  // reading stdin
-    if (optind == 1)
-        buffer = file2buf(argv[1]);
+
+    buffer = file2buf(argv[optind]);
     exec_42sh(buffer, pretty_print);
     return 0;
 }
