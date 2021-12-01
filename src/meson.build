@@ -1,4 +1,3 @@
-subdir('buItlin')
 subdir('exec')
 subdir('exec_builtins')
 subdir('lexer')

@@ -21,5 +21,6 @@ char *file2buf(char *filename)
         buffer = hrealloc(buffer, le + len);
     }
     buffer[le] = '\0';
+    fclose(fd);
     return buffer;
 }

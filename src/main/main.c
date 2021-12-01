@@ -14,7 +14,9 @@ struct free_list *list_malloc = NULL;
 
 int main(int argc, char **argv)
 {
-    static const struct option longOpts[] = {
+  if(argc == 1)
+    return 0;
+  static const struct option longOpts[] = {
         { "pretty_print", no_argument, NULL, 'p' },
         { "cmd", required_argument, NULL, 'c' },
         { "verbose", no_argument, NULL, 'v' },
@@ -30,7 +32,7 @@ int main(int argc, char **argv)
         switch (opt)
         {
         case 'c':
-            buffer = hmalloc(sizeof(char) * strlen(optarg));
+            buffer = hcalloc(sizeof(char), strlen(optarg) + 1);
             strcpy(buffer, optarg);
             break;
         case 'v':
@@ -45,10 +47,12 @@ int main(int argc, char **argv)
         buffer = file2buf(argv[1]);
     struct list *list;
     struct lexer *lex = lexer_new(buffer);
+    int res = 0;
     while ((list = build_list(lex)) != NULL)
     {
         //print_list(list);
-        exec_list(list);
+       res = exec_list(list);
     }
-    return 0;
+    //free_all();
+    return res;
 }
