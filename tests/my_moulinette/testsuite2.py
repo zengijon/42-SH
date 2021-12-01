@@ -23,6 +23,8 @@ def my_diff(expected: str, actual: str):
 def running(shell: str, stdin: str) -> sp.CompletedProcess:
     return sp.run([shell], input=stdin, capture_output=True, text=True)
 
+def running_process(shell: str, stdin: str) -> sp.CompletedProcess:
+    return sp.run([shell, "-c",stdin], capture_output=True, text=True)
 
 def check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess):
     assert expected.stdout == actual.stdout, \
@@ -57,10 +59,12 @@ if __name__ == "__main__":
 
         process_dash = running("dash", our_input)
 
-        input_42sh = "-c \""
-        input_42sh += our_input + "\""
+        #input_42sh = "-c "
+        #input_42sh = "\"" + our_input + "\""
+        print(our_input)
+        #res = str(path_42sh) + " " + input_42sh
 
-        process_42sh = running(path_42sh, input_42sh)
+        process_42sh = running_process(path_42sh, our_input)
 
         try:
             check_output(process_dash, process_42sh)
