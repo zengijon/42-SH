@@ -34,7 +34,7 @@ struct compound_list *build_compound_list(struct lexer *lex);
 
 struct rule_for *build_rule_for(struct lexer *lex); // for later
 
-struct rule_while *build_rule_while(struct lexer *lex); // for later
+struct rule_while *build_rule_while(struct lexer *lex);
 
 struct rule_until *build_rule_until(struct lexer *lex); // for later
 

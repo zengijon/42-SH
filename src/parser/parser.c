@@ -100,8 +100,8 @@ struct pipeline_next *build_pipeline_next(struct lexer *lex)
 struct pipeline *build_pipeline(struct lexer *lex)
 {
     struct pipeline *res = hcalloc(1, sizeof(struct pipeline));
-//     if (lex->current_tok->type == T)
-//     res->negation = 1;
+    //     if (lex->current_tok->type == T)
+    //     res->negation = 1;
 
     if ((res->cmd = build_command(lex)) == NULL)
     {
@@ -186,14 +186,13 @@ struct shell_command *build_shell_command(struct lexer *lex)
     //
     //    if ((res->r_f = build_rule_for(lex)) != NULL)
     //        ;
-    //    else if ((res->r_w = build_rule_while(lex)) != NULL)
-    //        ;
+    if ((res->r_w = build_rule_while(lex)) != NULL)
+        ;
     //    else if ((res->r_u = build_rule_until(lex)) != NULL)
     //        ;
     //    else if ((res->r_c = build_rule_case(lex)) != NULL)
     //        ;
-    //    else
-    if ((res->r_i = build_rule_if(lex)) != NULL)
+    else if ((res->r_i = build_rule_if(lex)) != NULL)
         ;
     else
         return NULL;
@@ -225,21 +224,21 @@ struct shell_command *build_shell_command(struct lexer *lex)
 //     return NULL;
 // }
 
-//struct redirection *build_redirection(struct lexer *lex)
+// struct redirection *build_redirection(struct lexer *lex)
 //{
-//    struct redirection *res = hcalloc(1, sizeof(struct funcdec));
-//    if (lex->current_tok->type == io_nb)
-//        res->IONUMBER = lexer_pop(lex) - '0';
-//    else
-//        res->IONUMBER = -1;
-//    if (lex->current_tok->type != )
-//        return NULL;
-//    res->re_op = 0; // lexer | pop
-//    if ( lexer | pop | reçu != word)
-//        errx (1, "missing file name to redirect to");
-//    res->next = build_redirection();
-//    return res;
-//}
+//     struct redirection *res = hcalloc(1, sizeof(struct funcdec));
+//     if (lex->current_tok->type == io_nb)
+//         res->IONUMBER = lexer_pop(lex) - '0';
+//     else
+//         res->IONUMBER = -1;
+//     if (lex->current_tok->type != )
+//         return NULL;
+//     res->re_op = 0; // lexer | pop
+//     if ( lexer | pop | reçu != word)
+//         errx (1, "missing file name to redirect to");
+//     res->next = build_redirection();
+//     return res;
+// }
 
 struct prefix *build_prefix(struct lexer *lex)
 {
@@ -322,6 +321,24 @@ struct compound_list *build_compound_list(struct lexer *lex)
     return NULL;
 }
 
+struct rule_while *build_rule_while(struct lexer *lex)
+{
+    struct rule_while *res = hcalloc(1, sizeof(struct rule_while));
+
+    if (lex->current_tok->type != TOKEN_WHILE)
+        return NULL;
+
+    lexer_pop(lex);
+    if ((res->cp_list = build_compound_list(lex)) != NULL)
+    {
+        if ((res->do_gp = build_do_group(lex)) != NULL)
+            return res;
+
+        errx(1, "Missing do_group");
+    }
+    errx(1, "missing compound_list");
+}
+
 struct rule_if *build_rule_if(struct lexer *lex)
 {
     struct rule_if *res = hcalloc(1, sizeof(struct rule_if));
@@ -378,4 +395,22 @@ struct else_clause *build_else_clause(struct lexer *lex)
         return res;
     }
     return NULL;
+}
+
+struct do_group *build_do_group(struct lexer *lex)
+{
+    struct do_group *res = hcalloc(1, sizeof(struct do_group));
+
+    if (lex->current_tok->type != TOKEN_DO)
+        return NULL;
+    lexer_pop(lex);
+
+    if ((res->cp_list = build_compound_list(lex)) != NULL)
+    {
+        if (lex->current_tok->type != TOKEN_DONE)
+            errx(1, " Missing token done");
+        lexer_pop(lex);
+        return res;
+    }
+    errx(1, "Missing compound_list after do for do_group");
 }
