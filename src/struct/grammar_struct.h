@@ -147,6 +147,7 @@ struct rule_for
     ///*******   can be remplace by ';' semi col
     // any \n we want
     // in token
+    int wl_s;
     char **word_list; // possibly NULL
     // / rajouter une size_word_list
     // not '&'
