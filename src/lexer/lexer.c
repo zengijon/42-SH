@@ -79,7 +79,23 @@ struct lexer *lexer_new(const char *input)
         size_t k = res->pos;
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
+        {
+            if (input[k] == '\'')
+            {
+                value[j++] = input[k++];
+                while(input[k] != '\0' && input[k] != '\'')
+                {
+                    value[j++] = input[k++];
+                }
+                if (input[k] == '\0')
+                {
+                    res->current_tok->type = TOKEN_ERROR;
+                    return res;
+                }
+            }
             value[j++] = input[k++];
+
+        }
         res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
         res->end = k;
@@ -262,50 +278,50 @@ struct token *lexer_pop(struct lexer *res)
     else if (strncmp(&input[res->pos], "'", 1) == 0)
     {
         res = gestion_quote(res, &input[res->pos]);
-        if (strncmp(&input[res->pos], "&", 1) == 0
-            || strncmp(&input[res->pos], "|", 1) == 0)
-            res = gestion_and_or(res, &input[res->pos]);
-        //  else if (strncmp(&input[res->pos], "\"", 1) == 0)
-        //       res = gestion_double_quote(res, &input[res->pos]);
-        //    else if (fnmatch("*([0-9])[<>]?([<>|&])*", &input[res->pos],
-        //    FNM_EXTMATCH) == 0)
-        //        res = gestion_redir(res, &input[res->pos]);
-        else
-        {
-            size_t j = 0;
-            size_t k = res->pos;
-            char *value = hcalloc(strlen(input) + 1, sizeof(char));
-            while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
-            {
-                if (input[k] == '\'')
-                {
-                    value[j++] = input[k++];
-                    while (input[k] != '\0' && input[k] != '\'')
-                    {
-                        value[j++] = input[k++];
-                    }
-                    if (input[k] == '\0')
-                    {
-                        res->current_tok->type = TOKEN_ERROR;
-                        return tmp;
-                    }
-                }
-                if (input[k] == '\\')
-                {
-                    value[j++] = input[k + 1];
-                    k += 2;
-                }
-                else
-                    value[j++] = input[k++];
-            }
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = value;
-            res->end = k;
-        }
-        return tmp;
     }
-    return ;
+    else if (strncmp(&input[res->pos], "&", 1) == 0
+             || strncmp(&input[res->pos], "|", 1) == 0)
+        res = gestion_and_or(res, &input[res->pos]);
+    //  else if (strncmp(&input[res->pos], "\"", 1) == 0)
+    //       res = gestion_double_quote(res, &input[res->pos]);
+    //    else if (fnmatch("*([0-9])[<>]?([<>|&])*", &input[res->pos],
+    //    FNM_EXTMATCH) == 0)
+    //        res = gestion_redir(res, &input[res->pos]);
+    else
+    {
+        size_t j = 0;
+        size_t k = res->pos;
+        char *value = hcalloc(strlen(input) + 1, sizeof(char));
+        while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
+        {
+            if (input[k] == '\'')
+            {
+                value[j++] = input[k++];
+                while(input[k] != '\0' && input[k] != '\'')
+                {
+                    value[j++] = input[k++];
+                }
+                if (input[k] == '\0')
+                {
+                    res->current_tok->type = TOKEN_ERROR;
+                    return tmp;
+                }
+            }
+            if (input[k] == '\\')
+            {
+                value[j++] = input[k + 1];
+                k += 2;
+            }
+            else
+                value[j++] = input[k++];
+        }
+        res->current_tok->type = TOKEN_WORDS;
+        res->current_tok->value = value;
+        res->end = k;
+    }
+    return tmp;
 }
+
 // int main(void)
 //{
 //     struct lexer *lexer = lexer_new("echo ff'te   st'");
