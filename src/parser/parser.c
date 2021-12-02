@@ -108,7 +108,7 @@ struct pipeline *build_pipeline(struct lexer *lex)
     struct pipeline *res = hcalloc(1, sizeof(struct pipeline));
     if (lex->current_tok->type == TOKEN_NEG)
          res->negation = 1;
-
+    lexer_pop(lex);
     if ((res->cmd = build_command(lex)) == NULL)
     {
         if (res->negation == 0)

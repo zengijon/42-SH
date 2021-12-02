@@ -65,10 +65,17 @@ int exec_pipeline_next(struct pipeline_next *p,
 
 int exec_pipeline(struct pipeline *p, struct exec_struct *ex_l)
 {
+    int res;
     if (p->next != NULL)
-        return my_pipe(p->cmd, p->next, ex_l);
+    {
+        res = my_pipe(p->cmd, p->next, ex_l);
+        return p->negation == 0 ? res : ! res;
+    }
     else
-        return exec_command(p->cmd, ex_l);
+    {
+        res = exec_command(p->cmd, ex_l);
+        return p->negation == 0 ? res : ! res;
+    }
 }
 
 int exec_command(struct command *cmd, struct exec_struct *ex_l)
