@@ -1,3 +1,5 @@
+//#define _GNU_SOURCE
+
 #include "lexer.h"
 
 #include <err.h>
@@ -10,6 +12,8 @@
 #include "../memory/free_list.h"
 #include "../memory/hmalloc.h"
 #include "utils.h"
+
+
 
 //struct free_list *list_malloc = NULL;
 
@@ -92,6 +96,10 @@ struct lexer *lexer_new(const char *input)
              || strncmp(&input[res->pos], "|", 1) == 0)
     {
         res = gestion_and_or(res, &input[res->pos]);
+    }
+    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH) == 0)
+    {
+        gestion_redir(res, input + res->pos);
     }
     else
     {
@@ -303,11 +311,10 @@ struct token *lexer_pop(struct lexer *res)
     else if (strncmp(&input[res->pos], "&", 1) == 0
              || strncmp(&input[res->pos], "|", 1) == 0)
         res = gestion_and_or(res, &input[res->pos]);
-    //  else if (strncmp(&input[res->pos], "\"", 1) == 0)
-    //       res = gestion_double_quote(res, &input[res->pos]);
-    //    else if (fnmatch("*([0-9])[<>]?([<>|&])*", &input[res->pos],
-    //    FNM_EXTMATCH) == 0)
-    //        res = gestion_redir(res, &input[res->pos]);
+    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH) == 0)
+    {
+        gestion_redir(res, input + res->pos);
+    }
     else
     {
         size_t j = 0;
@@ -332,7 +339,7 @@ struct token *lexer_pop(struct lexer *res)
 
 // int main(void)
 //{
-//     struct lexer *lexer = lexer_new("if echo fi; then echo then; fi; echo test");
+//     struct lexer *lexer = lexer_new("if <> >> >k");
 //     //    printf("%d\n", lexer->current_tok->type);
 //     //    struct token *tok = lexer_peek(lexer);
 //     //    printf("%d\n", tok->type);
