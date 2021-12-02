@@ -11,7 +11,6 @@
 #include "../memory/hmalloc.h"
 #include "utils.h"
 
-struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
