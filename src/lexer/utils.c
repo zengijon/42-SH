@@ -87,5 +87,23 @@ int is_token(const char *input, char *token, int n)
     return 1;
 }
 
-
-
+struct lexer *gestion_and_or(struct lexer *lexer, const char *input)
+{
+    if (input[0] == input[1])
+    {
+        lexer->end = lexer->pos + 2;
+        if (*input == '&')
+            lexer->current_tok->type = TOKEN_AND;
+        else
+            lexer->current_tok->type = TOKEN_OR;
+    }
+    else
+    {
+        lexer->end = lexer->pos + 1;
+        if (*input == '&')
+            lexer->current_tok->type = TOKEN_ESP;
+        else
+            lexer->current_tok->type = TOKEN_PIPE;
+    }
+    return lexer;
+}

@@ -10,7 +10,7 @@
 #include "../memory/hmalloc.h"
 #include "../memory/free_list.h"
 
-struct free_list *list_malloc = NULL;
+//struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
@@ -158,45 +158,21 @@ struct token *lexer_pop(struct lexer *res)
     }
     else if (is_token(&input[res->pos], "then ", 5) == 0)
     {
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "then";
-        }
-        else
         res->current_tok->type = TOKEN_THEN;
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "elif ", 5) == 0)
     {
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "elif";
-        }
-        else
         res->current_tok->type = TOKEN_ELIF;
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "else ", 5) == 0)
     {
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "else";
-        }
-        else
         res->current_tok->type = TOKEN_ELSE;
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "fi ", 3) == 0)
     {
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "fi";
-        }
-        else
         res->current_tok->type = TOKEN_FI;
         res->end = res->pos + 2;
     }

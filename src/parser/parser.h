@@ -8,7 +8,7 @@
 
 struct list_next *build_list_next(struct lexer *lex);
 
-struct list *build_list(const char *buffer);
+struct list *build_list(struct lexer *lex);
 
 struct and_or_next *build_and_or_next(struct lexer *lex);
 
@@ -34,7 +34,7 @@ struct compound_list *build_compound_list(struct lexer *lex);
 
 struct rule_for *build_rule_for(struct lexer *lex); // for later
 
-struct rule_while *build_rule_while(struct lexer *lex); // for later
+struct rule_while *build_rule_while(struct lexer *lex);
 
 struct rule_until *build_rule_until(struct lexer *lex); // for later
 

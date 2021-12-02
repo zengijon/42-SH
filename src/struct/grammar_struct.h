@@ -5,12 +5,6 @@
 #ifndef INC_42_SH_GRAMAR_STRUCT_H
 #define INC_42_SH_GRAMAR_STRUCT_H
 
-enum separator_
-{
-    Semi = 1,
-    Espe,
-    BackS
-};
 
 enum operator_
 {
@@ -32,24 +26,23 @@ enum redirect_op
 
 struct list_next
 { // optional
-    enum separator_ sep; // !!!!!!! \n pas autorise
     struct and_or *a_o;
+    int esp; // !!!!!!! \n pas autorise
     struct list_next *next;
 };
 
 struct list
 {
     struct and_or *a_o;
+    int esp; // optionel ; ou &
     struct list_next *next; // optional
-    enum separator_ sep; // optionel !!!!! \n pas autorise
 };
 
 struct and_or_next
 { // optional
     enum operator_ op;
     // autant qu'on en veut de new line
-    struct pipeline *pipeline; // pas mis avant et avant c'etait and_or *next
-                               // mais pose pb pour l'implementation
+    struct pipeline *pipeline;
     struct and_or_next *next; // optional
 };
 
@@ -131,16 +124,17 @@ struct element
 
 struct compound_next
 {
-    enum separator_ sep;
     // any \n we want
     struct and_or *a_o;
     struct compound_next *next; // as many we want
+    int esp; // optional
 };
 
 struct compound_list
 {
     // any \n we want
     struct and_or *and_or;
+    int esp; // optional
 
     struct compound_next *next;
 };
@@ -155,7 +149,7 @@ struct rule_for
     // in token
     char **word_list; // possibly NULL
     // / rajouter une size_word_list
-    enum separator_ sep_op; // not '&'
+    // not '&'
     ///*************************************
     // any \n we want
     struct do_group *do_gp;
@@ -183,7 +177,7 @@ struct rule_case
     // in token
     // any \n we want
     struct case_clause *case_cl; // optional
-    // struct Esac; ?? no description of esac
+    // token Esac;
 };
 
 struct rule_if
