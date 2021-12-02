@@ -10,7 +10,7 @@
 #include <unistd.h>
 #include <stdio.h>
 
-int my_pipe(struct command *cmd, struct pipeline_next *next) /// mis des const
+int my_pipe(struct command *cmd, struct pipeline_next *next, struct exec_struct *e_x) /// mis des const
 {
     pid_t child_pid;
     pid_t child_pid2;
@@ -31,7 +31,7 @@ int my_pipe(struct command *cmd, struct pipeline_next *next) /// mis des const
         close(pipefd[0]); // Close read pipe du child
 
         /// execute la commande de left_side
-        exec_command(cmd);
+        exec_command(cmd,e_x);
         exit(0);
         ///
     }
@@ -55,7 +55,7 @@ int my_pipe(struct command *cmd, struct pipeline_next *next) /// mis des const
             close(pipefd[1]);
 
             /// execute la commande de right_side
-            exec_pipeline_next(next);
+            exec_pipeline_next(next, e_x);
             exit(0);
             ///
         }
@@ -73,12 +73,3 @@ int my_pipe(struct command *cmd, struct pipeline_next *next) /// mis des const
     }
     return 0;
 }
-
-//
-//int main(void)
-//{
-//    const char *argv_left[3] = {"echo", "Hallo", NULL};
-//    const char *argv_right[4] = {"tr", "a", "d", NULL};
-//    printf("%d\n", exec_pipe(argv_left, argv_right));
-//    return 0;
-//}

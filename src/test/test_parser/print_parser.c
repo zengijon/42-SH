@@ -111,8 +111,8 @@ void print_simple_command(struct simple_command *s_c)
     if (s_c != NULL)
     {
         printf(" \n\t(simple_command) [ ");
-        // for (int i = 0; i < s_c->size_pre; ++i)
-        // print_prefix(s_c->list_pre[i]);
+         for (int i = 0; i < s_c->size_pre; ++i)
+         print_prefix(s_c->list_pre[i]);
         for (int j = 0; j < s_c->size_elt; ++j)
             print_element(s_c->list_elt[j]);
         printf("]");
@@ -169,18 +169,18 @@ void print_shell_command(struct shell_command *sh_cmd)
 //     printf("]");
 // }
 //
-// void print_prefix(struct prefix *p)
-//{
-//     printf("(prefix) [");
-//     if (p != NULL)
-//     {
-//         if (p->assignment_word != NULL)
-//             printf("(assignment word : %s )", p->assignment_word);
-//         else if (p->redirect)
+ void print_prefix(struct prefix *p)
+{
+     printf("(prefix) [");
+     if (p != NULL)
+     {
+         if (p->assignment_word != NULL)
+             printf("(assignment word : %s )", p->assignment_word);
+//         if (p->redirect)
 //             print_redirection(p->redirect);
-//     }
-//     printf("]");
-// }
+     }
+     printf("]");
+ }
 
 void print_element(struct element *e)
 {
