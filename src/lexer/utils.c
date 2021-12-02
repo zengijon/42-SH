@@ -20,12 +20,14 @@ size_t skipspace(const char *input)
 struct lexer *gestion_quote(struct lexer *lexer, const char *input)
 {
     size_t i = 1;
-    size_t j = 0;
-    char *str = hcalloc(strlen(input), sizeof(char));
+    size_t j = 1;
+    char *str = hcalloc(strlen(input), sizeof(char) + 1);
+    strcat(str, "'");
     while (input[i] != '\0' && (input[i] == '\\' || input[i] != '\''))
     {
         str[j++] = input[i++];
     }
+    strcat(str, "'");
     lexer->end = lexer->pos + i + 1;
     if (input[i] == '\'')
     {

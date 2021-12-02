@@ -11,7 +11,7 @@
 #include "../memory/hmalloc.h"
 #include "utils.h"
 
-//struct free_list *list_malloc = NULL;
+struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
@@ -315,6 +315,19 @@ struct token *lexer_pop(struct lexer *res)
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
         {
+            if (input[k] == '\'')
+            {
+                value[j++] = input[k++];
+                while(input[k] != '\0' && input[k] != '\'')
+                {
+                    value[j++] = input[k++];
+                }
+                if (input[k] == '\0')
+                {
+                    res->current_tok->type = TOKEN_ERROR;
+                    return tmp;
+                }
+            }
             if (input[k] == '\\')
             {
                 value[j++] = input[k + 1];
@@ -332,7 +345,7 @@ struct token *lexer_pop(struct lexer *res)
 
 // int main(void)
 //{
-//     struct lexer *lexer = lexer_new("if echo fi; then echo then; fi; echo test");
+//     struct lexer *lexer = lexer_new("echo ff'te   st'");
 //     //    printf("%d\n", lexer->current_tok->type);
 //     //    struct token *tok = lexer_peek(lexer);
 //     //    printf("%d\n", tok->type);
