@@ -27,6 +27,7 @@ enum token_type
     TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 20
 };
 
+//drfhfjfgj
 struct token
 {
     enum token_type type; ///< The kind of token
