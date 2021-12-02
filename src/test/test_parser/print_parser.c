@@ -65,7 +65,7 @@ void print_pipeline_next(struct pipeline_next *p)
 {
     if (p != NULL)
     {
-        printf(" ( | ) "); // ??? checker la grammaire plus tard
+        printf(" \n\t( | )\n\t"); // ??? checker la grammaire plus tard
         // printf("( new line ) ");
         print_command(p->cmd);
         print_pipeline_next(p->next);
@@ -89,7 +89,7 @@ void print_command(struct command *c)
 {
     if (c != NULL)
     {
-        printf(" (command) [ ");
+        printf("(command) [ ");
         if (c->s_cmd != NULL)
             print_simple_command(c->s_cmd);
         else if (c->sh_cmd != NULL)
@@ -111,8 +111,8 @@ void print_simple_command(struct simple_command *s_c)
     if (s_c != NULL)
     {
         printf(" \n\t(simple_command) [ ");
-        // for (int i = 0; i < s_c->size_pre; ++i)
-        // print_prefix(s_c->list_pre[i]);
+        for (int i = 0; i < s_c->size_pre; ++i)
+            print_prefix(s_c->list_pre[i]);
         for (int j = 0; j < s_c->size_elt; ++j)
             print_element(s_c->list_elt[j]);
         printf("]");
@@ -126,8 +126,8 @@ void print_shell_command(struct shell_command *sh_cmd)
         printf(" (shell_command) [ ");
         if (sh_cmd->c_p != NULL)
             print_compound_list(sh_cmd->c_p);
-        // else if (sh_cmd->r_f != NULL)
-        // print_rule_for(sh_cmd->r_f);
+        else if (sh_cmd->r_f != NULL)
+            print_rule_for(sh_cmd->r_f);
         else if (sh_cmd->r_w != NULL)
             print_rule_while(sh_cmd->r_w);
         // else if (sh_cmd->r_u != NULL)
@@ -169,18 +169,18 @@ void print_shell_command(struct shell_command *sh_cmd)
 //     printf("]");
 // }
 //
-// void print_prefix(struct prefix *p)
-//{
-//     printf("(prefix) [");
-//     if (p != NULL)
-//     {
-//         if (p->assignment_word != NULL)
-//             printf("(assignment word : %s )", p->assignment_word);
-//         else if (p->redirect)
-//             print_redirection(p->redirect);
-//     }
-//     printf("]");
-// }
+void print_prefix(struct prefix *p)
+{
+    printf("(prefix) [");
+    if (p != NULL)
+    {
+        if (p->assignment_word != NULL)
+            printf("(assignment word : %s )", p->assignment_word);
+        //         if (p->redirect)
+        //             print_redirection(p->redirect);
+    }
+    printf("]");
+}
 
 void print_element(struct element *e)
 {
@@ -221,32 +221,26 @@ void print_compound_list(struct compound_list *c_l)
     }
 }
 
-// void print_rule_for(struct rule_for *r_f)
-//{
-//     printf("(rule_for) [");
-//     if (r_f != NULL)
-//     {
-//         printf("( for )");
-//         if (r_f->word != NULL)
-//             printf("( word : )");
-//         if (r_f->sep_op == Semi)
-//             printf("(separator : %d )", r_f->sep_op);
-//         else if (r_f->word_list != NULL)
-//         {
-//             printf("( new line )");
-//             printf("( in )");
-//             printf("(word_list :");
-//             //for (int i = 0; i < r_f->size_word_list; ++i)
-//                 //printf(" &s", r_f->word_list[i]);
-//             printf(" )");
-//             printf("(separator : %d )", r_f->sep_op);
-//         }
-//         printf("( new line )");
-//         if (r_f->do_gp)
-//             print_do_group(r_f->do_gp);
-//     }
-//     printf("]");
-// }
+void print_rule_for(struct rule_for *r_f)
+{
+    printf("(rule_for) [");
+    if (r_f != NULL)
+    {
+        printf("( for )");
+        if (r_f->word != NULL)
+            printf("( word : %s)", r_f->word);
+        if (r_f->word_list != NULL)
+        {
+            printf("( in )");
+            printf("(word_list :");
+            for (int i = 0; i < r_f->wl_s; ++i)
+                printf(" %s", r_f->word_list[i]);
+            printf(" )");
+        }
+        print_do_group(r_f->do_gp);
+    }
+    printf("]");
+}
 
 void print_rule_while(struct rule_while *r_w) // never used normal
 {

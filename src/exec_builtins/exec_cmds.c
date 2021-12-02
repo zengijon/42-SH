@@ -6,16 +6,16 @@
 #include "echo.h"
 #include "microshell.h"
 
-char *all_cmd[] = { "ls", "pwd", "exit" };
+char *all_cmd[] = { "ls", "pwd", "exit" , "cat"};
 
 int exec_builtins(char *cmd, int nb_params, char **parameters)
 {
-    char *buffer = hcalloc(strlen(cmd) + 2, sizeof(char));
+    char *buffer = hmalloc(strlen(cmd) + 1);
     strcat(buffer, cmd);
     strcat(buffer, " ");
     for (int j = 0; j < nb_params; ++j)
     {
-        buffer = hrealloc(buffer, strlen(parameters[j]) + strlen(buffer) + 2);
+        buffer = hrealloc(buffer, strlen(parameters[j]) + strlen(buffer) + 1);
         strcat(buffer, parameters[j]);
         strcat(buffer, " ");
     }
@@ -45,12 +45,10 @@ int exec_builtins(char *cmd, int nb_params, char **parameters)
 
 int exec_cmds(char *cmd, int nb_params, char **parameters)
 {
-    int nb_cmd = 3;
-    if (strlen(cmd) == 0)
-        return 127;
+    int nb_cmd = 4;
     for (int i = 0; i < nb_cmd; ++i)
     {
-        char *buffer = hcalloc(strlen(cmd) + 2, sizeof(char));
+        char *buffer = hmalloc(strlen(cmd) + 1);
         strcat(buffer, cmd);
         strcat(buffer, " ");
         if (strcmp(cmd, all_cmd[i]) == 0)
@@ -58,7 +56,7 @@ int exec_cmds(char *cmd, int nb_params, char **parameters)
             for (int j = 0; j < nb_params; ++j)
             {
                 buffer = hrealloc(buffer,
-                                  strlen(parameters[j]) + strlen(buffer) + 2);
+                                  strlen(parameters[j]) + strlen(buffer) + 1);
                 strcat(buffer, parameters[j]);
                 strcat(buffer, " ");
             }

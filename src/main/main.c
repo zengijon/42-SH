@@ -17,11 +17,12 @@ int exec_42sh(char *buffer, int pretty_print)
     int res = 0;
     struct list *list;
     struct lexer *lex = lexer_new(buffer);
+    struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
     while ((list = build_list(lex)) != NULL)
     {
         if (pretty_print == 1)
             print_list(list);
-        res = exec_list(list);
+        res = exec_list(list, e_x);
     }
     return res;
 }
