@@ -11,7 +11,8 @@ char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
 {
     char *res = NULL;
     res = hcalloc(1, dollar_ind - start + 8096);
-    strcpy(res, strtok(start, "$"));
+    if (start[0] != '$')
+        strcpy(res, strtok(start, "$"));
     for (int i = 0; i < e_x->v_l_size; ++i)
         if (strcmp(e_x->v_l[i].name, dollar_ind) == 0)
             strcat(res, e_x->v_l[i].value);
