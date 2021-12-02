@@ -121,9 +121,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         return exec_rule_if(cmd->r_i, ex_l);
     if (cmd->r_w != NULL)
         return exec_rule_while(cmd->r_w, ex_l);
-    // if (cmd->r_u != NULL)
-        //        return exec_rule_until(cmd->r_u, ex_l);
-        assert(0);
+    //        return exec_rule_until(cmd->r_u, ex_l);
 }
 //
 // int exec_fundec(struct funcdec *cmd, struct exec_struct *ex_l)
@@ -142,11 +140,10 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
 //    return 0;
 //}
 
-
 int assign_var(char *name, char *value, struct exec_struct *ex_l)
 {
     int res = 0;
-    for (int i = 0; i < ex_l->v_l_size; ++i)
+    for (int i = 0; i < ex_l->v_l_size; i++)
         if (strcmp(ex_l->v_l[i].name, name) == 0)
         {
             ex_l->v_l[i].value = value;

@@ -48,26 +48,6 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_FI;
         res->end = res->pos + 2;
     }
-    else if (is_token(&input[res->pos], "while ", 6) == 0)
-    {
-        res->current_tok->type = TOKEN_WHILE;
-        res->end = res->pos + 5;
-    }
-    else if (is_token(&input[res->pos], "for ", 4) == 0)
-    {
-        res->current_tok->type = TOKEN_FOR;
-        res->end = res->pos + 3;
-    }
-    else if (is_token(&input[res->pos], "do ", 3) == 0)
-    {
-        res->current_tok->type = TOKEN_DO;
-        res->end = res->pos + 2;
-    }
-    else if (is_token(&input[res->pos], "done ", 5) == 0)
-    {
-        res->current_tok->type = TOKEN_DONE;
-        res->end = res->pos + 4;
-    }
     else if (strncmp(&input[res->pos], ";", 1) == 0)
     {
         res->current_tok->type = TOKEN_PTCOMA;
@@ -179,53 +159,34 @@ struct token *lexer_pop(struct lexer *res)
     res->pos = i;
     if (is_token(&input[res->pos], "if ", 3) == 0)
     {
-        res->current_tok->type = TOKEN_IF;
         if (tmp->type == TOKEN_WORDS)
         {
             res->current_tok->type = TOKEN_WORDS;
             res->current_tok->value = "if";
         }
+        else
+            res->current_tok->type = TOKEN_IF;
         res->end = res->pos + 2;
     }
     else if (is_token(&input[res->pos], "then ", 5) == 0)
     {
         res->current_tok->type = TOKEN_THEN;
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "then";
-        }
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "elif ", 5) == 0)
     {
         res->current_tok->type = TOKEN_ELIF;
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "elif";
-        }
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "else ", 5) == 0)
     {
         res->current_tok->type = TOKEN_ELSE;
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "else";
-        }
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "fi", 2) == 0
              && is_separator(input + res->pos + 2, separator) == 0)
     {
         res->current_tok->type = TOKEN_FI;
-        if (tmp->type == TOKEN_WORDS)
-        {
-            res->current_tok->type = TOKEN_WORDS;
-            res->current_tok->value = "fi";
-        }
         res->end = res->pos + 2;
     }
     else if (is_token(&input[res->pos], "while ", 6) == 0)
@@ -299,6 +260,7 @@ struct token *lexer_pop(struct lexer *res)
         res->end = res->pos + 1;
     }
     else if (strncmp(&input[res->pos], "'", 1) == 0)
+    {
         res = gestion_quote(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "&", 1) == 0
              || strncmp(&input[res->pos], "|", 1) == 0)

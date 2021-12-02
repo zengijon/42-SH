@@ -234,7 +234,7 @@ void print_rule_for(struct rule_for *r_f)
             printf("( in )");
             printf("(word_list :");
             for (int i = 0; i < r_f->wl_s; ++i)
-                printf(" %s", r_f->word_list[i]);
+                printf(" %s |", r_f->word_list[i]);
             printf(" )");
         }
         print_do_group(r_f->do_gp);

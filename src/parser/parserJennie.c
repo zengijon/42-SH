@@ -12,52 +12,7 @@
 
 
 // weird grammar not chou
-struct rule_for *build_rule_for(struct lexer *lex)
-{
-    struct rule_for *res = hcalloc(1, sizeof(struct relu_for));
 
-    if ( ! /*lexer | seek | reçu == for */)
-        return NULL;
-    // lexer | pop
-
-    if ( ! /*lexer | seek | reçu != char *word*/)
-        errx(1, "missing word after for");
-
-    res->word = ""; /* lexer | pop | attendu : char *word*/
-
-    if (/*lexer | seek | attendu : ;*/)
-    {
-        res->sep = Semi; /* lexer | pop | attendu : ;*/
-        is_good = 1;
-    }
-    else if (/*lexer | seek | attendu : char **word_list*/)
-    {
-        while (/*lexer | seek | attendu : \n*/)
-            ;/*lexer | pop */
-
-
-        res->word_list = NULL; /*lexer | pop | attendu : char * word_list*/
-        if ( /*lexer | seek | attendu : sep_op not &*/)
-        {
-            res->sep_op = 0; /*lexer | pop | attendu : sep_op but not &*/
-            is_good = 1;
-        }
-        else
-            errx(1, "not got sep_op which is not &");
-    }
-
-
-    if (is_good)
-    {
-        if (/*lexer | seek | attendu : do_group*/)
-        {
-            res->do_gp = build_do_group(lex);
-            if (res->do_gp == NULL)
-                errx(1, "Failed build_do_gp");
-        }
-    }
-    errx(1, "do not got ; or word_list");
-}
 
 struct rule_case *build_case(struct lexer *lex)
 {
