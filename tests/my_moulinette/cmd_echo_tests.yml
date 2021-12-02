@@ -1,6 +1,6 @@
-# ECHO 
+# ECHO TESTS WITH -c OPTION 
 
-  #BASIC TESTS
+#===========BASIC TESTS============
 
 - category: ECHO BASIC TESTS
   name: simple echo
@@ -8,7 +8,7 @@
 
 - category: ECHO BASIC TESTS  
   name: echo with quotes
-  input: echo "lol"
+  input: echo \"lol\"
 
 - category: ECHO BASIC TESTS  
   name: echo with backslash
@@ -26,9 +26,43 @@
   name: echo big spaces
   input: echo l        o l
 
+- category: ECHO BASIC TESTS  
+  name: echo nothing and cat -e
+  input: echo | cat -e
+
+- category: ECHO BASIC TESTS  
+  name: echo multiple things
+  input: echo def 65536 yohann 666 '' robin
+
+- category: ECHO BASIC TESTS  
+  name: echo lol | cat -e
+  input: echo lol | cat -e
+
+- category: ECHO BASIC TESTS  
+  name: echo abcdefghij with spaces and cat -e
+  input: echo a b c d e f g h i j | cat -e
+
+- category: ECHO BASIC TESTS  
+  name: echo 2 words separated by --
+  input: echo Armand -- Jennie
+  
+- category: ECHO BASIC TESTS  
+  name: echo -- Jennie
+  input: echo -- Jennie
+
+- category: ECHO BASIC TESTS  
+  name: echo Armand --
+  input: echo Armand ---
+
+- category: ECHO BASIC TESTS  
+  name: echo -- -n crackito
+  input: echo -- -n crackito
 
 
-    # MEDIUM TESTS
+#============MEDIUM TESTS===========
+- category: ECHO MEDIUM TESTS
+  name: echo with multiple quotes and empty
+  input: echo "oulala" "" "" "jaicho" | cat -e
 
 - category: ECHO MEDIUM TESTS
   name: echo -n
@@ -41,10 +75,6 @@
 - category: ECHO MEDIUM TESTS
   name: echo if complicated right
   input: if echo fi; then echo then; fi ; echo test
-
-- category: ECHO MEDIUM TESTS  
-  name: ECHO SCRIPT
-  input: ./echo_test.sh
 
 
 #LS TESTS
