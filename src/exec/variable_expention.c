@@ -21,8 +21,12 @@ char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
 
 char *search_for_dollar(char *word, struct exec_struct *e_x)
 {
-    for (size_t i = 0; i < strlen(word) - 1; ++i)
+    size_t len = strlen(word);
+    for (size_t i = 0; i < len - 1; ++i)
+    {
+        len = strlen(word);
         if (word[i] == '$')
-            word = expend(word, word + i + 1, e_x);
+            return expend(word, word + i + 1, e_x);
+    }
     return word;
 }

@@ -120,8 +120,8 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
 //    if (cmd->r_i != NULL)
         return exec_rule_if(cmd->r_i, ex_l);
 //    if (cmd->r_w != NULL)
-//        return exec_rule_while(cmd->r_w, ex_l);
-//    if (cmd->r_u != NULL)
+        return exec_rule_while(cmd->r_w, ex_l);
+    if (cmd->r_u != NULL)
 //        return exec_rule_until(cmd->r_u, ex_l);
     assert(0);
 }
