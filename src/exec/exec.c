@@ -75,16 +75,16 @@ int exec_command(struct command *cmd, struct exec_struct *ex_l)
 {
     if (cmd->redir != NULL)
     {
-//        int res = exec_redir(cmd->redir, ex_l);
-//        if (res != 0)
-//            return res;
+        //        int res = exec_redir(cmd->redir, ex_l);
+        //        if (res != 0)
+        //            return res;
     }
     if (cmd->s_cmd != NULL)
         return exec_simple_command(cmd->s_cmd, ex_l);
     if (cmd->sh_cmd != NULL)
         return exec_shell_command(cmd->sh_cmd, ex_l);
-//    if (cmd->fun != NULL)
-//        return exec_fundec(cmd->fun, ex_l);
+    //    if (cmd->fun != NULL)
+    //        return exec_fundec(cmd->fun, ex_l);
     assert(0);
 }
 
@@ -94,16 +94,16 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     for (int i = 0; cmd->size_elt == 0 && i < cmd->size_pre; ++i)
         exec_prefix(cmd->list_pre[i], ex_l);
     // gerer les redir dans les prefix
-//    for (int i = 0; i < cmd->size_elt; ++i)
-//        if (cmd->list_elt[i]->redirect != NULL)
-//            if ((res = exec_redir(cmd->list_elt[i]->redirect, ex_l)) != 0)
-//                return res;
+    //    for (int i = 0; i < cmd->size_elt; ++i)
+    //        if (cmd->list_elt[i]->redirect != NULL)
+    //            if ((res = exec_redir(cmd->list_elt[i]->redirect, ex_l)) != 0)
+    //                return res;
     if (cmd->size_elt < 1)
         return res;
     char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
     for (int i = 1; i < cmd->size_elt; ++i)
     {
-        list[i - 1] = search_for_dollar(cmd->list_elt[i]->word,ex_l);
+        list[i - 1] = search_for_dollar(cmd->list_elt[i]->word, ex_l);
     }
     return exec_cmds(cmd->list_elt[0]->word, cmd->size_elt - 1,
                      list); // Not in this file
@@ -113,16 +113,16 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
 {
     if (cmd->c_p != NULL)
         return exec_compound_list(cmd->c_p, ex_l);
-//    if (cmd->r_c != NULL)
-//        return exec_rule_case(cmd->r_c, ex_l);
-//    if (cmd->r_f != NULL)
-//        return exec_rule_for(cmd->r_f, ex_l);
-//    if (cmd->r_i != NULL)
+    //    if (cmd->r_c != NULL)
+    //        return exec_rule_case(cmd->r_c, ex_l);
+    if (cmd->r_f != NULL)
+        return exec_rule_for(cmd->r_f, ex_l);
+    if (cmd->r_i != NULL)
         return exec_rule_if(cmd->r_i, ex_l);
-//    if (cmd->r_w != NULL)
+    if (cmd->r_w != NULL)
         return exec_rule_while(cmd->r_w, ex_l);
-    if (cmd->r_u != NULL)
-//        return exec_rule_until(cmd->r_u, ex_l);
+    //    if (cmd->r_u != NULL)
+    //        return exec_rule_until(cmd->r_u, ex_l);
     assert(0);
 }
 //
@@ -142,23 +142,31 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
 //    return 0;
 //}
 
-int exec_prefix(struct prefix *pre, struct exec_struct *ex_l)
+int assign_var(char *name, char *value, struct exec_struct *ex_l)
 {
     int res = 0;
-    char *name = strtok(pre->assignment_word, "=\0");
     for (int i = 0; i < ex_l->v_l_size; ++i)
-        if (strcmp(ex_l->v_l[i].name,name) == 0)
+        if (strcmp(ex_l->v_l[i].name, name) == 0)
         {
-            ex_l->v_l[i].value = strtok(NULL, "\0");
-            ex_l->v_l[i].value_l = strlen(ex_l->v_l[ex_l->v_l_size - 1].value);
+            ex_l->v_l[i].value = value;
+            ex_l->v_l[i].value_l = strlen(value);
             return res;
         }
     ex_l->v_l = realloc(ex_l->v_l, ++ex_l->v_l_size);
     ex_l->v_l[ex_l->v_l_size - 1].name = name;
-    ex_l->v_l[ex_l->v_l_size - 1].value = strtok(NULL, "\0");
-    ex_l->v_l[ex_l->v_l_size - 1].name_l = strlen(ex_l->v_l[ex_l->v_l_size - 1].name);
-    ex_l->v_l[ex_l->v_l_size - 1].value_l = strlen(ex_l->v_l[ex_l->v_l_size - 1].value);
+    ex_l->v_l[ex_l->v_l_size - 1].value = value;
+    ex_l->v_l[ex_l->v_l_size - 1].name_l =
+        strlen(ex_l->v_l[ex_l->v_l_size - 1].name);
+    ex_l->v_l[ex_l->v_l_size - 1].value_l =
+        strlen(ex_l->v_l[ex_l->v_l_size - 1].value);
     return res;
+}
+
+int exec_prefix(struct prefix *pre, struct exec_struct *ex_l)
+{
+    char *name = strtok(pre->assignment_word, "=\0");
+    char *value = strtok(NULL, "\0");
+    return assign_var(name, value, ex_l);
 }
 
 // int exec_element(struct element *elt, struct exec_struct *ex_l)
@@ -188,13 +196,17 @@ int exec_compound_list(struct compound_list *cp_list, struct exec_struct *ex_l)
     else
         return exec_compound_next(cp_list->next, ex_l);
 }
-//
-// int exec_rule_for(struct rule_for *r_f, struct exec_struct *ex_l)
-//{
-//    if (r_f)
-//        return 0;
-//    return 0;
-//}
+
+int exec_rule_for(struct rule_for *r_f, struct exec_struct *ex_l)
+{
+    int res = 0;
+    for (int i = 0; i < r_f->wl_s;)
+    {
+        assign_var(r_f->word, r_f->word_list[i++], ex_l);
+        res = exec_do_group(r_f->do_gp, ex_l);
+    }
+    return res;
+}
 
 int exec_rule_while(struct rule_while *r_w, struct exec_struct *ex_l)
 {

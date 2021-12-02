@@ -22,7 +22,7 @@ void *hcalloc(size_t nmb, size_t size)
 
 void *hrealloc(void *ptr, size_t size)
 {
-    void *ptr2 = realloc(ptr, size);
+    void *ptr2 = realloc(ptr, size * sizeof(char *));
     if (!ptr2)
         errx(1, "memory exausted");
     list_add(ptr2);
