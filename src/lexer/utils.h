@@ -17,3 +17,5 @@ int is_token(const char *input, char *token, int n);
 
 //determine if a string is a simple '&', a simple '|', a 'or' or a 'and'
 struct lexer *gestion_and_or(struct lexer *lexer, const char *input);
+
+struct lexer *gestion_redir(struct lexer *lexer, const char *input);
