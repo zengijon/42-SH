@@ -145,8 +145,16 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
 int exec_prefix(struct prefix *pre, struct exec_struct *ex_l)
 {
     int res = 0;
+    char *name = strtok(pre->assignment_word, "=\0");
+    for (int i = 0; i < ex_l->v_l_size; ++i)
+        if (strcmp(ex_l->v_l[i].name,name) == 0)
+        {
+            ex_l->v_l[i].value = strtok(NULL, "\0");
+            ex_l->v_l[i].value_l = strlen(ex_l->v_l[ex_l->v_l_size - 1].value);
+            return res;
+        }
     ex_l->v_l = realloc(ex_l->v_l, ++ex_l->v_l_size);
-    ex_l->v_l[ex_l->v_l_size - 1].name = strtok(pre->assignment_word, "=\0");
+    ex_l->v_l[ex_l->v_l_size - 1].name = name;
     ex_l->v_l[ex_l->v_l_size - 1].value = strtok(NULL, "\0");
     ex_l->v_l[ex_l->v_l_size - 1].name_l = strlen(ex_l->v_l[ex_l->v_l_size - 1].name);
     ex_l->v_l[ex_l->v_l_size - 1].value_l = strlen(ex_l->v_l[ex_l->v_l_size - 1].value);
