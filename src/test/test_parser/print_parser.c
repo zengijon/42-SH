@@ -78,7 +78,7 @@ void print_pipeline(struct pipeline *p)
     {
         printf(" (pipeline) [ ");
         if (p->negation != 0)
-            printf(" ( ! ) ");
+            printf(" \n( ! )\n ");
         print_command(p->cmd);
         print_pipeline_next(p->next);
         printf("]");
@@ -130,8 +130,8 @@ void print_shell_command(struct shell_command *sh_cmd)
             print_rule_for(sh_cmd->r_f);
         else if (sh_cmd->r_w != NULL)
             print_rule_while(sh_cmd->r_w);
-        // else if (sh_cmd->r_u != NULL)
-        // print_rule_until(sh_cmd->r_u);
+        else if (sh_cmd->r_u != NULL)
+            print_rule_until(sh_cmd->r_u);
         // else if (sh_cmd->r_c != NULL)
         // print_rule_case(sh_cmd->r_c);
         else if (sh_cmd->r_i != NULL)
@@ -256,19 +256,19 @@ void print_rule_while(struct rule_while *r_w) // never used normal
     printf(" ] ");
 }
 
-// void print_until(struct rule_until *r_u) // never used normal
-//{
-//     printf("(rule until) [");
-//     if (r_u != NULL)
-//     {
-//         printf("( until )");
-//         if (r_u->cp_list != NULL)
-//             print_compound_list(r_u->cp_list);
-//         if (r_u->do_gp != NULL)
-//             print_do_group(r_u->do_gp);
-//     }
-//     printf("]");
-// }
+ void print_rule_until(struct rule_until *r_u) // never used normal
+{
+     printf("(rule until) [ ");
+     if (r_u != NULL)
+     {
+         printf("\n( until ) ");
+         if (r_u->cp_list != NULL)
+             print_compound_list(r_u->cp_list);
+         if (r_u->do_gp != NULL)
+             print_do_group(r_u->do_gp);
+     }
+     printf("] ");
+ }
 
 // void print_rule_case(struct rule_case *r_c)
 //{

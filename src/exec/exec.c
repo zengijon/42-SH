@@ -121,7 +121,8 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         return exec_rule_if(cmd->r_i, ex_l);
     if (cmd->r_w != NULL)
         return exec_rule_while(cmd->r_w, ex_l);
-    //        return exec_rule_until(cmd->r_u, ex_l);
+    if (cmd->r_u != NULL)
+            return exec_rule_until(cmd->r_u, ex_l);
     assert(0);
 }
 //
@@ -215,13 +216,15 @@ int exec_rule_while(struct rule_while *r_w, struct exec_struct *ex_l)
         res = exec_do_group(r_w->do_gp, ex_l);
     return res;
 }
-//
-// int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
-//{
-//    if (r_u)
-//        return 0;
-//    return 0;
-//}
+
+ int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
+{
+    assert(r_u);
+    int res = 0;
+    while (exec_compound_list(r_u->cp_list, ex_l) == 0)
+        res = exec_do_group(r_u->do_gp, ex_l);
+    return res;
+}
 
 // int exec_rule_case(struct rule_case *r_c, struct exec_struct *ex_l)
 //{

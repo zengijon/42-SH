@@ -106,8 +106,8 @@ struct pipeline_next *build_pipeline_next(struct lexer *lex)
 struct pipeline *build_pipeline(struct lexer *lex)
 {
     struct pipeline *res = hcalloc(1, sizeof(struct pipeline));
-    //     if (lex->current_tok->type == T)
-    //     res->negation = 1;
+    if (lex->current_tok->type == TOKEN_NEG)
+         res->negation = 1;
 
     if ((res->cmd = build_command(lex)) == NULL)
     {
@@ -193,8 +193,8 @@ struct shell_command *build_shell_command(struct lexer *lex)
         ;
     else if ((res->r_w = build_rule_while(lex)) != NULL)
         ;
-    //    else if ((res->r_u = build_rule_until(lex)) != NULL)
-    //        ;
+    else if ((res->r_u = build_rule_until(lex)) != NULL)
+        ;
     //    else if ((res->r_c = build_rule_case(lex)) != NULL)
     //        ;
     else if ((res->r_i = build_rule_if(lex)) != NULL)
@@ -339,23 +339,22 @@ struct rule_while *build_rule_while(struct lexer *lex)
     errx(1, "missing compound_list");
 }
 
-// struct rule_until *build_rule_until(struct lexer *lex)
-//{
-//     struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
-//
-//     //if (lex->current_tok->type != TOKEN_UNTIL)
-//         return NULL;
-//
-//     lexer_pop(lex);
-//     if ((res->cp_list = build_compound_list(lex)) != NULL)
-//     {
-//         if ((res->do_gp = build_do_group(lex)) != NULL)
-//             return res;
-//
-//         errx(1, "Missing do_group");
-//     }
-//     errx(1, "missing compound_list");
-// }
+ struct rule_until *build_rule_until(struct lexer *lex)
+{
+     struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
+     if (lex->current_tok->type != TOKEN_UNTIL)
+         return NULL;
+
+     lexer_pop(lex);
+     if ((res->cp_list = build_compound_list(lex)) != NULL)
+     {
+         if ((res->do_gp = build_do_group(lex)) != NULL)
+             return res;
+
+         errx(1, "Missing do_group");
+     }
+     errx(1, "missing compound_list");
+ }
 
 struct rule_if *build_rule_if(struct lexer *lex)
 {
