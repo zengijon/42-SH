@@ -122,6 +122,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
     if (cmd->r_w != NULL)
         return exec_rule_while(cmd->r_w, ex_l);
     //        return exec_rule_until(cmd->r_u, ex_l);
+    assert(0);
 }
 //
 // int exec_fundec(struct funcdec *cmd, struct exec_struct *ex_l)

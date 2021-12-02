@@ -63,19 +63,6 @@ int main(int argc, char **argv)
             errx(1, "bad option");
         }
     }
-    if (optind == 1)
-        buffer = file2buf(argv[1]);
-    struct list *list;
-    struct lexer *lex = lexer_new(buffer);
-    int res = 0;
-    while ((list = build_list(lex)) != NULL)
-    {
-        //print_list(list);
-       res = exec_list(list);
-    }
-    //free_all();
-    return res;
-    if (argc <= optind)
     if (!c && argc <= optind)
         errx(1, "missing argv"); // errx(1, "missing parameter"); //handel
                                  // reading stdin
