@@ -5,6 +5,7 @@
 #include "parser.h"
 
 #include <err.h>
+#include <fnmatch.h>
 
 #include "../memory/hmalloc.h"
 
@@ -137,14 +138,13 @@ struct command *build_command(struct lexer *lex)
 struct simple_command *build_simple_command(struct lexer *lex)
 {
     struct simple_command *res = hcalloc(1, sizeof(struct simple_command));
-    //    struct prefix *tmp = NULL;
-    //    while ((tmp = build_prefix(lex)) != NULL)
-    //    {
-    //        res->list_pre = hrealloc(res->list_pre,
-    //                                 ++(res->size_pre) * sizeof(struct prefix
-    //                                 *));
-    //        res->list_pre[res->size_pre - 1] = tmp;
-    //    }
+    struct prefix *tmp = NULL;
+    while ((tmp = build_prefix(lex)) != NULL)
+    {
+        res->list_pre = hrealloc(res->list_pre,
+                                 ++(res->size_pre) * sizeof(struct prefix *));
+        res->list_pre[res->size_pre - 1] = tmp;
+    }
 
     struct element *tmp2 = NULL;
     while ((tmp2 = build_element(lex)) != NULL)
@@ -246,21 +246,15 @@ struct shell_command *build_shell_command(struct lexer *lex)
 
 struct prefix *build_prefix(struct lexer *lex)
 {
-    /// A enlever
-    if (lex != NULL)
-        return NULL;
-    return (struct prefix *)lex;
-    ///
-    // struct prefix *res = hcalloc(1, sizeof(struct prefix));
+     struct prefix *res = hcalloc(1, sizeof(struct prefix));
 
-    // if (lex->current_tok->type != assignement_word)
-    // return NULL;
-    // res->assignment_word = lexer_pop(lex)->value;
+     if (lex->current_tok->type != TOKEN_WORDS || fnmatch("*=*", lex->current_tok->value,0) != 0 || lex->current_tok->value[0] == '=')
+     return NULL;
+     res->assignment_word = lexer_pop(lex)->value;
 
-    // res->redirect = build_redirection(lex);
-    // if (res->redirect == NULL)
-    //     return NULL;
-    // return res;
+     //res->redirect = build_redirection(lex);
+
+     return res;
 }
 
 struct element *build_element(struct lexer *lex)
@@ -272,8 +266,7 @@ struct element *build_element(struct lexer *lex)
     res->word = lexer_pop(lex)->value;
 
     //    res->redirect = build_redirection(lex);
-    //    if (res->redirect == NULL)
-    //        return NULL;
+
     return res;
 }
 
@@ -343,24 +336,23 @@ struct rule_while *build_rule_while(struct lexer *lex)
     errx(1, "missing compound_list");
 }
 
-//struct rule_until *build_rule_until(struct lexer *lex)
+// struct rule_until *build_rule_until(struct lexer *lex)
 //{
-//    struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
+//     struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
 //
-//    //if (lex->current_tok->type != TOKEN_UNTIL)
-//        return NULL;
+//     //if (lex->current_tok->type != TOKEN_UNTIL)
+//         return NULL;
 //
-//    lexer_pop(lex);
-//    if ((res->cp_list = build_compound_list(lex)) != NULL)
-//    {
-//        if ((res->do_gp = build_do_group(lex)) != NULL)
-//            return res;
+//     lexer_pop(lex);
+//     if ((res->cp_list = build_compound_list(lex)) != NULL)
+//     {
+//         if ((res->do_gp = build_do_group(lex)) != NULL)
+//             return res;
 //
-//        errx(1, "Missing do_group");
-//    }
-//    errx(1, "missing compound_list");
-//}
-
+//         errx(1, "Missing do_group");
+//     }
+//     errx(1, "missing compound_list");
+// }
 
 struct rule_if *build_rule_if(struct lexer *lex)
 {
