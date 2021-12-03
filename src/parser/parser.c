@@ -20,8 +20,8 @@ struct list_next *build_list_next(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
-    if (lex->current_tok->type == TOKEN_NEWLINE)
-        ;
+    else if (lex->current_tok->type == TOKEN_NEWLINE)
+        return res;
     else
         errx(1, "missing separator after list");
     lexer_pop(lex);
@@ -43,8 +43,8 @@ struct list *build_list(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
-    if (lex->current_tok->type == TOKEN_NEWLINE)
-        ;
+    else if (lex->current_tok->type == TOKEN_NEWLINE)
+        return res;
     else
         errx(1, "missing separator after list");
     lexer_pop(lex);
@@ -107,8 +107,10 @@ struct pipeline *build_pipeline(struct lexer *lex)
 {
     struct pipeline *res = hcalloc(1, sizeof(struct pipeline));
     if (lex->current_tok->type == TOKEN_NEG)
-         res->negation = 1;
-    lexer_pop(lex);
+    {
+        res->negation = 1;
+        lexer_pop(lex);
+    }
     if ((res->cmd = build_command(lex)) == NULL)
     {
         if (res->negation == 0)

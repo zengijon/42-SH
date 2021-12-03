@@ -159,7 +159,7 @@ int assign_var(char *name, char *value, struct exec_struct *ex_l)
             ex_l->v_l[i].value_l = strlen(value);
             return res;
         }
-    ex_l->v_l = realloc(ex_l->v_l, ++ex_l->v_l_size);
+    ex_l->v_l = hrealloc(ex_l->v_l, (++ex_l->v_l_size) * sizeof(char *) );
     ex_l->v_l[ex_l->v_l_size - 1].name = name;
     ex_l->v_l[ex_l->v_l_size - 1].value = value;
     ex_l->v_l[ex_l->v_l_size - 1].name_l =

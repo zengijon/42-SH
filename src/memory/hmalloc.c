@@ -26,7 +26,7 @@ void *hrealloc(void *ptr, size_t size)
     if (!ptr2)
         errx(1, "memory exausted");
     list_add(ptr2);
-    if (ptr == NULL)
+    if (ptr != NULL)
         list_remove(ptr);
     return ptr2;
 }
