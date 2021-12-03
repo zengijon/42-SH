@@ -397,7 +397,8 @@ struct rule_for *build_rule_for(struct lexer *lex)
         errx(1, "missing word after for");
 
     res->word = lexer_pop(lex)->value;
-
+    if (valid_name(res->word) == 0)
+        errx(1, "not valid variable for for");
     if (lex->current_tok->type == TOKEN_PTCOMA)
         lexer_pop(lex);
     else
