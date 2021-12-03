@@ -9,6 +9,7 @@
 #include <string.h>
 
 #include "../memory/hmalloc.h"
+#include "../exec/variable_expention.h"
 
 struct list_next *build_list_next(struct lexer *lex)
 {
@@ -256,7 +257,8 @@ struct prefix *build_prefix(struct lexer *lex)
         || lex->current_tok->value[0] == '=')
         return NULL;
     res->assignment_word = lexer_pop(lex)->value;
-
+    if (valid_name(res->assignment_word) == 0)
+        err(1, "name not valid");
     // res->redirect = build_redirection(lex);
 
     return res;
@@ -411,7 +413,7 @@ struct rule_for *build_rule_for(struct lexer *lex)
         {
             res->word_list = hrealloc(res->word_list, ++(res->wl_s) * sizeof(char *) );
             res->word_list[res->wl_s - 1] = lexer_pop(lex)->value;
-            printf("%s", res->word_list[res->wl_s - 1]);
+//            printf("%s", res->word_list[res->wl_s - 1]);
         }
         if (lex->current_tok->type != TOKEN_PTCOMA
             && lex->current_tok->type != TOKEN_NEWLINE)

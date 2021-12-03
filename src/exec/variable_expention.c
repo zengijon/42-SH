@@ -97,3 +97,19 @@ char *remove_sep(char *word, struct exec_struct *e_x)
     }
     return res;
 }
+
+int valid_name(char *word)
+{
+    if ((word[0] >= 'a' && word[0] <= 'z') || (word[0] >= 'A' && word[0] <= 'Z') || word[0] == '_')
+    {
+        for (size_t i = 1; i < strlen(word); ++i)
+        {
+            if (word[i] == '=')
+                return 1;
+            if (is_accepted(word[i]) == 0)
+                return 0;
+        }
+        return 1;
+    }
+    return 0;
+}

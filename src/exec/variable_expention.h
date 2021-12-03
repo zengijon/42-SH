@@ -13,4 +13,6 @@ char *search_for_dollar(char *word, struct exec_struct *e_x);
 
 char *remove_sep(char *word, struct exec_struct *e_x);
 
+int valid_name(char *word);
+
 #endif // INC_42SHEEEE_VARIABLE_EXPENTION_H
