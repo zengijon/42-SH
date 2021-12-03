@@ -79,3 +79,21 @@ char *search_for_dollar(char *word, struct exec_struct *e_x)
             return expend(word, word + i + 1, e_x);
     return word;
 }
+
+char *remove_sep(char *word, struct exec_struct *e_x)
+{
+    word = search_for_dollar(word, e_x);
+    char *res = hcalloc(1, strlen(word));
+    int j = 0;
+    for (int i = 0; i < (int) strlen(word); ++i)
+    {
+        if (word[i] == '\"' || word[i] == '\'') // on n'arrive pas a faire la difference entre des "" ou '' pour les echos \' et \" pour juste
+            ;
+        else
+        {
+            res[j] = word[i];
+            j++;
+        }
+    }
+    return res;
+}

@@ -12,12 +12,19 @@
 
 struct free_list *list_malloc = NULL;
 
+struct exec_struct *build_exec_struct(void)
+{
+    struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
+    return e_x;
+}
+
 int exec_42sh(char *buffer, int pretty_print)
 {
     int res = 0;
     struct list *list;
     struct lexer *lex = lexer_new(buffer);
-    struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
+
+    struct exec_struct *e_x = build_exec_struct();
     while ((list = build_list(lex)) != NULL)
     {
         if (pretty_print == 1)

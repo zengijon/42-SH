@@ -110,7 +110,8 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
     for (int i = 1; i < cmd->size_elt; ++i)
     {
-        list[i - 1] = search_for_dollar(cmd->list_elt[i]->word, ex_l);
+        //list[i - 1] = search_for_dollar(cmd->list_elt[i]->word, ex_l);
+        list[i - 1] = remove_sep(cmd->list_elt[i]->word, ex_l);
     }
     return exec_cmds(cmd->list_elt[0]->word, cmd->size_elt - 1,
                      list); // Not in this file
