@@ -99,7 +99,22 @@ struct lexer *lexer_new(const char *input)
         size_t k = res->pos;
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
+        {
             value[j++] = input[k++];
+            if (input[k] == '\'')
+            {
+                value[j++] = input[k++];
+                while(input[k] != '\0' && input[k] != '\'')
+                {
+                    value[j++] = input[k++];
+                }
+                if (input[k] == '\0')
+                {
+                    res->current_tok->type = TOKEN_ERROR;
+                    return res;
+                }
+            }
+        }
         res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
         res->end = k;
