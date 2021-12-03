@@ -72,3 +72,14 @@ int append_redir(char *io, char *file, struct redir *redir)
 //    printf("in stdout\n");
 //    return 1;
 //}
+
+int main(void)
+{
+    struct redir *n = malloc(sizeof(struct redir));
+    simple_redir("1", "test", n);
+    printf("in test\n");
+    reinit_redir(n);
+    printf("in stdout\n");
+    return 1;
+}
+

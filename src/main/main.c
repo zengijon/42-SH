@@ -17,12 +17,11 @@ int exec_42sh(char *buffer, int pretty_print)
     int res = 0;
     struct list *list;
     struct lexer *lex = lexer_new(buffer);
-    struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
     while ((list = build_list(lex)) != NULL)
     {
         if (pretty_print == 1)
             print_list(list);
-        res = exec_list(list, e_x);
+        res = exec_list(list);
     }
     return res;
 }
@@ -63,19 +62,6 @@ int main(int argc, char **argv)
             errx(1, "bad option");
         }
     }
-    if (optind == 1)
-        buffer = file2buf(argv[1]);
-    struct list *list;
-    struct lexer *lex = lexer_new(buffer);
-    int res = 0;
-    while ((list = build_list(lex)) != NULL)
-    {
-        //print_list(list);
-       res = exec_list(list);
-    }
-    //free_all();
-    return res;
-    if (argc <= optind)
     if (!c && argc <= optind)
         errx(1, "missing argv"); // errx(1, "missing parameter"); //handel
                                  // reading stdin
