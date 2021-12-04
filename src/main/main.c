@@ -12,19 +12,31 @@
 
 struct free_list *list_malloc = NULL;
 
-struct exec_struct *build_exec_struct(void)
+struct exec_struct *build_exec_struct(int argc, char **argv)
 {
     struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
+    // $@
+    char *res = hcalloc(argc - 1 , sizeof(char *));
+    for (int i = 1; i < argc ; ++i)
+    {
+        strcat(res, (const char *) argv[i]);
+        strcat(res, " ");
+    }
+    e_x->v_l[e_x->v_l_size++].name = "$@";
+    e_x->v_l[e_x->v_l_size++].value = res;
+
+    //
+
     return e_x;
 }
 
-int exec_42sh(char *buffer, int pretty_print)
+int exec_42sh(char *buffer, int pretty_print, int argc, char **argv)
 {
     int res = 0;
     struct list *list;
     struct lexer *lex = lexer_new(buffer);
 
-    struct exec_struct *e_x = build_exec_struct();
+    struct exec_struct *e_x = build_exec_struct(int argc, char **argv);
     while ((list = build_list(lex)) != NULL)
     {
         if (pretty_print == 1)
@@ -75,5 +87,5 @@ int main(int argc, char **argv)
                                  // reading stdin
     if (!c)
         buffer = file2buf(argv[optind]);
-    return exec_42sh(buffer, pretty_print);
+    return exec_42sh(buffer, pretty_print, argc, argv);
 }
