@@ -1,4 +1,4 @@
-#define _GNU_SOURCE //should be removed for mason
+//#define _GNU_SOURCE // should be removed for mason
 
 #include "lexer.h"
 
@@ -8,13 +8,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <fnmatch.h>
 
 #include "../memory/free_list.h"
 #include "../memory/hmalloc.h"
 #include "utils.h"
 
-//struct free_list *list_malloc = NULL;
+// struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
@@ -81,22 +80,27 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_NEWLINE;
         res->end = res->pos + 1;
     }
+    else if (strncmp(&input[res->pos], "\"", 1) == 0)
+        res = gestion_double_quote(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "'", 1) == 0)
-    {
         res = gestion_quote(res, &input[res->pos]);
-        res->end = res->pos + 1;
-    }
-    //    else if (strncmp(&input[res->pos], "\"", 1) == 0)
-    //    {
-    //        res = gestion_double_quote(res, &input[res->pos]);
-    //        res->end = res->pos + 1;
-    //    }
     else if (strncmp(&input[res->pos], "&", 1) == 0
              || strncmp(&input[res->pos], "|", 1) == 0)
     {
         res = gestion_and_or(res, &input[res->pos]);
     }
-    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH) == 0)
+    else if (input[res->pos] == '(')
+    {
+        res->current_tok->type = TOKEN_PA_OPEN;
+        res->end = res->pos + 1;
+    }
+    else if (input[res->pos] == ')')
+    {
+        res->current_tok->type = TOKEN_PA_CLOSE;
+        res->end = res->pos + 1;
+    }
+    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH)
+             == 0)
     {
         gestion_redir(res, input + res->pos);
     }
@@ -107,21 +111,20 @@ struct lexer *lexer_new(const char *input)
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
         {
-//            if (input[k] == '\'')
-//            {
-//                value[j++] = input[k++];
-//                while(input[k] != '\0' && input[k] != '\'')
-//                {
-//                    value[j++] = input[k++];
-//                }
-//                if (input[k] == '\0')
-//                {
-//                    res->current_tok->type = TOKEN_ERROR;
-//                    return res;
-//                }
-//            } // WHAT DID YOU DO !!?
+            //            if (input[k] == '\'')
+            //            {
+            //                value[j++] = input[k++];
+            //                while(input[k] != '\0' && input[k] != '\'')
+            //                {
+            //                    value[j++] = input[k++];
+            //                }
+            //                if (input[k] == '\0')
+            //                {
+            //                    res->current_tok->type = TOKEN_ERROR;
+            //                    return res;
+            //                }
+            //            } // WHAT DID YOU DO !!?
             value[j++] = input[k++];
-
         }
         res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
@@ -321,12 +324,25 @@ struct token *lexer_pop(struct lexer *res)
         res->current_tok->type = TOKEN_NEWLINE;
         res->end = res->pos + 1;
     }
+    else if (input[res->pos] == '(')
+    {
+        res->current_tok->type = TOKEN_PA_OPEN;
+        res->end = res->pos + 1;
+    }
+    else if (input[res->pos] == ')')
+    {
+        res->current_tok->type = TOKEN_PA_CLOSE;
+        res->end = res->pos + 1;
+    }
+    else if (strncmp(&input[res->pos], "\"", 1) == 0)
+        res = gestion_double_quote(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "'", 1) == 0)
         res = gestion_quote(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "&", 1) == 0
              || strncmp(&input[res->pos], "|", 1) == 0)
         res = gestion_and_or(res, &input[res->pos]);
-    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH) == 0)
+    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH)
+             == 0)
     {
         gestion_redir(res, input + res->pos);
     }
@@ -337,19 +353,6 @@ struct token *lexer_pop(struct lexer *res)
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
         {
-            if (input[k] == '\'')
-            {
-                value[j++] = input[k++];
-                while(input[k] != '\0' && input[k] != '\'')
-                {
-                    value[j++] = input[k++];
-                }
-                if (input[k] == '\0')
-                {
-                    res->current_tok->type = TOKEN_ERROR;
-                    return tmp;
-                }
-            }
             if (input[k] == '\\')
             {
                 value[j++] = input[k + 1];

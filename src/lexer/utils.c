@@ -24,8 +24,10 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
     size_t j = 1;
     char *str = hcalloc(strlen(input), sizeof(char) + 1);
     strcat(str, "'");
-    while (input[i] != '\0' && (input[i] == '\\' || input[i] != '\''))
+    while (input[i] != '\0' && input[i] != '\'')
     {
+        if (input[i] == '\\')
+            i++;
         str[j++] = input[i++];
     }
     strcat(str, "'");
@@ -37,6 +39,30 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
     }
     else
         errx(1, "missing single quote");
+    return lexer;
+}
+
+struct lexer *gestion_double_quote(struct lexer *lexer, const char *input)
+{
+    size_t i = 1;
+    size_t j = 1;
+    char *str = hcalloc(strlen(input), sizeof(char) + 1);
+    strcat(str, "\"");
+    while (input[i] != '\0' && input[i] != '\"')
+    {
+        if (input[i] == '\\')
+            i++;
+        str[j++] = input[i++];
+    }
+    strcat(str, "\"");
+    lexer->end = lexer->pos + i + 1;
+    if (input[i] == '\"')
+    {
+        lexer->current_tok->type = TOKEN_WORDS;
+        lexer->current_tok->value = str;
+    }
+    else
+        lexer->current_tok->type = TOKEN_ERROR;
     return lexer;
 }
 
@@ -58,7 +84,11 @@ struct separator *build_separator_list(void)
     new->separators[5] = "<";
     new->separators[6] = hcalloc(2,1);
     new->separators[6] = ">";
-    new->nb_separator = 7;
+    new->separators[7] = hcalloc(2,1);
+    new->separators[7] = "(";
+    new->separators[8] = hcalloc(2,1);
+    new->separators[8] = ")";
+    new->nb_separator = 9;
     return new;
 }
 
