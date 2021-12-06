@@ -104,7 +104,7 @@ char *remove_sep(char *word, struct exec_struct *e_x)
     int single = 0;
     int double_ = 0;
     word = search_for_dollar(word, e_x);
-    char *res = hcalloc(1, strlen(word));
+    char *res = hcalloc(1, strlen(word) + 1);
     int j = 0;
     for (int i = 0; word[i] != 0; ++i)
     {
