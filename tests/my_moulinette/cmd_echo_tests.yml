@@ -1,4 +1,4 @@
-# ECHO TESTS WITH -c OPTION 
+&# ECHO TESTS WITH -c OPTION 
 
 #===========BASIC TESTS============
 
@@ -8,6 +8,9 @@
 
 - category: ECHO BASIC TESTS  
   name: echo with quotes
+  input: echo "lol"
+- category: ECHO BASIC TESTS  
+  name: echo with quotes protected
   input: echo \"lol\"
 
 - category: ECHO BASIC TESTS  
@@ -59,20 +62,28 @@
   input: echo -- -n crackito
 
 
-#============MEDIUM TESTS===========
-- category: ECHO MEDIUM TESTS
+#============ECHO OPT TESTS===========
+- category: ECHO OPT TESTS
   name: echo with multiple quotes and empty
-  input: echo "oulala" "" "" "jaicho" | cat -e
+  input: echo "oulala" "" "" "jaicho"
 
-- category: ECHO MEDIUM TESTS
+- category: ECHO OPT TESTS
   name: echo -n
   input: echo -n lol
 
-- category: ECHO MEDIUM TESTS
+- category: ECHO OPT TESTS
+  name: echo -n <no args>
+  input: echo -n
+
+- category: ECHO OPT TESTS
+  name: echo -n kernel
+  input: echo -n kernel
+
+- category: ECHO OPT TESTS
   name: echo if complicated wrong
   input: if echo fi; then echo then; fi echo test
 
-- category: ECHO MEDIUM TESTS
+- category: ECHO OPT TESTS
   name: echo if complicated right
   input: if echo fi; then echo then; fi ; echo test
 
@@ -83,19 +94,31 @@
   name: simple ls
   input: ls
 
-#Faire plein de test avec ';' coller aux mots
+#============IF and ';' TESTS=============
+    #WITHOUT ERRORS
 
 - category: PT COMA
   name: fi coma
   input: if true; then echo then; fi;
 
 - category: PT COMA
-  name: if coma
-  input: if;
-
-- category: PT COMA
   name: echo coma
   input: echo;
+
+- category: PT COMA
+  name: if true; then ; else ; fi
+  input: if true; then echo the right thing; else echo wrong!!; fi
+
+- category: PT COMA
+  name: if false; then ; else ; fi
+  input: if false; then echo wrong!!; else echo the right thing; fi
+
+
+    #WITH ERRORS
+
+- category: PT COMA
+  name: if coma
+  input: if;
 
 - category: PT COMA
   name: then coma broken 1
@@ -104,3 +127,31 @@
 - category: PT COMA
   name: then coma broken 2
   input: if true; then; echo test; fi
+
+- category: PT COMA
+  name: error 'else' unexpected
+  input: if false then echo wrong!!; else echo the right thing; fi
+
+- category: PT COMA
+  name: error 'fi' unexpected
+  input: if false then echo wrong!! else echo the right thing; fi
+
+- category: PT COMA
+  name: error expecting 'then'
+  input: if false then echo wrong!! else echo the right thing fi
+
+- category: PT COMA
+  name: error ';' unexpected after then
+  input: if false; then; echo wrong!!; else; echo the right thing; fi
+
+- category: PT COMA
+  name: error 'else' unexpected 
+  input: if false then; echo wrong!!; else; echo the right thing; fi
+
+- category: PT COMA
+  name: elif
+  input: if false; then echo wrong; elif false; then echo wrong; else echo sisi la famille; fi
+
+- category: PT COMA
+  name: 
+  input: if false; then echo wrong; elif true; then echo the right thing; else echo wrong; fi

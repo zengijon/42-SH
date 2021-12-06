@@ -105,4 +105,3 @@ if __name__ == "__main__":
         process_42sh = running_process(path_42sh, our_input)
 
         my_check_output(process_dash, process_42sh, 0, name, our_input)
-            
