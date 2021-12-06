@@ -350,11 +350,11 @@ struct token *lexer_pop(struct lexer *res)
                     return tmp;
                 }
             }
-            if (input[k] == '\\')
-            {
-                value[j++] = input[k + 1];
-                k += 2;
-            }
+//            if (input[k] == '\\')
+//            {
+//                value[j++] = input[k + 1];
+//                k += 2;
+//            }
             else
                 value[j++] = input[k++];
         }
