@@ -1,1 +1,1 @@
-all_sources += files('exec.c')
+all_sources += files('exec.c', 'mypipe.c', 'variable_expention.c')
