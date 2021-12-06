@@ -25,7 +25,9 @@ enum token_type
     TOKEN_UNTIL, ///<'until' -> 18
     TOKEN_NEG, ///<'!' -> 19
     TOKEN_REDIR,/// <> -> 20
-    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 21
+    TOKEN_PA_OPEN, /// '(' -> 21
+    TOKEN_PA_CLOSE, /// ')' -> 22
+    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 23
 };
 
 //drfhfjfgj

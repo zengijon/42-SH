@@ -6,6 +6,8 @@ size_t skipspace(const char *input);
 //create token_word with all the string between the quotes
 struct lexer *gestion_quote(struct lexer *lexer, const char *input);
 
+struct lexer *gestion_double_quote(struct lexer *lexer, const char *input);
+
 //create an array of strings with all the separators
 struct separator *build_separator_list(void);
 
