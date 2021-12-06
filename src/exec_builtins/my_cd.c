@@ -2,7 +2,7 @@
 // Created by jennie on 06/12/2021.
 //
 
-#include "cd.h"
+#include "my_cd.h"
 
 #include<stdio.h>
 #include<unistd.h>
@@ -40,7 +40,7 @@ int is_valid_dir(char *name, char *current_path)
     path = strcat(path, "/");
     path = strcat(path, name);
 
-    struct dirent *pDirent;
+    //struct dirent *pDirent;
     DIR *pDir;
 
     pDir = opendir (path);

@@ -49,7 +49,7 @@ char *get_path(void)
         errx(1, "getcwd failed");
     char *res = hcalloc(1, strlen(s));
 
-    memccpy(res, s, strlen(s));
+    //memccpy(res, s, strlen(s));
 
     return res;
 }
