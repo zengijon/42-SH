@@ -256,9 +256,9 @@ struct prefix *build_prefix(struct lexer *lex)
         || fnmatch("*=*", lex->current_tok->value, 0) != 0
         || lex->current_tok->value[0] == '=')
         return NULL;
+    if (valid_name(lex->current_tok->value) == 0)
+        return NULL;
     res->assignment_word = lexer_pop(lex)->value;
-    if (valid_name(res->assignment_word) == 0)
-        err(1, "name not valid");
     // res->redirect = build_redirection(lex);
 
     return res;
