@@ -1,9 +1,9 @@
 //#define _GNU_SOURCE //should be removed for mason
 
+
 #include "lexer.h"
 
 #include <err.h>
-#include <fnmatch.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>

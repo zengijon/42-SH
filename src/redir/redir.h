@@ -1,8 +1,7 @@
 #pragma once
 
-struct redir
-{
-    int new_fd;
-    int old_fd;
-    FILE *file;
-};
+#include "../struct/exec_struct.h"
+
+int simple_redir(char *io, char *file, struct redir *redir, char *flag);
+
+void reinit_redir(struct redir *redir);
