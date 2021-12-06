@@ -12,7 +12,7 @@
 int is_accepted(char c)
 {
     const char *accepted =
-        "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_123456789";
+        "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789";
     for (int i = 0; accepted[i] != 0; ++i)
         if (c == accepted[i])
             return 1;
@@ -51,8 +51,10 @@ char *strcmp_withhook(char *ref, char *start)
     return start + i + 1;
 }
 
+//corner case when $n is followed by valid charcters. ex : $1a
+
 char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
-{
+{ //unacurate buffer size
     char *res = hcalloc(1, dollar_ind - start + 8096);
     char *rest = NULL;
     strncpy(res, start, dollar_ind - start - 1);
@@ -73,21 +75,34 @@ char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
 
 char *search_for_dollar(char *word, struct exec_struct *e_x)
 {
-    for (int i = 0; i < (int)strlen(word) - 1; i++)
-        if (word[i] == '$'
-            && (word[i + 1] == '{' || is_accepted(word[i + 1]) == 1))
+    int single = 0;
+    int double_ = 0;
+    for (int i = 0; word[i] != 0 && i < (int)strlen(word) - 1; i++)
+    {
+        if (word[i] == '"')
+            double_ = !double_;
+        if (double_ == 0 && word[i] == '\'')
+            single = !single;
+        if (single == 0 && word[i] == '$' && word[i + 1] != '"' && word[i + 1] != '\'')
             return expend(word, word + i + 1, e_x);
+    }
     return word;
 }
 
 char *remove_sep(char *word, struct exec_struct *e_x)
 {
+    int single = 0;
+    int double_ = 0;
     word = search_for_dollar(word, e_x);
     char *res = hcalloc(1, strlen(word));
     int j = 0;
     for (int i = 0; i < (int) strlen(word); ++i)
     {
-        if (word[i] == '\"' || word[i] == '\'') // on n'arrive pas a faire la difference entre des "" ou '' pour les echos \' et \" pour juste
+        if (word[i] == '"')
+            double_ = !double_;
+        if (double_ == 0 && word[i] == '\'')
+            single = !single;
+        if ((word[i] == '\"' && single == 0) || (word[i] == '\'' && double_ == 0)) // on n'arrive pas a faire la difference entre des "" ou '' pour les echos \' et \" pour juste
             ;
         else
         {

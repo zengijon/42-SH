@@ -47,3 +47,5 @@ int exec_do_group(struct do_group *do_gp, struct exec_struct *ex_l);
 int exe_case_clause(struct case_clause *c_c, struct exec_struct *ex_l);
 
 int exec_case_item(struct case_item *c_i, struct exec_struct *ex_l);
+
+int assign_var(char *name, char *value, struct exec_struct *ex_l);
