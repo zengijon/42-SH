@@ -1,4 +1,4 @@
-&# ECHO TESTS WITH -c OPTION 
+# ECHO TESTS WITH -c OPTION 
 
 #===========BASIC TESTS============
 
@@ -6,58 +6,82 @@
   name: simple echo
   input: echo lol
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo with quotes
   input: echo "lol"
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo with quotes protected
   input: echo \"lol\"
 
-- category: ECHO BASIC TESTS  
-  name: echo with backslash
-  input: echo ./\*
+- category: ECHO BASIC TESTS
+name: echo with backslash
+input: echo ./\*
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
+  name: echo with backslash 2
+  input: echo \\toi
+
+- category: ECHO BASIC TESTS
+  name: echo with backslash 3
+  input: echo \\connerie
+
+- category: ECHO BASIC TESTS
+  name: echo with backslash 4
+  input: echo \\nenufar
+
+- category: ECHO BASIC TESTS
+  name: echo with backslash 5
+  input: echo \\roulette
+
+- category: ECHO BASIC TESTS
+  name: echo with inutile backslash
+  input: echo \\tematematema
+
+- category: ECHO BASIC TESTS
+  name: echo with inutile backslash
+  input: echo \\yo\\ma\\ptite\\gueule
+
+- category: ECHO BASIC TESTS
   name: echo -> IF FI
   input: echo if fi
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo -> LS
   input: echo ls
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo big spaces
   input: echo l        o l
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo nothing and cat -e
   input: echo | cat -e
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo multiple things
   input: echo def 65536 yohann 666 '' robin
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo lol | cat -e
   input: echo lol | cat -e
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo abcdefghij with spaces and cat -e
   input: echo a b c d e f g h i j | cat -e
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo 2 words separated by --
   input: echo Armand -- Jennie
-  
-- category: ECHO BASIC TESTS  
+
+- category: ECHO BASIC TESTS
   name: echo -- Jennie
   input: echo -- Jennie
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo Armand --
   input: echo Armand ---
 
-- category: ECHO BASIC TESTS  
+- category: ECHO BASIC TESTS
   name: echo -- -n crackito
   input: echo -- -n crackito
 
@@ -94,8 +118,8 @@
   name: simple ls
   input: ls
 
-#============IF and ';' TESTS=============
-    #WITHOUT ERRORS
+    #============IF and ';' TESTS=============
+  #WITHOUT ERRORS
 
 - category: PT COMA
   name: fi coma
@@ -114,7 +138,7 @@
   input: if false; then echo wrong!!; else echo the right thing; fi
 
 
-    #WITH ERRORS
+  #WITH ERRORS
 
 - category: PT COMA
   name: if coma
@@ -145,7 +169,7 @@
   input: if false; then; echo wrong!!; else; echo the right thing; fi
 
 - category: PT COMA
-  name: error 'else' unexpected 
+  name: error 'else' unexpected
   input: if false then; echo wrong!!; else; echo the right thing; fi
 
 - category: PT COMA
@@ -153,5 +177,5 @@
   input: if false; then echo wrong; elif false; then echo wrong; else echo sisi la famille; fi
 
 - category: PT COMA
-  name: 
+  name:
   input: if false; then echo wrong; elif true; then echo the right thing; else echo wrong; fi

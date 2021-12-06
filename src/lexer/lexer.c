@@ -111,20 +111,14 @@ struct lexer *lexer_new(const char *input)
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
         {
-            //            if (input[k] == '\'')
-            //            {
-            //                value[j++] = input[k++];
-            //                while(input[k] != '\0' && input[k] != '\'')
-            //                {
-            //                    value[j++] = input[k++];
-            //                }
-            //                if (input[k] == '\0')
-            //                {
-            //                    res->current_tok->type = TOKEN_ERROR;
-            //                    return res;
-            //                }
-            //            } // WHAT DID YOU DO !!?
-            value[j++] = input[k++];
+
+            if (input[k] == '\\')
+            {
+                value[j++] = input[k++];
+                value[j++] = input[k++];
+            }
+            else
+                value[j++] = input[k++];
         }
         res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
@@ -355,8 +349,8 @@ struct token *lexer_pop(struct lexer *res)
         {
             if (input[k] == '\\')
             {
-                value[j++] = input[k + 1];
-                k += 2;
+                value[j++] = input[k++];
+                value[j++] = input[k++];
             }
             else
                 value[j++] = input[k++];
