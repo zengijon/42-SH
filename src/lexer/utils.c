@@ -36,7 +36,7 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
         lexer->current_tok->value = str;
     }
     else
-        lexer->current_tok->type = TOKEN_ERROR;
+        errx(1, "missing single quote");
     return lexer;
 }
 
