@@ -46,8 +46,6 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
     struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
     for (int i = optind; i <= argc - optind; ++i)
     {
-        //char *single_arg = hcalloc(2, 1);
-
         assign_var(my_itoa(i - optind, hcalloc(1, 8)), argv[i], e_x);
         if ( i != optind)
         {

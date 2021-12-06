@@ -104,6 +104,8 @@ char *remove_sep(char *word, struct exec_struct *e_x)
             single = !single;
         if ((word[i] == '\"' && single == 0) || (word[i] == '\'' && double_ == 0)) // on n'arrive pas a faire la difference entre des "" ou '' pour les echos \' et \" pour juste
             ;
+        else if (word[i] == '\\')
+            printf("\\ found !\n");
         else
         {
             res[j] = word[i];

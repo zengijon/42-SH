@@ -40,7 +40,8 @@ char *expand_special_var(char *buffer, char *val_list)
         if (single == 0 && buffer[i] == '$' && buffer[i + 1] == '@')
         {
             strncpy(res, buffer, i);
-            return expand_special_var(strcat(res, val_list), val_list);
+            strcat(res, val_list);
+            return strcat(res, expand_special_var(buffer + i + 2, val_list));
         }
     }
     return res[0] == 0 ? buffer : res;
