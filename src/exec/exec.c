@@ -100,6 +100,7 @@ int exec_command(struct command *cmd, struct exec_struct *ex_l)
     assert(0);
 }
 
+
 int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
 {
     int res = 0;
