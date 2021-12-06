@@ -69,7 +69,7 @@ struct lexer *gestion_double_quote(struct lexer *lexer, const char *input)
 struct separator *build_separator_list(void)
 {
     struct separator *new = hcalloc(1, sizeof(struct separator));
-    new->separators = hcalloc(8, sizeof(char *));
+    new->separators = hcalloc(20, sizeof(char *));
     new->separators[0] = hcalloc(2,1);
     new->separators[0] = "\n";
     new->separators[1] = hcalloc(2,1);
