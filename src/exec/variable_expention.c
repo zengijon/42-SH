@@ -111,14 +111,7 @@ char *remove_sep(char *word, struct exec_struct *e_x)
         if (word[i] == '"')
             double_ = !double_;
         if (double_ == 0 && word[i] == '\'')
-        {
             single = !single;
-            if (word[i + 1] == '\'')
-            {
-                res[0] = ' ';
-                return res;
-            }
-        }
         if ((word[i] == '\"' && single == 0)
             || (word[i] == '\'' && double_ == 0))
             ;
