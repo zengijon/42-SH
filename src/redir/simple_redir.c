@@ -34,13 +34,13 @@ void reinit_redir(struct redir *redir)
     fclose(redir->file);
 }
 
-//
-//int main(void)
-//{
-//    struct redir *n = malloc(sizeof(struct redir));
-//    simple_redir("1", "test", n);
-//    printf("in test\n");
-//    reinit_redir(n);
-//    printf("in stdout\n");
-//    return 1;
-//}
+
+int main(void)
+{
+    struct redir *n = malloc(sizeof(struct redir));
+    simple_redir("1", "test", n);
+    printf("in test\n");
+    reinit_redir(n);
+    printf("in stdout\n");
+    return 1;
+}

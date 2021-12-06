@@ -3,6 +3,7 @@
 #include "lexer.h"
 
 #include <err.h>
+#include <fnmatch.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,13 +202,12 @@ struct token *lexer_pop(struct lexer *res)
     res->pos = i;
     if (is_token(&input[res->pos], "if ", 3) == 0)
     {
+        res->current_tok->type = TOKEN_IF;
         if (tmp->type == TOKEN_WORDS)
         {
             res->current_tok->type = TOKEN_WORDS;
             res->current_tok->value = "if";
         }
-        else
-            res->current_tok->type = TOKEN_IF;
         res->end = res->pos + 2;
     }
     else if (is_token(&input[res->pos], "then ", 5) == 0)
@@ -350,11 +350,11 @@ struct token *lexer_pop(struct lexer *res)
                     return tmp;
                 }
             }
-//            if (input[k] == '\\')
-//            {
-//                value[j++] = input[k + 1];
-//                k += 2;
-//            }
+            if (input[k] == '\\')
+            {
+                value[j++] = input[k + 1];
+                k += 2;
+            }
             else
                 value[j++] = input[k++];
         }
@@ -367,7 +367,7 @@ struct token *lexer_pop(struct lexer *res)
 
 // int main(void)
 //{
-//     struct lexer *lexer = lexer_new("if <> >> >k");
+//     struct lexer *lexer = lexer_new("if echo fi; then echo then; fi; echo test");
 //     //    printf("%d\n", lexer->current_tok->type);
 //     //    struct token *tok = lexer_peek(lexer);
 //     //    printf("%d\n", tok->type);
