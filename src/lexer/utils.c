@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <err.h>
 #include <string.h>
+#include <fnmatch.h>
 
 size_t skipspace(const char *input)
 {
@@ -20,12 +21,14 @@ size_t skipspace(const char *input)
 struct lexer *gestion_quote(struct lexer *lexer, const char *input)
 {
     size_t i = 1;
-    size_t j = 0;
-    char *str = hcalloc(strlen(input), sizeof(char));
+    size_t j = 1;
+    char *str = hcalloc(strlen(input), sizeof(char) + 1);
+    strcat(str, "'");
     while (input[i] != '\0' && (input[i] == '\\' || input[i] != '\''))
     {
         str[j++] = input[i++];
     }
+    strcat(str, "'");
     lexer->end = lexer->pos + i + 1;
     if (input[i] == '\'')
     {
@@ -106,5 +109,33 @@ struct lexer *gestion_and_or(struct lexer *lexer, const char *input)
         else
             lexer->current_tok->type = TOKEN_PIPE;
     }
+    return lexer;
+}
+
+struct lexer *gestion_redir(struct lexer *lexer, const char *input)
+{
+    int i = 0;
+    lexer->current_tok->type = TOKEN_REDIR;
+    char *res = hcalloc(1500, sizeof(char));
+    while (input[i] != '>' && input[i] != '<')
+    {
+        res[i] = input[i];
+        ++i;
+    }
+    res[i] = input[i];
+    if ((input[i + 1] == '>' || input[i + 1] == '<') && input[i] != input[i + 1])
+    {
+        lexer->end = lexer->pos + i + 1;
+    }
+    else if (fnmatch("[<>|&]*", input + i + 1, 0) == 0)
+    {
+        lexer->end = lexer->pos + i + 2;
+        res[i + 1] = input[i + 1];
+    }
+    else
+    {
+        lexer->end = lexer->pos + i + 1;
+    }
+    lexer->current_tok->value = res;
     return lexer;
 }

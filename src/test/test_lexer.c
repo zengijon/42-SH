@@ -1,7 +1,7 @@
 #include <criterion/criterion.h>
 #include <criterion/redirect.h>
 
-#include "lexer.h"
+#include "../lexer/lexer.h"
 
 void redirect_all_stdout(void)
 {
