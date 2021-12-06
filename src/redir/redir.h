@@ -6,3 +6,5 @@ struct redir
     int old_fd;
     FILE *file;
 };
+
+
