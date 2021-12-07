@@ -6,7 +6,7 @@
 #include "echo.h"
 #include "microshell.h"
 
-char *all_cmd[] = { "ls", "pwd", "exit" , "cat"};
+char *all_cmd[] = {"ls", "pwd", "exit" , "cat"};
 
 int exec_builtins(char *cmd, int nb_params, char **parameters)
 {

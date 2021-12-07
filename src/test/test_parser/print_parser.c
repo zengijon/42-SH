@@ -88,19 +88,19 @@ void print_command(struct command *c)
     if (c != NULL)
     {
         printf("(command) [ ");
-        print_redirection(c->redir);
+        for (int i = 0; i < c->nb_redir; ++i)
+            print_redirection(c->redir[i]);
         if (c->s_cmd != NULL)
             print_simple_command(c->s_cmd);
         else if (c->sh_cmd != NULL)
-        {
             print_shell_command(c->sh_cmd);
-            print_redirection(c->redir);
-        }
         // else if (c->fun)
         //{
         // print_funcdec(c->fun);
-        print_redirection(c->redir);
         //}
+
+        for (int i = 0; i < c->nb_redir2; ++i)
+            print_redirection(c->redir2[i]);
         printf("]");
     }
 }
@@ -153,7 +153,7 @@ void print_shell_command(struct shell_command *sh_cmd)
 //     printf("]");
 // }
 
- void print_redirection(struct redirection *r)
+void print_redirection(struct redirection *r)
 {
     if (r != NULL)
     {
@@ -251,19 +251,19 @@ void print_rule_while(struct rule_while *r_w) // never used normal
     printf(" ] ");
 }
 
- void print_rule_until(struct rule_until *r_u) // never used normal
+void print_rule_until(struct rule_until *r_u) // never used normal
 {
-     printf("(rule until) [ ");
-     if (r_u != NULL)
-     {
-         printf("\n( until ) ");
-         if (r_u->cp_list != NULL)
-             print_compound_list(r_u->cp_list);
-         if (r_u->do_gp != NULL)
-             print_do_group(r_u->do_gp);
-     }
-     printf("] ");
- }
+    printf("(rule until) [ ");
+    if (r_u != NULL)
+    {
+        printf("\n( until ) ");
+        if (r_u->cp_list != NULL)
+            print_compound_list(r_u->cp_list);
+        if (r_u->do_gp != NULL)
+            print_do_group(r_u->do_gp);
+    }
+    printf("] ");
+}
 
 // void print_rule_case(struct rule_case *r_c)
 //{
