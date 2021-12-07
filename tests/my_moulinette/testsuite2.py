@@ -7,6 +7,14 @@ from typing import cast
 import termcolor
 import yaml
 
+basic_files =  []
+error_files = []
+hard_files = []
+script_files = []
+
+
+
+
 TEST_OK = f"[ {termcolor.colored('OK', 'green')} ]"
 TEST_KO = f"[ {termcolor.colored('KO', 'red')} ]"
 RED_DOT = f"{termcolor.colored('*', 'red')}"
@@ -62,21 +70,14 @@ def my_check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess, 
 )
 
 
-#def check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess):
-#    assert expected.returncode == actual.returncode, \
- #       f"Exit with return code -> {actual.returncode}, and -> {expected.returncode} was expected"
-  #  assert expected.stdout == actual.stdout, \
-   #     f"Stdout is not the same\n{ACTUAL}\n{actual.stdout}\n{EXPECTED}\n{expected.stdout}"
-    #assert expected.stderr == actual.stderr, \
-     #   f"Stderr is not the same\n {ACTUAL}\n{actual.stderr}\n{EXPECTED}\n"
-
-
 if __name__ == "__main__":
     parser = ArgumentParser("TestSuite")
     parser.add_argument("--binary", required=True, type=Path)
+    parser.add_argument("--type", required=True, type=str)
     arg = parser.parse_args()
-
     path_42sh = arg.binary.absolute()
+    type_of_test = arg.type
+    print(type_of_test)
     print(f"We are testing the following binary -> {path_42sh}")
 
     with open("cmd_echo_tests.yml", "r") as our_yaml:
@@ -96,12 +97,6 @@ if __name__ == "__main__":
         name = test["name"]
 
         process_dash = running("dash", our_input)
-
-        #input_42sh = "-c "
-        #input_42sh = "\"" + our_input + "\""
-        #print(our_input)
-        #res = str(path_42sh) + " " + input_42sh
-        #print(f"\n LE PATH: {path_42sh}, -c <{our_input}>\n")
         process_42sh = running_process(path_42sh, our_input)
 
         my_check_output(process_dash, process_42sh, 0, name, our_input)
