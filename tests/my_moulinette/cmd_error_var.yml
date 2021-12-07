@@ -1,0 +1,15 @@
+# VAR TESTS WITH -c OPTION
+
+#===========BASIC TESTS===========
+
+- category: VAR BASIC TESTS
+  name: define wrong 1
+  input: t= chocolat
+
+- category: VAR BASIC TESTS
+  name: define wrong 2
+  input: t = chocolat
+
+- category: VAR BASIC TESTS
+  name: define wrong 3
+  input: t =chocolat

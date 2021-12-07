@@ -10,6 +10,7 @@
 #include "../memory/free_list.h"
 #include "../memory/hmalloc.h"
 #include "lexer.h"
+#include "utils.h"
 
 size_t skipspace(const char *input)
 {

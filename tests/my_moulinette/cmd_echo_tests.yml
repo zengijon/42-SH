@@ -19,26 +19,6 @@
   input: echo ./\*
 
 - category: ECHO BASIC TESTS  
-  name: echo with backslash 2
-  input: echo \\toi
-
-- category: ECHO BASIC TESTS  
-  name: echo with backslash 3
-  input: echo \\connerie
-
-- category: ECHO BASIC TESTS  
-  name: echo with backslash 4
-  input: echo \\nenufar
-
-- category: ECHO BASIC TESTS  
-  name: echo with backslash 5
-  input: echo \\roulette
-
-- category: ECHO BASIC TESTS  
-  name: echo with inutile backslash
-  input: echo \\tematematema
-
-- category: ECHO BASIC TESTS  
   name: echo with mutiple backslash
   input: echo \\yo\\ma\\ptite\\gueule
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <stddef.h>
 // skip spaces
 size_t skipspace(const char *input);
 

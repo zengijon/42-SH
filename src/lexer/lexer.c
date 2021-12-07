@@ -236,7 +236,7 @@ struct token *lexer_pop(struct lexer *res)
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "fi", 2) == 0
-             && is_separator(input + res->pos + 2, separator) == 0)
+             && (is_separator(input + res->pos + 2, separator) == 0 || input[res->pos + 2] == 0))
     {
         res->current_tok->type = TOKEN_FI;
         if (tmp->type == TOKEN_WORDS)

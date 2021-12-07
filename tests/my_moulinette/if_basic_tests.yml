@@ -65,10 +65,6 @@
   input: if false; then =mlkjx==lsk; else echo ok; fi
 
 - category: IF BASIC
-  name: if false then -> nimp
-  input: if false; then if then else; else echo ok; fi
-
-- category: IF BASIC
   name: complicated if and echo
   input: if echo if; then echo then; fi
 
@@ -81,21 +77,9 @@
   input: if (echo if); then echo ok; fi
 
 - category: IF BASIC
-  name: if [true]
-  input: if [ true ] ; then echo ok; fi
-
-- category: IF BASIC
-  name: wrong function again
-  input: if [ true ] ; then echo ouiii; elif [ false ] ; then ok; else ok; fi
-
-- category: IF BASIC
-  name: only false but echo non
-  input: if [ false ] ; then echo non; elif [ false ] ; then echo non; fi
-
-- category: IF BASIC
   name: echo if complicated wrong with final echo
   input: if echo fi; then echo then; fi ; echo test
 
 - category: IF BASIC
-  name:
-  input: 
+  name: echo if complicated wrong with final echo
+  input: if echo fi; then echo then; fi ; echo test ;

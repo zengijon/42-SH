@@ -53,7 +53,15 @@
 - category: VAR BASIC TESTS
   name: var add 4
   input: a=1 ; b=2; a=$(($a + $b)) ; echo $a; echo $b
+  
+- category: VAR BASIC TESTS
+  name: var empty
+  input: echo $t
 
+  
+- category: VAR BASIC TESTS
+  name: var empty special
+  input: echo $echo
 
 
 #=========SPECIAL VAR TESTS==========
