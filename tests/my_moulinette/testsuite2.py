@@ -7,8 +7,8 @@ from typing import cast
 import termcolor
 import yaml
 
-basic_files =  ["if_basic_tests.yml"]
-error_files = ["if_error_tests.yml"]
+basic_files =  ["if_basic_tests.yml", "cmd_var.yml"]
+error_files = ["if_error_tests.yml", "cmd_error_var.yml"]
 hard_files = []
 script_files = []
 

@@ -1,15 +1,20 @@
 # VAR TESTS WITH -c OPTION
 
-#===========BASIC TESTS===========
+#===========ERROR TESTS===========
 
-- category: VAR BASIC TESTS
+- category: VAR ERROR TESTS
   name: define wrong 1
   input: t= chocolat
 
-- category: VAR BASIC TESTS
+- category: VAR ERROR TESTS
   name: define wrong 2
   input: t = chocolat
 
-- category: VAR BASIC TESTS
+- category: VAR ERROR TESTS
   name: define wrong 3
   input: t =chocolat
+
+- category: VAR ERROR TESTS
+  name: {var}
+  input: \{t\}=1
+

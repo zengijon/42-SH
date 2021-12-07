@@ -8,7 +8,7 @@
 
 - category: VAR BASIC TESTS
   name: echo var
-  input: t=1 ; echo $t
+  input: t=1 ; echo $t 
 
 - category: VAR BASIC TESTS
   name: var;
@@ -77,10 +77,6 @@
 - category: VAR BASICS SPECIAL TESTS
   name: var $?
   input: echo $?
-
-- category: VAR BASICS SPECIAL TESTS
-  name: var $$
-  input: echo $$
 
 - category: VAR BASICS SPECIAL TESTS
   name: var $1
