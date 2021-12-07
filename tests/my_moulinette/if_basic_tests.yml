@@ -1,0 +1,101 @@
+#============IF BASIC TESTS=============
+
+- category: IF BASIC
+  name: simple with pt comas
+  input: if true; then echo ok; fi;
+
+- category: IF BASIC
+  name: simple with else
+  input: if true; then echo ok; else echo non-non; fi
+
+- category: IF BASIC
+  name: wrong function without error
+  input: if true; then echo ok; else ok; fi
+
+- category: IF BASIC
+  name: multiple if 
+  input: if true; then if true; then if true; then if true; then echo c fini; fi; fi; fi fi;
+
+- category: IF BASIC
+  name: multiple if 2
+  input: if true; then if true; then if true; then if true; then echo ok; fi fi fi fi
+
+- category: IF BASIC
+  name: only 'true'
+  input: if true; then true; else true; fi
+
+- category: IF BASIC
+  name: if echo
+  input: if echo; then echo ok; else echo nono; fi
+
+- category: IF BASIC
+  name: simple elif
+  input: if false; then echo nono; elif true; then echo ok; else echo nonono; fi
+
+- category: IF BASIC
+  name: if false
+  input: if false; then echo ok; else echo non-non; fi
+
+- category: IF BASIC
+  name: elif false
+  input: if false; then echo nono; elif false; then echo nonono; else echo ouiii; fi
+
+- category: IF BASIC
+  name: if echo a then -> same
+  input: if echo a; then if echo b; then if echo c; then if echo d; then if echo e; then if echo f; then echo c bon; fi fi fi fi fi fi
+
+- category: IF BASIC
+  name: if true; then ; else ; fi
+  input: if true; then echo the right thing; else echo wrong!!; fi
+
+- category: IF BASIC
+  name: if false; then ; else ; fi
+  input: if false; then echo wrong!!; else echo the right thing; fi
+
+- category: IF BASIC
+  name: elif echo 
+  input: if false; then echo wrong; elif true; then echo the right thing; else echo wrong; fi
+
+- category: IF BASIC
+  name: else if false
+  input: if false; then echo wrong; else if false; then echo wrong; fi fi
+
+- category: IF BASIC
+  name: if false then -> nimp
+  input: if false; then =mlkjx==lsk; else echo ok; fi
+
+- category: IF BASIC
+  name: if false then -> nimp
+  input: if false; then if then else; else echo ok; fi
+
+- category: IF BASIC
+  name: complicated if and echo
+  input: if echo if; then echo then; fi
+
+- category: IF BASIC
+  name: echo ifthenelse
+  input: if echo ifthenelse; then echo then; else echo else; fi
+
+- category: IF BASIC
+  name: if (echo if)
+  input: if (echo if); then echo ok; fi
+
+- category: IF BASIC
+  name: if [true]
+  input: if [ true ] ; then echo ok; fi
+
+- category: IF BASIC
+  name: wrong function again
+  input: if [ true ] ; then echo ouiii; elif [ false ] ; then ok; else ok; fi
+
+- category: IF BASIC
+  name: only false but echo non
+  input: if [ false ] ; then echo non; elif [ false ] ; then echo non; fi
+
+- category: IF BASIC
+  name: echo if complicated wrong with final echo
+  input: if echo fi; then echo then; fi ; echo test
+
+- category: IF BASIC
+  name:
+  input: 
