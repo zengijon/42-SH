@@ -3,8 +3,7 @@
 #include <string.h>
 
 #include "../memory/hmalloc.h"
-#include "builtins/echo.h"
-#include "builtins/my_cd.h"
+#include "builtins/builtins.h"
 #include "microshell.h"
 
 char *all_cmd[] = {"ls", "pwd", "exit"};
