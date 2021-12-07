@@ -82,10 +82,15 @@ int exec_pipeline(struct pipeline *p, struct exec_struct *ex_l)
 
 int exec_command(struct command *cmd, struct exec_struct *ex_l)
 {
-    if (cmd->redir != NULL)
+    int res = 0;
+    for (int i = 0; i < cmd->nb_redir; i++)
     {
-        int res = exec_redir(cmd->redir, ex_l);
-        if (res != 0)
+        if ((res = exec_redir(cmd->redir[i], ex_l)) != 0)
+            return res;
+    }
+    for (int i = 0; i < cmd->nb_redir2; i++)
+    {
+        if ((res = exec_redir(cmd->redir2[i], ex_l)) != 0)
             return res;
     }
     if (cmd->s_cmd != NULL)
@@ -97,7 +102,7 @@ int exec_command(struct command *cmd, struct exec_struct *ex_l)
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
-    assert(0);
+    return res;
 }
 
 
