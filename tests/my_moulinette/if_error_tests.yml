@@ -111,6 +111,7 @@
 - category: IF ERRORS
   name: if false then -> if
   input: if false; then if; else echo ok; fi
+
 - category: IF ERRORS
   name: if echo if then else
   input: if echo if then else; then echo then; else echo else; fi
