@@ -2,17 +2,18 @@
 
 #include "lexer.h"
 
-#include <err.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+
+#define _GNU_SOURCE //should be removed for mason
+#include <fnmatch.h>
 
 #include "../memory/free_list.h"
 #include "../memory/hmalloc.h"
 #include "utils.h"
 
-// struct free_list *list_malloc = NULL;
+struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input)
 {
@@ -342,16 +343,31 @@ struct token *lexer_pop(struct lexer *res)
         res = gestion_and_or(res, &input[res->pos]);
     else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH)
              == 0)
-    {
         gestion_redir(res, input + res->pos);
-    }
     else
     {
+        res->current_tok->type = TOKEN_WORDS;
         size_t j = 0;
         size_t k = res->pos;
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
         {
+            if (input[k] == '$' && input[k + 1] == '(')
+            {
+                int is_sub = 1;
+                value[j++] = input[k++];
+                value[j++] = input[k++];
+                while(input[k] != '\0' && is_sub > 0)
+                {
+                    if (input[k] == '(')
+                        is_sub++;
+                    if (input[k] == ')')
+                        is_sub--;
+                    value[j++] = input[k++];
+                }
+                if (input[k] == '\0')
+                    res->current_tok->type = TOKEN_ERROR;
+            }
             if (input[k] == '\\')
             {
                 value[j++] = input[k + 1];
@@ -360,7 +376,6 @@ struct token *lexer_pop(struct lexer *res)
             else
                 value[j++] = input[k++];
         }
-        res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
         res->end = k;
     }
@@ -369,7 +384,7 @@ struct token *lexer_pop(struct lexer *res)
 
 // int main(void)
 //{
-//     struct lexer *lexer = lexer_new("if echo fi; then echo then; fi; echo test");
+//     struct lexer *lexer = lexer_new("test $(subfv((bite)  kd)fkdkd FJFF");
 //     //    printf("%d\n", lexer->current_tok->type);
 //     //    struct token *tok = lexer_peek(lexer);
 //     //    printf("%d\n", tok->type);

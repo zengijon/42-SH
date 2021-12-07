@@ -169,3 +169,27 @@ struct lexer *gestion_redir(struct lexer *lexer, const char *input)
     lexer->current_tok->value = res;
     return lexer;
 }
+
+struct lexer *build_command_sub(struct lexer *lexer, const char *input)
+{
+    int i = 2;
+    int nb_parenthese = 1;
+    lexer->current_tok->type = TOKEN_WORDS;
+    char *buffer = hcalloc(strlen(input) + 1, sizeof(char));
+    buffer[0] = '$';
+    buffer[1] = '(';
+    while (input[i] != '\0' && nb_parenthese > 0)
+    {
+        if (input[i] == '(')
+            nb_parenthese++;
+        if (input[i] == ')')
+            nb_parenthese--;
+        buffer[i] = input[i];
+        ++i;
+    }
+    if (input[i] == '\0')
+        lexer->current_tok->type = TOKEN_ERROR;
+    lexer->end = lexer->pos + i;
+    return lexer;
+}
+

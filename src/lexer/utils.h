@@ -21,3 +21,5 @@ int is_token(const char *input, char *token, int n);
 struct lexer *gestion_and_or(struct lexer *lexer, const char *input);
 
 struct lexer *gestion_redir(struct lexer *lexer, const char *input);
+
+struct lexer *build_command_sub(struct lexer *lexer, const char *input);
