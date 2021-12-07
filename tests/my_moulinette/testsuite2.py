@@ -77,26 +77,39 @@ if __name__ == "__main__":
     arg = parser.parse_args()
     path_42sh = arg.binary.absolute()
     type_of_test = arg.type
-    print(type_of_test)
     print(f"We are testing the following binary -> {path_42sh}")
 
-    with open("cmd_echo_tests.yml", "r") as our_yaml:
-        tests_list = list(yaml.safe_load(our_yaml))
+    if (type_of_test == "basic"):
+    	tests_files = basic_files
 
-    cat_list = ["ECHO BASIC TESTS"]
-    i = 0
-    print(f"\n============ECHO BASIC TESTS============")
-    for test in tests_list:
-        cat = test["category"]
-        if (cat_list[i] != cat):
-            print(f"\n============{cat}============")
-            cat_list.append(cat)
-            i += 1
+    if (type_of_test == "error"):
+    	tests_files = error_files
 
-        our_input = test["input"]
-        name = test["name"]
+    if (type_of_test == "script"):
+    	tests_files = script_files
 
-        process_dash = running("dash", our_input)
-        process_42sh = running_process(path_42sh, our_input)
+    if (type_of_test == "hard"):
+    	tests_files = hard_files
 
-        my_check_output(process_dash, process_42sh, 0, name, our_input)
+    for file_test in tests_files:
+
+	    with open(file_test, "r") as our_yaml:
+	        tests_list = list(yaml.safe_load(our_yaml))
+
+	    cat_list = []
+	    i = 0
+	    
+	    for test in tests_list:
+	        cat = test["category"]
+	        if cat in cat_list:
+	            print(f"\n============{cat}============")
+	            cat_list.append(cat)
+	            i += 1
+
+	        our_input = test["input"]
+	        name = test["name"]
+
+	        process_dash = running("dash", our_input)
+	        process_42sh = running_process(path_42sh, our_input)
+
+	        my_check_output(process_dash, process_42sh, 0, name, our_input)
