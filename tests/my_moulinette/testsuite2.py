@@ -91,25 +91,27 @@ if __name__ == "__main__":
     if (type_of_test == "hard"):
     	tests_files = hard_files
 
+    cat = ""
+
     for file_test in tests_files:
 
 	    with open(file_test, "r") as our_yaml:
 	        tests_list = list(yaml.safe_load(our_yaml))
-
-	    cat_list = []
-	    i = 0
 	    
 	    for test in tests_list:
-	        cat = test["category"]
-	        if cat in cat_list:
+	        if (cat != test["category"]):
+                cat = test["category"]
 	            print(f"\n============{cat}============")
-	            cat_list.append(cat)
-	            i += 1
+
 
 	        our_input = test["input"]
 	        name = test["name"]
 
 	        process_dash = running("dash", our_input)
-	        process_42sh = running_process(path_42sh, our_input)
+
+            if type_of_test == "script":
+                process_42sh = running(path_42sh, our_input)
+            else:
+	            process_42sh = running_process(path_42sh, our_input)
 
 	        my_check_output(process_dash, process_42sh, 0, name, our_input)
