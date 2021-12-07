@@ -1,4 +1,4 @@
-&# ECHO TESTS WITH -c OPTION 
+# ECHO TESTS WITH -c OPTION 
 
 #===========BASIC TESTS============
 
@@ -9,13 +9,38 @@
 - category: ECHO BASIC TESTS  
   name: echo with quotes
   input: echo "lol"
+
 - category: ECHO BASIC TESTS  
   name: echo with quotes protected
   input: echo \"lol\"
 
 - category: ECHO BASIC TESTS  
-  name: echo with backslash
+  name: echo with backslash 1
   input: echo ./\*
+
+- category: ECHO BASIC TESTS  
+  name: echo with backslash 2
+  input: echo \\toi
+
+- category: ECHO BASIC TESTS  
+  name: echo with backslash 3
+  input: echo \\connerie
+
+- category: ECHO BASIC TESTS  
+  name: echo with backslash 4
+  input: echo \\nenufar
+
+- category: ECHO BASIC TESTS  
+  name: echo with backslash 5
+  input: echo \\roulette
+
+- category: ECHO BASIC TESTS  
+  name: echo with inutile backslash
+  input: echo \\tematematema
+
+- category: ECHO BASIC TESTS  
+  name: echo with mutiple backslash
+  input: echo \\yo\\ma\\ptite\\gueule
 
 - category: ECHO BASIC TESTS  
   name: echo -> IF FI
@@ -30,23 +55,24 @@
   input: echo l        o l
 
 - category: ECHO BASIC TESTS  
-  name: echo nothing and cat -e
-  input: echo | cat -e
+  name: echo nothing
+  input: echo
 
 - category: ECHO BASIC TESTS  
   name: echo multiple things
   input: echo def 65536 yohann 666 '' robin
 
 - category: ECHO BASIC TESTS  
-  name: echo lol | cat -e
-  input: echo lol | cat -e
+  name: echo lol l    o   l 42 -a
+  input: echo lol l    o     l    42 -a
 
 - category: ECHO BASIC TESTS  
-  name: echo abcdefghij with spaces and cat -e
-  input: echo a b c d e f g h i j | cat -e
+  name: echo all alphabet with spaces 
+  input: echo a b c d e f g h i j k l m n o p q r s t u v w x y z
 
 - category: ECHO BASIC TESTS  
-  name: echo 2 words separated by --
+  name: echo
+   2 words separated by --
   input: echo Armand -- Jennie
   
 - category: ECHO BASIC TESTS  
@@ -55,7 +81,7 @@
 
 - category: ECHO BASIC TESTS  
   name: echo Armand --
-  input: echo Armand ---
+  input: echo Armand --
 
 - category: ECHO BASIC TESTS  
   name: echo -- -n crackito
@@ -78,80 +104,3 @@
 - category: ECHO OPT TESTS
   name: echo -n kernel
   input: echo -n kernel
-
-- category: ECHO OPT TESTS
-  name: echo if complicated wrong
-  input: if echo fi; then echo then; fi echo test
-
-- category: ECHO OPT TESTS
-  name: echo if complicated right
-  input: if echo fi; then echo then; fi ; echo test
-
-
-#LS TESTS
-
-- category: LS TESTS
-  name: simple ls
-  input: ls
-
-#============IF and ';' TESTS=============
-    #WITHOUT ERRORS
-
-- category: PT COMA
-  name: fi coma
-  input: if true; then echo then; fi;
-
-- category: PT COMA
-  name: echo coma
-  input: echo;
-
-- category: PT COMA
-  name: if true; then ; else ; fi
-  input: if true; then echo the right thing; else echo wrong!!; fi
-
-- category: PT COMA
-  name: if false; then ; else ; fi
-  input: if false; then echo wrong!!; else echo the right thing; fi
-
-
-    #WITH ERRORS
-
-- category: PT COMA
-  name: if coma
-  input: if;
-
-- category: PT COMA
-  name: then coma broken 1
-  input: if true then; echo test; fi
-
-- category: PT COMA
-  name: then coma broken 2
-  input: if true; then; echo test; fi
-
-- category: PT COMA
-  name: error 'else' unexpected
-  input: if false then echo wrong!!; else echo the right thing; fi
-
-- category: PT COMA
-  name: error 'fi' unexpected
-  input: if false then echo wrong!! else echo the right thing; fi
-
-- category: PT COMA
-  name: error expecting 'then'
-  input: if false then echo wrong!! else echo the right thing fi
-
-- category: PT COMA
-  name: error ';' unexpected after then
-  input: if false; then; echo wrong!!; else; echo the right thing; fi
-
-- category: PT COMA
-  name: error 'else' unexpected 
-  input: if false then; echo wrong!!; else; echo the right thing; fi
-
-- category: PT COMA
-  name: elif
-  input: if false; then echo wrong; elif false; then echo wrong; else echo sisi la famille; fi
-
-- category: PT COMA
-  name: 
-  input: if false; then echo wrong; elif true; then echo the right thing; else echo wrong; fi
