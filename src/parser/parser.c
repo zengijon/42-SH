@@ -8,6 +8,7 @@
 #include <fnmatch.h>
 #include <string.h>
 
+#include "../exec/variable_expention.h"
 #include "../memory/hmalloc.h"
 
 struct list_next *build_list_next(struct lexer *lex)
@@ -20,8 +21,8 @@ struct list_next *build_list_next(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
-    if (lex->current_tok->type == TOKEN_NEWLINE)
-        ;
+    else if (lex->current_tok->type == TOKEN_NEWLINE)
+        return res;
     else
         errx(1, "missing separator after list");
     lexer_pop(lex);
@@ -43,8 +44,9 @@ struct list *build_list(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
-    if (lex->current_tok->type == TOKEN_NEWLINE)
-        ;
+    else if (lex->current_tok->type == TOKEN_NEWLINE
+             || lex->current_tok->type == TOKEN_EOF)
+        return res;
     else
         errx(1, "missing separator after list");
     lexer_pop(lex);
@@ -106,9 +108,11 @@ struct pipeline_next *build_pipeline_next(struct lexer *lex)
 struct pipeline *build_pipeline(struct lexer *lex)
 {
     struct pipeline *res = hcalloc(1, sizeof(struct pipeline));
-    //     if (lex->current_tok->type == T)
-    //     res->negation = 1;
-
+    if (lex->current_tok->type == TOKEN_NEG)
+    {
+        res->negation = 1;
+        lexer_pop(lex);
+    }
     if ((res->cmd = build_command(lex)) == NULL)
     {
         if (res->negation == 0)
@@ -124,15 +128,29 @@ struct pipeline *build_pipeline(struct lexer *lex)
 struct command *build_command(struct lexer *lex)
 {
     struct command *res = hcalloc(1, sizeof(struct command));
+    struct redirection *tmp;
+    while ((tmp = build_redirection(lex)) != NULL)
+    {
+        res->redir = hrealloc(res->redir,
+                                 ++(res->nb_redir) * sizeof(struct redirection *));
+        res->redir[res->nb_redir - 1] = tmp;
+    }
     if ((res->s_cmd = build_simple_command(lex)) != NULL)
         return res;
     else if ((res->sh_cmd = build_shell_command(lex)) != NULL)
         ;
     //    else if ((res->fun = build_funcdec(lex)) != NULL)
     //        ;
+    else if (res->redir != NULL)
+        return res;
     else
         return NULL;
-    //    res->redir = build_redirection(lex);
+    while ((tmp = build_redirection(lex)) != NULL)
+    {
+        res->redir2 = hrealloc(res->redir2,
+                              ++(res->nb_redir2) * sizeof(struct prefix *));
+        res->redir2[res->nb_redir2 - 1] = tmp;
+    }
     return res;
 }
 
@@ -177,24 +195,24 @@ struct shell_command *build_shell_command(struct lexer *lex)
     //        return res;
     //    }
     //
-    //    if (lex->current_tok->type == "(")
-    //    {
-    //        lexer_pop(lex);
-    //        res->c_p = build_compound_list(lex);
-    //        if (res->c_p == NULL)
-    //            errx(1, "missing compound list between '()'");
-    //        if (lex->current_tok->type != ")")
-    //            errx(1, "syntax error : missing ')'");
-    //        lexer_pop(lex);
-    //        return res;
-    //    }
+    if (lex->current_tok->type == TOKEN_PA_OPEN)
+    {
+        lexer_pop(lex);
+        res->c_p = build_compound_list(lex);
+        if (res->c_p == NULL)
+            errx(1, "missing compound list between '()'");
+        if (lex->current_tok->type != TOKEN_PA_CLOSE)
+            errx(1, "syntax error : missing ')'");
+        lexer_pop(lex);
+        return res;
+    }
     //
     if ((res->r_f = build_rule_for(lex)) != NULL)
         ;
     else if ((res->r_w = build_rule_while(lex)) != NULL)
         ;
-    //    else if ((res->r_u = build_rule_until(lex)) != NULL)
-    //        ;
+    else if ((res->r_u = build_rule_until(lex)) != NULL)
+        ;
     //    else if ((res->r_c = build_rule_case(lex)) != NULL)
     //        ;
     else if ((res->r_i = build_rule_if(lex)) != NULL)
@@ -229,21 +247,17 @@ struct shell_command *build_shell_command(struct lexer *lex)
 //     return NULL;
 // }
 
-// struct redirection *build_redirection(struct lexer *lex)
-//{
-//     struct redirection *res = hcalloc(1, sizeof(struct funcdec));
-//     if (lex->current_tok->type == io_nb)
-//         res->IONUMBER = lexer_pop(lex) - '0';
-//     else
-//         res->IONUMBER = -1;
-//     if (lex->current_tok->type != )
-//         return NULL;
-//     res->re_op = 0; // lexer | pop
-//     if ( lexer | pop | reçu != word)
-//         errx (1, "missing file name to redirect to");
-//     res->next = build_redirection();
-//     return res;
-// }
+struct redirection *build_redirection(struct lexer *lex)
+{
+    struct redirection *res = hcalloc(1, sizeof(struct funcdec));
+    if (lex->current_tok->type != TOKEN_REDIR)
+        return NULL;
+    res->redir_type = lexer_pop(lex)->value;
+    if (lex->current_tok->type != TOKEN_WORDS)
+        errx(2, "word exepected after redir");
+    res->word = lexer_pop(lex)->value;
+    return res;
+}
 
 struct prefix *build_prefix(struct lexer *lex)
 {
@@ -253,9 +267,10 @@ struct prefix *build_prefix(struct lexer *lex)
         || fnmatch("*=*", lex->current_tok->value, 0) != 0
         || lex->current_tok->value[0] == '=')
         return NULL;
+    if (valid_name(lex->current_tok->value) == 0)
+        return NULL;
     res->assignment_word = lexer_pop(lex)->value;
-
-    // res->redirect = build_redirection(lex);
+    res->redirect = build_redirection(lex);
 
     return res;
 }
@@ -268,7 +283,7 @@ struct element *build_element(struct lexer *lex)
         return NULL;
     res->word = lexer_pop(lex)->value;
 
-    //    res->redirect = build_redirection(lex);
+    res->redirect = build_redirection(lex);
 
     return res;
 }
@@ -339,23 +354,22 @@ struct rule_while *build_rule_while(struct lexer *lex)
     errx(1, "missing compound_list");
 }
 
-// struct rule_until *build_rule_until(struct lexer *lex)
-//{
-//     struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
-//
-//     //if (lex->current_tok->type != TOKEN_UNTIL)
-//         return NULL;
-//
-//     lexer_pop(lex);
-//     if ((res->cp_list = build_compound_list(lex)) != NULL)
-//     {
-//         if ((res->do_gp = build_do_group(lex)) != NULL)
-//             return res;
-//
-//         errx(1, "Missing do_group");
-//     }
-//     errx(1, "missing compound_list");
-// }
+struct rule_until *build_rule_until(struct lexer *lex)
+{
+    struct rule_until *res = hcalloc(1, sizeof(struct rule_until));
+    if (lex->current_tok->type != TOKEN_UNTIL)
+        return NULL;
+
+    lexer_pop(lex);
+    if ((res->cp_list = build_compound_list(lex)) != NULL)
+    {
+        if ((res->do_gp = build_do_group(lex)) != NULL)
+            return res;
+
+        errx(1, "Missing do_group");
+    }
+    errx(1, "missing compound_list");
+}
 
 struct rule_if *build_rule_if(struct lexer *lex)
 {
@@ -394,7 +408,8 @@ struct rule_for *build_rule_for(struct lexer *lex)
         errx(1, "missing word after for");
 
     res->word = lexer_pop(lex)->value;
-
+    if (valid_name(res->word) == 0)
+        errx(1, "not valid variable for for");
     if (lex->current_tok->type == TOKEN_PTCOMA)
         lexer_pop(lex);
     else
@@ -408,9 +423,10 @@ struct rule_for *build_rule_for(struct lexer *lex)
         lexer_pop(lex);
         while (lex->current_tok->type == TOKEN_WORDS)
         {
-            res->word_list = hrealloc(res->word_list, ++(res->wl_s) * sizeof(char *) );
+            res->word_list =
+                hrealloc(res->word_list, ++(res->wl_s) * sizeof(char *));
             res->word_list[res->wl_s - 1] = lexer_pop(lex)->value;
-            printf("%s", res->word_list[res->wl_s - 1]);
+            //            printf("%s", res->word_list[res->wl_s - 1]);
         }
         if (lex->current_tok->type != TOKEN_PTCOMA
             && lex->current_tok->type != TOKEN_NEWLINE)

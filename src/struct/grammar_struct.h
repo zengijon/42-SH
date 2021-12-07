@@ -70,10 +70,13 @@ struct pipeline
 
 struct command
 {
+    int nb_redir;
+    struct redirection **redir; // possibly null
     struct simple_command *s_cmd; // only one of the three plus redirection if the first was not choosen
     struct shell_command *sh_cmd;
     struct funcdec *fun;
-    struct redirection *redir; // possibly null
+    int nb_redir2;
+    struct redirection **redir2; // possibly null
 };
 
 struct simple_command
@@ -104,10 +107,8 @@ struct funcdec
 
 struct redirection
 {
-    int IONUMBER; // optional
-    enum redirect_op re_op;
-    char *word; // possibly HEREDOC  for << or <<
-    struct redirection *next;
+    char *redir_type;
+    char *word;
 };
 
 struct prefix

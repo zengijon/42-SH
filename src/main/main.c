@@ -2,6 +2,7 @@
 #include <getopt.h>
 #include <stddef.h>
 #include <string.h>
+#include <unistd.h>
 
 #include "../exec/exec.h"
 #include "../memory/hmalloc.h"
@@ -12,11 +13,74 @@
 
 struct free_list *list_malloc = NULL;
 
-int exec_42sh(char *buffer, int pretty_print)
+char *my_itoa(int n, char *s)
+{
+    int k = 0;
+    if (n < 0)
+    {
+        s[k++] = '-';
+        n = -1 * n;
+    }
+    int i = 1;
+    for (int j = n; j >= 10; j /= 10)
+        i *= 10;
+    for (; i > 0; i /= 10)
+    {
+        s[k++] = '0' + (n / i);
+        n %= i;
+    }
+    s[k] = 0;
+    return s;
+}
+
+char *get_value_in_vl(struct exec_struct *e_x, char *name)
+{
+    for (int i = 0; i < e_x->v_l_size; i++)
+        if (strcmp(name,e_x->v_l[i].name) == 0)
+            return e_x->v_l[i].value;
+    return NULL;
+}
+
+//char *get_path(void)
+//{
+//    char s[2048] = { 0 };
+//    getcwd(s, 2048);
+//    if (s == NULL)
+//        errx(1, "getcwd failed");
+//    char *res = hcalloc(1, strlen(s));
+//
+//    memccpy(res, s, strlen(s));
+//
+//    return res;
+//}
+
+struct exec_struct *build_exec_struct(int argc, char **argv)
+{
+    char *A_starval = hcalloc(15536, 1);
+    struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
+    for (int i = optind; i <= argc - optind; ++i)
+    {
+        assign_var(my_itoa(i - optind, hcalloc(1, 8)), argv[i], e_x);
+        if ( i != optind)
+        {
+            strcat(A_starval, " ");
+            strcat(A_starval, argv[i]);
+        }
+    }
+    assign_var("*", A_starval, e_x);
+    assign_var("#", my_itoa(argc - optind - 1, hcalloc(1, 8)), e_x);
+    assign_var("$", my_itoa(getpid(), hcalloc(1, 8)), e_x);\
+    //assign_var("OLDPWD", get_path(),e_x);
+    //assign_var("PWD", get_path(), e_x);
+    return e_x;
+}
+
+int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x)
 {
     int res = 0;
     struct list *list;
-    struct lexer *lex = lexer_new(buffer);
+    struct lexer *lex = lexer_new(expand_special_var(buffer, get_value_in_vl(e_x,"*")));
+
     while ((list = build_list(lex)) != NULL)
     {
         if (pretty_print == 1)
@@ -67,5 +131,5 @@ int main(int argc, char **argv)
                                  // reading stdin
     if (!c)
         buffer = file2buf(argv[optind]);
-    return exec_42sh(buffer, pretty_print);
+    return exec_42sh(buffer, pretty_print, build_exec_struct(argc, argv));
 }

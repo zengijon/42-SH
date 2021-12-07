@@ -6,7 +6,7 @@
 
 #include "redir.h"
 
-int simple_redir(char *io, char *file, struct redir *redir, char *flag)
+int simple_redir(char *io, char *file, struct redir *redir, char *flag) // >| > <> <
 {
     int io_nb;
     if (io == NULL)
@@ -21,6 +21,8 @@ int simple_redir(char *io, char *file, struct redir *redir, char *flag)
     if (io_nb > 1024)
         return 1;
     FILE *new_file = fopen(file, flag);
+    if (!new_file)
+        return 1;
     int fd = fileno(new_file);
     int new_fd = dup(io_nb);
     close(io_nb);
@@ -41,11 +43,10 @@ void reinit_redir(struct redir *redir)
     fclose(redir->file);
 }
 
-
-int append_redir(char *io, char *file, struct redir *redir)
+int append_redir(char *io, char *file, struct redir *redir) // >>
 {
     int io_nb;
-    if (io == NULL)
+    if (io[0] == '\0')
         io_nb = 1;
     else
         io_nb = atoi(io);
@@ -58,28 +59,27 @@ int append_redir(char *io, char *file, struct redir *redir)
     close(fd);
     redir->new_fd = new_fd;
     redir->old_fd = io_nb;
-    redir->file = new_file;
+    redir->file = NULL;
     return 0;
 }
 
-//
-//int main(void)
-//{
-//    struct redir *n = malloc(sizeof(struct redir));
-//    simple_redir("1", "test", n);
-//    printf("in test\n");
-//    reinit_redir(n);
-//    printf("in stdout\n");
-//    return 1;
-//}
-
-int main(void)
+int esp_redir(char *io, char *fd_esp, struct redir *redir, int flag)
 {
-    struct redir *n = malloc(sizeof(struct redir));
-    simple_redir("1", "test", n);
-    printf("in test\n");
-    reinit_redir(n);
-    printf("in stdout\n");
-    return 1;
+    int io_nb;
+    if (io == NULL)
+        io_nb = flag;
+    else
+        io_nb = atoi(io);
+    if (io_nb > 1024)
+        return 1;
+    int fd_nb = atoi(fd_esp);
+    int new_fd = dup(io_nb);
+    close(io_nb);
+    dup2(fd_nb, io_nb);
+    close(fd_nb);
+    redir->new_fd = new_fd;
+    redir->old_fd = io_nb;
+    redir->file = NULL;
+    return 0;
 }
 

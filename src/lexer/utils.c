@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <err.h>
 #include <string.h>
+#include <fnmatch.h>
 
 size_t skipspace(const char *input)
 {
@@ -23,13 +24,39 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
     size_t j = 1;
     char *str = hcalloc(strlen(input), sizeof(char) + 1);
     strcat(str, "'");
-    while (input[i] != '\0' && (input[i] == '\\' || input[i] != '\''))
+    while (input[i] != '\0' && input[i] != '\'')
     {
+        if (input[i] == '\\')
+            i++;
         str[j++] = input[i++];
     }
     strcat(str, "'");
     lexer->end = lexer->pos + i + 1;
     if (input[i] == '\'')
+    {
+        lexer->current_tok->type = TOKEN_WORDS;
+        lexer->current_tok->value = str;
+    }
+    else
+        errx(1, "missing single quote");
+    return lexer;
+}
+
+struct lexer *gestion_double_quote(struct lexer *lexer, const char *input)
+{
+    size_t i = 1;
+    size_t j = 1;
+    char *str = hcalloc(strlen(input), sizeof(char) + 1);
+    strcat(str, "\"");
+    while (input[i] != '\0' && input[i] != '\"')
+    {
+        if (input[i] == '\\')
+            i++;
+        str[j++] = input[i++];
+    }
+    strcat(str, "\"");
+    lexer->end = lexer->pos + i + 1;
+    if (input[i] == '\"')
     {
         lexer->current_tok->type = TOKEN_WORDS;
         lexer->current_tok->value = str;
@@ -42,7 +69,7 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
 struct separator *build_separator_list(void)
 {
     struct separator *new = hcalloc(1, sizeof(struct separator));
-    new->separators = hcalloc(8, sizeof(char *));
+    new->separators = hcalloc(20, sizeof(char *));
     new->separators[0] = hcalloc(2,1);
     new->separators[0] = "\n";
     new->separators[1] = hcalloc(2,1);
@@ -57,7 +84,11 @@ struct separator *build_separator_list(void)
     new->separators[5] = "<";
     new->separators[6] = hcalloc(2,1);
     new->separators[6] = ">";
-    new->nb_separator = 7;
+    new->separators[7] = hcalloc(2,1);
+    new->separators[7] = "(";
+    new->separators[8] = hcalloc(2,1);
+    new->separators[8] = ")";
+    new->nb_separator = 9;
     return new;
 }
 
@@ -108,5 +139,33 @@ struct lexer *gestion_and_or(struct lexer *lexer, const char *input)
         else
             lexer->current_tok->type = TOKEN_PIPE;
     }
+    return lexer;
+}
+
+struct lexer *gestion_redir(struct lexer *lexer, const char *input)
+{
+    int i = 0;
+    lexer->current_tok->type = TOKEN_REDIR;
+    char *res = hcalloc(1500, sizeof(char));
+    while (input[i] != '>' && input[i] != '<')
+    {
+        res[i] = input[i];
+        ++i;
+    }
+    res[i] = input[i];
+    if ((input[i + 1] == '>' || input[i + 1] == '<') && input[i] != input[i + 1])
+    {
+        lexer->end = lexer->pos + i + 1;
+    }
+    else if (fnmatch("[<>|&]*", input + i + 1, 0) == 0)
+    {
+        lexer->end = lexer->pos + i + 2;
+        res[i + 1] = input[i + 1];
+    }
+    else
+    {
+        lexer->end = lexer->pos + i + 1;
+    }
+    lexer->current_tok->value = res;
     return lexer;
 }
