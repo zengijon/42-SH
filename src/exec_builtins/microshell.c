@@ -23,10 +23,8 @@ int microshell(char *cmd, char **argv)
     if (pid == -1)
         errx(1, "fork failed");
     if (pid == 0)
-    {
-        //if (argv[0] != NULL)
-        return execvp(cmd, argv); // ne marche pas si argv = NULL
-    }
+        return execvp(cmd, argv);
+
     int wstatus;
     int child_pid = waitpid(pid, &wstatus, 0);
     if (child_pid == -1)

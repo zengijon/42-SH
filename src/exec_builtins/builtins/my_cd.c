@@ -2,19 +2,19 @@
 // Created by jennie on 06/12/2021.
 //
 
-#include "cd.h"
+#include "my_cd.h"
 
-#include<stdio.h>
-#include<unistd.h>
-#include <string.h>
-#include <sys/stat.h>
 #include <ctype.h>
 #include <dirent.h>
-#include <stdlib.h>
 #include <err.h>
 #include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <unistd.h>
 
-#include "../struct/exec_struct.h"
+#include "../../struct/exec_struct.h"
 
 size_t len_path(char *current_path)
 {
@@ -92,17 +92,18 @@ char *find_old_path(struct exec_struct *e_x, char *name)
     return NULL;
 }
 
-const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x)
+const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x, int *need_pwd)
 {
     if (arg == NULL)
         return "~";
 
     if (strcmp(arg, "-") == 0)
     {
-        char *old_path = find_old_path(e_x, "OLDPWD");
+        char *old_path = NULL; //find_old_path(e_x, "OLDPWD");
         if (old_path == NULL)
             errx(1, "OLDPWD not inizialized");
         assign_var("OLDPWD", current_path, e_x);
+        *need_pwd = 1;
         return NULL;
     }
 
@@ -123,26 +124,28 @@ const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct
         return is_valid_dir(arg, current_path) == 1 ? arg : NULL; // dir
 }
 
-int my_cd(char **argv, struct exec_struct *e_x) // changer le oldpwd avant le "cd"
+int my_cd(char **argv, struct exec_struct *e_x)
 {
-    char s[2048];
+    char s[2048] = { 0 };
+    int need_pwd = 0;
     char *current_path = getcwd(s, 2048);
+
     if (current_path == NULL)
         errx(1, "getcwd failed");
+
     size_t len_current_path = len_path(current_path);
-    const char *arg_cd = get_cd_arg(arg, current_path, len_current_path, e_x);
+    const char *arg_cd = get_cd_arg(argv[1], current_path, len_current_path, e_x, &need_pwd);
+
     if (arg_cd == NULL)
         errx(1, "This is not a valid operator");
 
-    printf("\n\n---===%s\n", current_path); // a enlever
-
-    if (need_pwd == 1);
-    /// il faut executer = cd "$OLDPWD" && pwd
+    printf("\n\n---===%s\n", current_path); // a enleverc
 
     if (chdir(arg_cd) == -1)
         errx(1, "Chdir failed");
 
-    printf("---%s\n", getcwd(s, 2048)); // a enlever
+    if (need_pwd == 1);
+        printf("---%s\n", getcwd(s, 2048));
 
     return 0;
 }

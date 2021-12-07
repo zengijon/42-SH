@@ -5,6 +5,6 @@
 #ifndef UNTITLED_CD_H
 #define UNTITLED_CD_H
 
-int my_cd(char *arg);
+int my_cd(char **argv, struct exec_struct *e_x);
 
 #endif //UNTITLED_CD_H
