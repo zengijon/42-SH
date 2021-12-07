@@ -166,6 +166,14 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
     ex_l->r_l = hrealloc(ex_l->r_l, ++ex_l->r_l_size * sizeof(struct redir));
     if (fnmatch("*>",r->redir_type, 0) == 0 || fnmatch("<>",r->redir_type, 0) == 0 || fnmatch(">|",r->redir_type, 0) == 0)
         return simple_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1],"w");
+    if (fnmatch("*<",r->redir_type, 0) == 0)
+        return simple_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1],"w");
+    if (fnmatch("*>&",r->redir_type, 0) == 0)
+        return esp_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1], 1);
+    if (fnmatch("*<&",r->redir_type, 0) == 0)
+        return esp_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1], 0);
+    if (fnmatch("*>>",r->redir_type, 0) == 0)
+        return append_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1]);
     assert(0);
 }
 
