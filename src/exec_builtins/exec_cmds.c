@@ -8,7 +8,7 @@
 
 char *all_cmd[] = {"ls", "pwd", "exit"};
 
-int exec_builtins(char *cmd, int nb_params, char **parameters)
+int exec_builtins(char *cmd, int nb_params, char **parameters, struct exec_struct *e_x)
 {
     char *buffer = hcalloc(strlen(cmd) + 2, sizeof(char));
     strcat(buffer, cmd);
@@ -22,7 +22,7 @@ int exec_builtins(char *cmd, int nb_params, char **parameters)
     if (strcmp(cmd, "echo") == 0)
         return my_echo(buffer);
     else if (strcmp(cmd, "cd") == 0)
-        return my_cd(parameters);
+        return my_cd(parameters, e_x);
     else if (strcmp(cmd, "export") == 0)
         return 0;
     else if (strcmp(cmd, "continue") == 0)
@@ -69,7 +69,7 @@ int exec_builtins(char *cmd, int nb_params, char **parameters)
 //        return 127;
 //}
 
-int exec_cmds(char *cmd, int nb_params, char **parameters)
+int exec_cmds(char *cmd, int nb_params, char **parameters, struct exec_struct *e_x)
 {
     int nb_cmd = 3;
     if (strlen(cmd) == 0)
@@ -79,7 +79,7 @@ int exec_cmds(char *cmd, int nb_params, char **parameters)
         if (strcmp(cmd, all_cmd[i]) == 0)
             return microshell(cmd, parameters);
     }
-    return exec_builtins(cmd, nb_params, parameters);
+    return exec_builtins(cmd, nb_params, parameters, e_x);
 }
 
 //int main(void)

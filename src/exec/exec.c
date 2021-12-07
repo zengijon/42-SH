@@ -126,7 +126,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
         list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt - 1,
-                     list); // Not in this file
+                     list, ex_l); // Not in this file
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;

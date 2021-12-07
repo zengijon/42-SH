@@ -33,7 +33,7 @@ size_t len_path(char *current_path)
     return nb;
 }
 
-int is_valid_dir(char *name, char *current_path)
+int is_valid_dir(char *name, char *current_path) // PB : clion enlever toujours le dernier dir donc le working directory est faux
 {
     char *path = calloc(1, strlen(name) + strlen(current_path) + 2); // null terminated
     path = strcat(path, current_path);
@@ -86,16 +86,16 @@ int is_valid_d_coma(char *arg, size_t nb_tok_path)
 }
 char *find_old_path(struct exec_struct *e_x, char *name)
 {
-    for (int i = 0; i < ex_l->v_l_size; i++)
-        if (strcmp(ex_l->v_l[i].name, name) == 0)
-            return ex_l->v_l[i].value;
+    for (int i = 0; i < e_x->v_l_size; i++)
+        if (strcmp(e_x->v_l[i].name, name) == 0)
+            return e_x->v_l[i].value;
     return NULL;
 }
 
 const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x, int *need_pwd)
 {
     if (arg == NULL)
-        return "~";
+        return "/home"; // Marhce sur le long terme ?
 
     if (strcmp(arg, "-") == 0)
     {
@@ -139,12 +139,10 @@ int my_cd(char **argv, struct exec_struct *e_x)
     if (arg_cd == NULL)
         errx(1, "This is not a valid operator");
 
-    printf("\n\n---===%s\n", current_path); // a enleverc
-
     if (chdir(arg_cd) == -1)
         errx(1, "Chdir failed");
 
-    if (need_pwd == 1);
+    if (need_pwd == 1)
         printf("---%s\n", getcwd(s, 2048));
 
     return 0;

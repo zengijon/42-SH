@@ -5,7 +5,8 @@
 #ifndef INC_42SHEEEE_BUILTINS_H
 #define INC_42SHEEEE_BUILTINS_H
 
-#include "../../"
+#include "../../struct/exec_struct.h"
+#include "../../exec/exec.h"
 
 int my_echo(char *cmd);
 
