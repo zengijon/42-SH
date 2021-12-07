@@ -16,7 +16,7 @@
 
 #include "../struct/exec_struct.h"
 
-size_t strlen_path(char *current_path)
+size_t len_path(char *current_path)
 {
     size_t nb = 0;
     char *token = current_path;
@@ -38,60 +38,72 @@ int is_valid_dir(char *name, char *current_path)
     char *path = calloc(1, strlen(name) + strlen(current_path) + 2); // null terminated
     path = strcat(path, current_path);
     path = strcat(path, "/");
-    path = strcat(path, name);
+    path = strcat(path, name); // path abs
 
-    struct dirent *pDirent;
-    DIR *pDir;
-
-    pDir = opendir (path);
-    if (pDir == NULL) {
+    DIR *pDir = opendir(path);
+    if (pDir == NULL)
+    {
         printf ("Cannot open directory\n");
         return 0;
     }
     closedir (pDir);
-    return pDir == NULL ? 0 : 1;
+    return 1;
 }
 
-int is_valid_d_coma(char *arg, size_t nb_tok_path)// reste ca a faire
+int is_valid_d_coma(char *arg, size_t nb_tok_path)
 {
     size_t len = strlen(arg);
     size_t count = 0;
     size_t i = 0;
     if (len % 3 == 0)
     {
-        while (i + 2 < len)
+        while (i < len)
         {
             if (count >= nb_tok_path)
                 errx(1, "sequence of ../ is too long");
-            if (arg[i] == '.')
+
+            if (arg[i] == '.' && i + 1 < len && arg[i + 1] == '.')
             {
-                i++;
-                if (arg[i] == '.')
+                i += 2;
+                if (i <= len && arg[i] == '/')
                 {
                     i++;
-                    if (arg[i] == '/')
-                        i++;
-                    else
-                        return 1;
+                    count++;
                 }
-                count++;
+                else
+                {
+                    if (i != len)
+                        return 0;
+                    return 1; // can finish without a /
+                }
             }
             else
                 return 0;
         }
+        return 1;
     }
-    return 1;
+    return 0; // not a sequence of ../
+}
+char *find_old_path(struct exec_struct *e_x, char *name)
+{
+    for (int i = 0; i < ex_l->v_l_size; i++)
+        if (strcmp(ex_l->v_l[i].name, name) == 0)
+            return ex_l->v_l[i].value;
+    return NULL;
 }
 
-const char *get_cd_arg(char *arg, char *current_path, int need_pwd, size_t nb_tok_path)
+const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x)
 {
-    if (arg == NULL) ///--- Pour aller au HOME
+    if (arg == NULL)
         return "~";
 
-    if (strcmp(arg, "-") == 0) ///--- Operand special
+    if (strcmp(arg, "-") == 0)
     {
-        need_pwd = 1;
-        return "$OLDPWD";
+        char *old_path = find_old_path(e_x, "OLDPWD");
+        if (old_path == NULL)
+            errx(1, "OLDPWD not inizialized");
+        assign_var("OLDPWD", current_path, e_x);
+        return NULL;
     }
 
     if (strcmp(arg, ".") == 0)
@@ -102,24 +114,23 @@ const char *get_cd_arg(char *arg, char *current_path, int need_pwd, size_t nb_to
 
     if (arg[0] == '.')
     {
-        if (isalpha(arg[1]) != 0) ///--- Possiblement un dossier cache
-            return is_valid_dir(arg, current_path) == 1 ? arg : NULL;
+        if (strlen(arg) > 1 && isalpha(arg[1]) != 0)
+            return is_valid_dir(arg, current_path) == 1 ? arg : NULL; // hidden dir
 
-        return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL;
+        return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL; // sequence of ../
     }
     else
-        return is_valid_dir(arg, current_path) == 1 ? arg : NULL;
+        return is_valid_dir(arg, current_path) == 1 ? arg : NULL; // dir
 }
 
-int my_cd(char *arg, struct exec_struct *e_x) // changer le oldpwd avant le "cd"
+int my_cd(char **argv, struct exec_struct *e_x) // changer le oldpwd avant le "cd"
 {
     char s[2048];
-    int need_pwd = 0;
     char *current_path = getcwd(s, 2048);
     if (current_path == NULL)
         errx(1, "getcwd failed");
-    size_t len_current_path = strlen_path(current_path);
-    const char *arg_cd = get_cd_arg(arg, current_path, need_pwd, len_current_path);
+    size_t len_current_path = len_path(current_path);
+    const char *arg_cd = get_cd_arg(arg, current_path, len_current_path, e_x);
     if (arg_cd == NULL)
         errx(1, "This is not a valid operator");
 
@@ -133,5 +144,5 @@ int my_cd(char *arg, struct exec_struct *e_x) // changer le oldpwd avant le "cd"
 
     printf("---%s\n", getcwd(s, 2048)); // a enlever
 
-    return 0; // finish
+    return 0;
 }

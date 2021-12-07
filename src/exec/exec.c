@@ -120,10 +120,10 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
 //                return res;
     if (cmd->size_elt < 1)
         return res;
-    char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
-    for (int i = 1; i < cmd->size_elt; ++i)
+    char **list = hcalloc(cmd->size_elt, sizeof(char *));
+    for (int i = 0; i < cmd->size_elt; ++i)
     {
-        list[i - 1] = remove_sep(cmd->list_elt[i]->word, ex_l);
+        list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt - 1,
                      list); // Not in this file
