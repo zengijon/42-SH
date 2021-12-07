@@ -41,18 +41,18 @@ char *get_value_in_vl(struct exec_struct *e_x, char *name)
     return NULL;
 }
 
-char *get_path(void)
-{
-    char s[2048] = { 0 };
-    getcwd(s, 2048);
-    if (s == NULL)
-        errx(1, "getcwd failed");
-    char *res = hcalloc(1, strlen(s));
-
-    memccpy(res, s, strlen(s));
-
-    return res;
-}
+//char *get_path(void)
+//{
+//    char s[2048] = { 0 };
+//    getcwd(s, 2048);
+//    if (s == NULL)
+//        errx(1, "getcwd failed");
+//    char *res = hcalloc(1, strlen(s));
+//
+//    memccpy(res, s, strlen(s));
+//
+//    return res;
+//}
 
 struct exec_struct *build_exec_struct(int argc, char **argv)
 {
@@ -70,8 +70,8 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
     assign_var("*", A_starval, e_x);
     assign_var("#", my_itoa(argc - optind - 1, hcalloc(1, 8)), e_x);
     assign_var("$", my_itoa(getpid(), hcalloc(1, 8)), e_x);\
-    assign_var("OLDPWD", get_path(),e_x);
-    assign_var("PWD", get_path(), e_x);
+    //assign_var("OLDPWD", get_path(),e_x);
+    //assign_var("PWD", get_path(), e_x);
     return e_x;
 }
 
