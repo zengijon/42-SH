@@ -33,7 +33,6 @@ Test(endnewlinee, exit_code, .init = redirect_all_stdout)
     free(test);
 }
 
-
 Test(endnewlinereee, exit_code, .init = redirect_all_stdout)
 {
     char *test = strdup("echo cou\\ncou");

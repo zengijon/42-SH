@@ -1,7 +1,8 @@
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <err.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "../memory/hmalloc.h"
 #include "unistd.h"
 
@@ -41,7 +42,7 @@ char *create_token(char *buffer)
 {
     int i = 0;
     char *tmp = hcalloc(strlen(buffer) + 1, sizeof(char));
-    while(*buffer != '\0' && *buffer != ' ')
+    while (*buffer != '\0' && *buffer != ' ')
     {
         tmp[i++] = *buffer++;
     }
@@ -57,7 +58,7 @@ int my_echo(char *cmd)
     char *res = hcalloc(strlen(cmd) * 2, sizeof(char));
     if (strncmp(cmd, "echo ", 5) != 0)
     {
-        write(2,"not an echo command",20);
+        write(2, "not an echo command", 20);
         return 127;
     }
     char *tmp1 = hcalloc(strlen(cmd), 1);
@@ -71,7 +72,8 @@ int my_echo(char *cmd)
             n_flag = 1;
         else if (strcmp(token, "-e") == 0 && word_flag == 0)
             e_flag = 1;
-        else if ((strcmp(token, "-ne") == 0 || strcmp(token, "-en") == 0) && word_flag == 0)
+        else if ((strcmp(token, "-ne") == 0 || strcmp(token, "-en") == 0)
+                 && word_flag == 0)
         {
             e_flag = 1;
             n_flag = 1;
@@ -100,11 +102,10 @@ int my_echo(char *cmd)
     return 0;
 }
 
-//int main(void)
+// int main(void)
 //{
 //    char * cmd = malloc(40);
 //    cmd = strcpy(cmd, "echo coucou bnitgjker fkfkf");
 //    my_echo(cmd);
 //    return 0;
 //}
-

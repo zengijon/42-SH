@@ -1,6 +1,7 @@
 #pragma once
 //#define _GNU_SOURCE //should be removed for mason
 #include <fnmatch.h>
+
 #include "token.h"
 
 struct lexer
@@ -34,7 +35,7 @@ void lexer_free(struct lexer *lexer);
  */
 struct token *lexer_peek(struct lexer *lexer);
 
-//return the n ieme token(n = 1 is equql to lexer_peak)
+// return the n ieme token(n = 1 is equql to lexer_peak)
 struct token *lexer_peek_rec(struct lexer *lexer, int n);
 
 /**

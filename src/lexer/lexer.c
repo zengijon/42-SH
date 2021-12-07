@@ -1,6 +1,5 @@
 //#define _GNU_SOURCE //should be removed for mason
 
-
 #include "lexer.h"
 
 #include <err.h>
@@ -111,7 +110,6 @@ struct lexer *lexer_new(const char *input)
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
         {
-
             if (input[k] == '\\')
             {
                 value[j++] = input[k++];
@@ -364,7 +362,8 @@ struct token *lexer_pop(struct lexer *res)
 
 // int main(void)
 //{
-//     struct lexer *lexer = lexer_new("if echo fi; then echo then; fi; echo test");
+//     struct lexer *lexer = lexer_new("if echo fi; then echo then; fi; echo
+//     test");
 //     //    printf("%d\n", lexer->current_tok->type);
 //     //    struct token *tok = lexer_peek(lexer);
 //     //    printf("%d\n", tok->type);

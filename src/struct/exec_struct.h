@@ -7,7 +7,8 @@
 
 #include <stdio.h>
 
-struct exec_struct{
+struct exec_struct
+{
     struct var_list *v_l;
     struct redir *r_l;
     int r_l_size;
@@ -21,7 +22,8 @@ struct redir
     FILE *file;
 };
 
-struct var_list{
+struct var_list
+{
     char *name;
     char *value;
     int name_l;

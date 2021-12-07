@@ -5,7 +5,6 @@
 #ifndef INC_42_SH_GRAMAR_STRUCT_H
 #define INC_42_SH_GRAMAR_STRUCT_H
 
-
 enum operator_
 {
     AND = 1,
@@ -72,7 +71,8 @@ struct command
 {
     int nb_redir;
     struct redirection **redir; // possibly null
-    struct simple_command *s_cmd; // only one of the three plus redirection if the first was not choosen
+    struct simple_command *s_cmd; // only one of the three plus redirection if
+                                  // the first was not choosen
     struct shell_command *sh_cmd;
     struct funcdec *fun;
     int nb_redir2;
@@ -144,7 +144,7 @@ struct rule_for
 {
     // for = word detected
     char *word;
-    //int flag_semi_col; // token ;
+    // int flag_semi_col; // token ;
     ///*******   can be remplace by ';' semi col
     // any \n we want
     // in token
@@ -202,7 +202,6 @@ struct else_clause
     // then token
     struct compound_list *cp_list2bis;
     struct else_clause *next;
-
 };
 
 struct do_group

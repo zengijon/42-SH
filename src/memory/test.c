@@ -15,7 +15,7 @@ int main()
     tmp2 = hrealloc(tmp2, 500);
     tmp = hrealloc(tmp, 50000);
     tmp3 = hrealloc(tmp3, 600);
-    
+
     hfree(tmp);
     hfree(tmp2);
     free_all();

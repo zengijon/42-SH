@@ -1,14 +1,15 @@
-#include "lexer.h"
 #include "utils.h"
-#include "../memory/hmalloc.h"
-#include "../memory/free_list.h"
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <err.h>
-#include <string.h>
 #include <fnmatch.h>
+#include <stddef.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../memory/free_list.h"
+#include "../memory/hmalloc.h"
+#include "lexer.h"
 
 size_t skipspace(const char *input)
 {
@@ -70,23 +71,23 @@ struct separator *build_separator_list(void)
 {
     struct separator *new = hcalloc(1, sizeof(struct separator));
     new->separators = hcalloc(20, sizeof(char *));
-    new->separators[0] = hcalloc(2,1);
+    new->separators[0] = hcalloc(2, 1);
     new->separators[0] = "\n";
-    new->separators[1] = hcalloc(2,1);
+    new->separators[1] = hcalloc(2, 1);
     new->separators[1] = " ";
-    new->separators[2] = hcalloc(2,1);
+    new->separators[2] = hcalloc(2, 1);
     new->separators[2] = ";";
-    new->separators[3] = hcalloc(2,1);
+    new->separators[3] = hcalloc(2, 1);
     new->separators[3] = "|";
-    new->separators[4] = hcalloc(2,1);
+    new->separators[4] = hcalloc(2, 1);
     new->separators[4] = "&";
-    new->separators[5] = hcalloc(2,1);
+    new->separators[5] = hcalloc(2, 1);
     new->separators[5] = "<";
-    new->separators[6] = hcalloc(2,1);
+    new->separators[6] = hcalloc(2, 1);
     new->separators[6] = ">";
-    new->separators[7] = hcalloc(2,1);
+    new->separators[7] = hcalloc(2, 1);
     new->separators[7] = "(";
-    new->separators[8] = hcalloc(2,1);
+    new->separators[8] = hcalloc(2, 1);
     new->separators[8] = ")";
     new->nb_separator = 9;
     return new;
@@ -96,7 +97,9 @@ int is_separator(const char *input, struct separator *separator)
 {
     for (size_t i = 0; i < separator->nb_separator; ++i)
     {
-        if(strncmp(input, separator->separators[i], strlen(separator->separators[i])) == 0
+        if (strncmp(input, separator->separators[i],
+                    strlen(separator->separators[i]))
+                == 0
             || input[0] == separator->separators[i][0])
             return 0;
     }
@@ -115,7 +118,7 @@ int is_token(const char *input, char *token, int n)
     test[n - 1] = '\0';
     if (strncmp(input, test, n) == 0)
         return 0;
-    test[n-1] = '\t';
+    test[n - 1] = '\t';
     if (strncmp(input, test, n) == 0)
         return 0;
     return 1;
@@ -153,7 +156,8 @@ struct lexer *gestion_redir(struct lexer *lexer, const char *input)
         ++i;
     }
     res[i] = input[i];
-    if ((input[i + 1] == '>' || input[i + 1] == '<') && input[i] != input[i + 1])
+    if ((input[i + 1] == '>' || input[i + 1] == '<')
+        && input[i] != input[i + 1])
     {
         lexer->end = lexer->pos + i + 1;
     }

@@ -1,12 +1,13 @@
 #pragma once
-#include "../struct/grammar_struct.h"
 #include "../struct/exec_struct.h"
+#include "../struct/grammar_struct.h"
 
 int exec_list(struct list *l, struct exec_struct *ex_l);
 
 int exec_list_next(struct list_next *l_n, struct exec_struct *ex_l);
 
-int exec_and_or_next(struct and_or_next *a_o, int p_res, struct exec_struct *ex_l);
+int exec_and_or_next(struct and_or_next *a_o, int p_res,
+                     struct exec_struct *ex_l);
 
 int exec_and_or(struct and_or *a_o, struct exec_struct *ex_l);
 
