@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <err.h>
 #include "unistd.h"
-#include "../memory/hmalloc.h"
+#include "../../memory/hmalloc.h"
 
 
 char *replace_newline(char *token)
