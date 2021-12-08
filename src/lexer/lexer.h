@@ -1,6 +1,4 @@
 #pragma once
-//#define _GNU_SOURCE //should be removed for mason
-#include <fnmatch.h>
 
 #include "token.h"
 

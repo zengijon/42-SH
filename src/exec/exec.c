@@ -15,6 +15,7 @@
 #include "variable_expention.h"
 #include "../lexer/lexer.h"
 #include "../redir/redir.h"
+#include <fnmatch.h>
 
 int exec_list_next(struct list_next *l_n, struct exec_struct *ex_s)
 {

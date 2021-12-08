@@ -232,10 +232,11 @@ struct shell_command *build_shell_command(struct lexer *lex)
      {
          if (lexer_peek(lex)->type != TOKEN_PA_OPEN)
               return NULL;
-         if (lexer_peek_rec(lex,2)->type != TOKEN_PA_CLOSE)
-             errx(2, "Open parenthethis in weird context");
          res->funct_name = lexer_pop(lex)->value;
          lexer_pop(lex);
+         if (lex->current_tok->type != TOKEN_PA_CLOSE)
+             errx(2, "Open parenthethis in weird context");
+
          lexer_pop(lex);
 
          while (lex->current_tok->type == TOKEN_NEWLINE)
