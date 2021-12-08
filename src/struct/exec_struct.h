@@ -28,6 +28,7 @@ struct redir
 struct fun_list
 {
     char *name;
+    char **args;
     struct command *cmd;
 };
 
