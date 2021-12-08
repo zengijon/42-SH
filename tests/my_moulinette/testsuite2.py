@@ -7,13 +7,10 @@ from typing import cast
 import termcolor
 import yaml
 
-basic_files =  ["if_basic_tests.yml", "cmd_var.yml"]
+basic_files = ["if_basic_tests.yml", "cmd_var.yml"]
 error_files = ["if_error_tests.yml", "cmd_error_var.yml"]
 hard_files = []
-script_files = []
-
-
-
+script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh"]
 
 TEST_OK = f"[ {termcolor.colored('OK', 'green')} ]"
 TEST_KO = f"[ {termcolor.colored('KO', 'red')} ]"
@@ -21,6 +18,7 @@ RED_DOT = f"{termcolor.colored('*', 'red')}"
 
 ACTUAL = f"{termcolor.colored('---ACTUAL---', 'blue')}"
 EXPECTED = f"{termcolor.colored('---EXPECTED---', 'magenta')}"
+
 
 def check_stderr(stderr_output: str):
     length = len(stderr_output)
@@ -44,8 +42,10 @@ def my_diff(expected: str, actual: str):
 def running(shell: str, stdin: str) -> sp.CompletedProcess:
     return sp.run([shell], input=stdin, capture_output=True, text=True)
 
+
 def running_process(shell: str, stdin: str) -> sp.CompletedProcess:
-    return sp.run([shell, "-c",stdin], capture_output=True, text=True)
+    return sp.run([shell, "-c", stdin], capture_output=True, text=True)
+
 
 def my_check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess, flag: int, name: str, input: str):
     if (expected.returncode != actual.returncode):
@@ -54,20 +54,21 @@ def my_check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess, 
         flag += 1
     if (expected.stderr != actual.stderr):
         flag += 1
-    
+
     if (flag == 0):
         print(f"{TEST_OK} {name}")
     else:
         print(f"{TEST_KO} {name}\n")
         print(f"INPUT: {input}")
         if (expected.returncode != actual.returncode):
-            print(f"\n{RED_DOT} Exit with return code -> {actual.returncode}, and -> {expected.returncode} was expected")
+            print(
+                f"\n{RED_DOT} Exit with return code -> {actual.returncode}, and -> {expected.returncode} was expected")
         if (expected.stdout != actual.stdout):
-            print(f"\n{RED_DOT} Stdout is not the same\n{ACTUAL}\n{actual.stdout}\n{EXPECTED}\n{expected.stdout}") 
-        if (expected.stderr != ""): #PR VOIR SI UN MSG DERREUR EST ATTENDU
-            if (check_stderr(actual.stderr) == False): #CHECK SI LE MSG DERREUR COMMENCE PAR '42sh:'
+            print(f"\n{RED_DOT} Stdout is not the same\n{ACTUAL}\n{actual.stdout}\n{EXPECTED}\n{expected.stdout}")
+        if (expected.stderr != ""):  # PR VOIR SI UN MSG DERREUR EST ATTENDU
+            if (check_stderr(actual.stderr) == False):  # CHECK SI LE MSG DERREUR COMMENCE PAR '42sh:'
                 print(f"\n{RED_DOT} Stderr is not the same\n {ACTUAL}\n{actual.stderr}\n{EXPECTED}\n"
-)
+                      )
 
 
 if __name__ == "__main__":
@@ -80,38 +81,35 @@ if __name__ == "__main__":
     print(f"We are testing the following binary -> {path_42sh}")
 
     if (type_of_test == "basic"):
-    	tests_files = basic_files
+        tests_files = basic_files
 
     if (type_of_test == "error"):
-    	tests_files = error_files
+        tests_files = error_files
 
     if (type_of_test == "script"):
-    	tests_files = script_files
+        tests_files = script_files
 
     if (type_of_test == "hard"):
-    	tests_files = hard_files
+        tests_files = hard_files
 
     cat = ""
 
     for file_test in tests_files:
 
-	    with open(file_test, "r") as our_yaml:
-	        tests_list = list(yaml.safe_load(our_yaml))
-	    
-	    for test in tests_list:
-	        if (cat != test["category"]):
+        with open(file_test, "r") as our_yaml:
+            tests_list = list(yaml.safe_load(our_yaml))
+
+        for test in tests_list:
+            if cat != test["category"]:
                 cat = test["category"]
-	            print(f"\n============{cat}============")
+                print(f"\n============{cat}============")
 
+            our_input = test["input"]
+            name = test["name"]
 
-	        our_input = test["input"]
-	        name = test["name"]
-
-	        process_dash = running("dash", our_input)
-
+            process_dash = running("dash", our_input)
             if type_of_test == "script":
                 process_42sh = running(path_42sh, our_input)
             else:
-	            process_42sh = running_process(path_42sh, our_input)
-
-	        my_check_output(process_dash, process_42sh, 0, name, our_input)
+                process_42sh = running_process(path_42sh, our_input)
+            my_check_output(process_dash, process_42sh, 0, name, our_input)

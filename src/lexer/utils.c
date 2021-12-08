@@ -90,7 +90,9 @@ struct separator *build_separator_list(void)
     new->separators[7] = "(";
     new->separators[8] = hcalloc(2, 1);
     new->separators[8] = ")";
-    new->nb_separator = 9;
+    new->separators[9] = hcalloc(2, 1);
+    new->separators[9] = "\0";
+    new->nb_separator = 10;
     return new;
 }
 
