@@ -13,6 +13,8 @@
 #include "mypipe.h"
 #include "string.h"
 #include "variable_expention.h"
+#include "../lexer/lexer.h"
+#include "../redir/redir.h"
 
 int exec_list_next(struct list_next *l_n, struct exec_struct *ex_s)
 {
@@ -122,13 +124,13 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     //                return res;
     if (cmd->size_elt < 1)
         return res;
-    char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
-    for (int i = 1; i < cmd->size_elt; ++i)
+    char **list = hcalloc(cmd->size_elt, sizeof(char *));
+    for (int i = 0; i < cmd->size_elt; ++i)
     {
-        list[i - 1] = remove_sep(cmd->list_elt[i]->word, ex_l);
+        list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt - 1,
-                    list); // Not in this file
+                     list, ex_l); // Not in this file
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
