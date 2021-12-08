@@ -27,8 +27,9 @@ enum token_type
     TOKEN_REDIR, /// <> -> 20
     TOKEN_PA_OPEN, /// '(' -> 21
     TOKEN_PA_CLOSE, /// ')' -> 22
-    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid ->
-                ///< 23
+    TOKEN_ACO_OPEN,///< '{' -> 23
+    TOKEN_ACO_CLOSE,///< '}' -> 24
+    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 25
 };
 
 // drfhfjfgj

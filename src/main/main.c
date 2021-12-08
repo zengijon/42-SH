@@ -50,6 +50,7 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
     }
     assign_var("*", A_starval, e_x);
     assign_var("#", my_itoa(argc - optind - 1, hcalloc(1, 8)), e_x);
+    assign_var("IFS", "\n", e_x);
     assign_var("$", my_itoa(getpid(), hcalloc(1, 8)),
                e_x); // assign_var("OLDPWD", get_path(),e_x);
     // assign_var("PWD", get_path(), e_x);
