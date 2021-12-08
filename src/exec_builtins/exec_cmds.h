@@ -8,4 +8,5 @@ int exec_cmds(char *cmd, int nb_params, char **parameters, struct exec_struct *e
 
 //int exec_function(int indic, char **parameters, int nb_param, struct exec_struct *e_x);
 int exec_function(int indic, struct exec_struct *e_x);
+struct exec_struct *exec_struct_copy_fill(struct exec_struct *e_x);
 
