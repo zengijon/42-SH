@@ -99,6 +99,16 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_PA_CLOSE;
         res->end = res->pos + 1;
     }
+    else if (input[res->pos] == '{')
+    {
+        res->current_tok->type = TOKEN_ACO_OPEN;
+        res->end = res->pos + 1;
+    }
+    else if (input[res->pos] == '}')
+    {
+        res->current_tok->type = TOKEN_ACO_CLOSE;
+        res->end = res->pos + 1;
+    }
     else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH)
              == 0)
     {
@@ -294,6 +304,26 @@ struct token *lexer_pop(struct lexer *res)
         }
         res->end = res->pos + 4;
     }
+    else if (is_token(&input[res->pos], "{ ", 2) == 0)
+    {
+        res->current_tok->type = TOKEN_ACO_OPEN;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "{";
+        }
+        res->end = res->pos + 1;
+    }
+    else if (is_token(&input[res->pos], "} ", 2) == 0)
+    {
+        res->current_tok->type = TOKEN_ACO_OPEN;
+        if (res->current_tok->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "}";
+        }
+        res->end = res->pos + 1;
+    }
     else if (is_token(&input[res->pos], "until ", 6) == 0)
     {
         res->current_tok->type = TOKEN_UNTIL;
@@ -380,6 +410,9 @@ struct token *lexer_pop(struct lexer *res)
         res->end = k;
     }
     return tmp;
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //9
+//     tok = lexer_pop(lexer);
 }
 
 // int main(void)
@@ -394,9 +427,6 @@ struct token *lexer_pop(struct lexer *res)
 //     printf("%d\n", tok->type); //12
 //     tok = lexer_pop(lexer);
 //     printf("%d\n", tok->type); //12
-//     tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type); //9
-//     tok = lexer_pop(lexer);
 //     printf("%d\n", tok->type); //1
 //     tok = lexer_pop(lexer);
 //     printf("%d\n", tok->type); //12
