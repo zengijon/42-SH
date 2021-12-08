@@ -21,7 +21,8 @@ struct list_next *build_list_next(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
-    else if (lex->current_tok->type == TOKEN_NEWLINE)
+    else if (lex->current_tok->type == TOKEN_NEWLINE
+	     || lex->current_tok->type == TOKEN_EOF)
         return res;
     else
         errx(1, "missing separator after list");
