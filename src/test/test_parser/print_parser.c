@@ -94,10 +94,8 @@ void print_command(struct command *c)
             print_simple_command(c->s_cmd);
         else if (c->sh_cmd != NULL)
             print_shell_command(c->sh_cmd);
-        // else if (c->fun)
-        //{
-        // print_funcdec(c->fun);
-        //}
+        else if (c->fun)
+            print_funcdec(c->fun);
 
         for (int i = 0; i < c->nb_redir2; ++i)
             print_redirection(c->redir2[i]);
@@ -139,19 +137,16 @@ void print_shell_command(struct shell_command *sh_cmd)
     }
 }
 
-// void print_funcdec(struct funcdec *f)
-//{
-//     printf("(funcdec) [");
-//     if (f != NULL)
-//     {
-//         if (f->funct_name != NULL)
-//             printf("(function name : %s )", f->funct_name);
-//         printf("( )");
-//         printf("( new line )");
-//         print_shell_command(f->sh_cmd);
-//     }
-//     printf("]");
-// }
+void print_funcdec(struct funcdec *f)
+{
+    printf("(funcdec) [");
+    if (f != NULL)
+    {
+        printf("(function name : %s )", f->funct_name);
+        print_command(f->sh_cmd);
+    }
+    printf("]");
+}
 
 void print_redirection(struct redirection *r)
 {

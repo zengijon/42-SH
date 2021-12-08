@@ -136,12 +136,12 @@ struct command *build_command(struct lexer *lex)
                               ++(res->nb_redir) * sizeof(struct redirection *));
         res->redir[res->nb_redir - 1] = tmp;
     }
-    if ((res->s_cmd = build_simple_command(lex)) != NULL)
+    if ((res->fun = build_funcdec(lex)) != NULL)
+        ;
+    else if ((res->s_cmd = build_simple_command(lex)) != NULL)
         return res;
     else if ((res->sh_cmd = build_shell_command(lex)) != NULL)
         ;
-    //    else if ((res->fun = build_funcdec(lex)) != NULL)
-    //        ;
     else if (res->redir != NULL)
         return res;
     else
@@ -199,6 +199,7 @@ struct shell_command *build_shell_command(struct lexer *lex)
     if (lex->current_tok->type == TOKEN_PA_OPEN)
     {
         lexer_pop(lex);
+        res->is_subshell = 1;
         res->c_p = build_compound_list(lex);
         if (res->c_p == NULL)
             errx(1, "missing compound list between '()'");
@@ -223,30 +224,28 @@ struct shell_command *build_shell_command(struct lexer *lex)
     return res;
 }
 
-// struct funcdec *build_funcdec(struct lexer *lex)
-//{
-//     struct funcdec *res = hcalloc(1, sizeof(struct funcdec));
-//
-//     if (lex->current_tok->type == TOKEN_WORDS)
-//     {
-//         if (lexer_peek(lex)->type != "(")
-//              return NULL;
-//         if (lexer_peek_rec(lex,2)->type != ')')
-//             return NULL;
-//         res->funct_name = lexer_pop(lex)->value;
-//         lexer_pop(lex);
-//         lexer_pop(lex);
-//
-//         while (lex->current_tok->type == TOKEN_NEWLINE)
-//             lexer_pop(lex);
-//         res->sh_cmd = build_shell_command(lex);
-//
-//         if (res->sh_cmd == NULL)
-//             errx(1, "Missing shell cmd after word () new line");
-//         return res;
-//     }
-//     return NULL;
-// }
+ struct funcdec *build_funcdec(struct lexer *lex)
+{
+     struct funcdec *res = hcalloc(1, sizeof(struct funcdec));
+
+     if (lex->current_tok->type == TOKEN_WORDS)
+     {
+         if (lexer_peek(lex)->type != TOKEN_PA_OPEN)
+              return NULL;
+         if (lexer_peek_rec(lex,2)->type != TOKEN_PA_CLOSE)
+             errx(2, "Open parenthethis in weird context");
+         res->funct_name = lexer_pop(lex)->value;
+         lexer_pop(lex);
+         lexer_pop(lex);
+
+         while (lex->current_tok->type == TOKEN_NEWLINE)
+             lexer_pop(lex);
+         if ((res->sh_cmd = build_command(lex)) == NULL)
+             errx(1, "Missing shell cmd after word () new line");
+         return res;
+     }
+     return NULL;
+ }
 
 struct redirection *build_redirection(struct lexer *lex)
 {
@@ -289,8 +288,6 @@ struct element *build_element(struct lexer *lex)
     return res;
 }
 
-#include "stdio.h"
-
 static struct compound_next *build_compound_next(struct lexer *lex)
 {
     struct compound_next *res = hcalloc(1, sizeof(struct compound_next));
@@ -313,6 +310,7 @@ static struct compound_next *build_compound_next(struct lexer *lex)
     res->next = build_compound_next(lex);
     return res;
 }
+
 struct compound_list *build_compound_list(struct lexer *lex)
 {
     struct compound_list *res = hcalloc(1, sizeof(struct compound_list));

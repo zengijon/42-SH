@@ -1,11 +1,14 @@
 #include "../exec/exec.h"
 
+#include <err.h>
 #include <stdio.h>
+#include <sys/wait.h>
 
 #include "../exec_builtins/exec_cmds.h"
 #include "../lexer/lexer.h"
 #include "../memory/hmalloc.h"
 #include "../redir/redir.h"
+#include "../utils/usefull_fonction.h"
 #include "assert.h"
 #include "mypipe.h"
 #include "string.h"
@@ -134,6 +137,17 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
 
 int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
 {
+    if (cmd->c_p != NULL && cmd->is_subshell == 1)
+    {
+        int pid = fork();
+        if (pid == 0)
+            exit( exec_compound_list(cmd->c_p, ex_l));
+        int wstatus;
+        int child_pid = waitpid(pid, &wstatus, 0);
+        if (child_pid == -1)
+            errx(1, "error in subshell wait");
+        return 0;
+    }
     if (cmd->c_p != NULL)
         return exec_compound_list(cmd->c_p, ex_l);
     //    if (cmd->r_c != NULL)
@@ -148,6 +162,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         return exec_rule_until(cmd->r_u, ex_l);
     assert(0);
 }
+
 //
 // int exec_fundec(struct funcdec *cmd, struct exec_struct *ex_l)
 //{

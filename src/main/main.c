@@ -10,28 +10,9 @@
 #include "../test/test_parser/print_parser.h"
 #include "../utils/file2buf.h"
 #include "stdio.h"
+#include "../utils/usefull_fonction.h"
 
 struct free_list *list_malloc = NULL;
-
-char *my_itoa(int n, char *s)
-{
-    int k = 0;
-    if (n < 0)
-    {
-        s[k++] = '-';
-        n = -1 * n;
-    }
-    int i = 1;
-    for (int j = n; j >= 10; j /= 10)
-        i *= 10;
-    for (; i > 0; i /= 10)
-    {
-        s[k++] = '0' + (n / i);
-        n %= i;
-    }
-    s[k] = 0;
-    return s;
-}
 
 char *get_value_in_vl(struct exec_struct *e_x, char *name)
 {

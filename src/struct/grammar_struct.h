@@ -89,6 +89,7 @@ struct simple_command
 
 struct shell_command
 {
+    int is_subshell;
     struct compound_list *c_p; // with () or {}
     struct rule_for *r_f;
     struct rule_while *r_w;
@@ -102,7 +103,7 @@ struct funcdec
     char *funct_name;
     // str = ()
     // any \n we want
-    struct shell_command *sh_cmd;
+    struct command *sh_cmd;
 };
 
 struct redirection
