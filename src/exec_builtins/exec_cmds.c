@@ -74,7 +74,17 @@ int exec_cmds(char *cmd, int nb_params, char **parameters, struct exec_struct *e
 //}
 int exec_function(int indic, struct exec_struct *e_x)
 {
-    return exec_command(e_x->f_l[indic].cmd, e_x);
+    struct exec_struct *copy = exec_struct_copy_fill(e_x);
+    int res = exec_command(e_x->f_l[indic].cmd, copy);
+    return res;
+}
+
+struct exec_struct *exec_struct_copy_fill(struct exec_struct *e_x)
+{
+    /// il faut copier coller la struct e_x puis remplacer uniauement les variables speciales pour les faires matcherts avec les parametres de la fonction
+    /// et stocker les anciennes valeurs des variables speciales du pgm globale
+    /// apres l'execution de exec_command, il faut remettre les anciennes valeurs prealablements stokee dans exec_struct
+    return NULL;
 }
 //int main(void)
 //{
