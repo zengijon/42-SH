@@ -90,9 +90,7 @@ struct separator *build_separator_list(void)
     new->separators[7] = "(";
     new->separators[8] = hcalloc(2, 1);
     new->separators[8] = ")";
-    new->separators[9] = hcalloc(2, 1);
-    new->separators[9] = "\0";
-    new->nb_separator = 10;
+    new->nb_separator = 9;
     return new;
 }
 
@@ -106,6 +104,8 @@ int is_separator(const char *input, struct separator *separator)
             || input[0] == separator->separators[i][0])
             return 0;
     }
+    if (input[0] == '\0')
+        return 0;
     return 1;
 }
 
