@@ -417,37 +417,37 @@ struct token *lexer_pop(struct lexer *res)
     //     tok = lexer_pop(lexer);
 }
 
- int main(void)
-{
-     struct lexer *lexer = lexer_new("test ()");
-     //    printf("%d\n", lexer->current_tok->type);
-     //    struct token *tok = lexer_peek(lexer);
-     //    printf("%d\n", tok->type);
-     struct token *tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //0
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //12
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //12
-     printf("%d\n", tok->type); //1
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //12
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //12
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //9
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //4 HERE
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //9
-     tok = lexer_pop(lexer);
-     printf("%d\n", tok->type); //12
-     //    printf("==================================\n");
-     //    tok = lexer_pop(lexer);
-     //    printf("%s\n", tok->value);
-     //    tok = lexer_peek(lexer);
-     //    printf("%s\n", tok->value);
-     //    printf("====================================\n");
-     //    printf("%s\n", lexer->current_tok->value);
-     return 0;
- }
+// int main(void)
+//{
+//     struct lexer *lexer = lexer_new("test ()");
+//     //    printf("%d\n", lexer->current_tok->type);
+//     //    struct token *tok = lexer_peek(lexer);
+//     //    printf("%d\n", tok->type);
+//     struct token *tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //0
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //12
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //12
+//     printf("%d\n", tok->type); //1
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //12
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //12
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //9
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //4 HERE
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //9
+//     tok = lexer_pop(lexer);
+//     printf("%d\n", tok->type); //12
+//     //    printf("==================================\n");
+//     //    tok = lexer_pop(lexer);
+//     //    printf("%s\n", tok->value);
+//     //    tok = lexer_peek(lexer);
+//     //    printf("%s\n", tok->value);
+//     //    printf("====================================\n");
+//     //    printf("%s\n", lexer->current_tok->value);
+//     return 0;
+// }
