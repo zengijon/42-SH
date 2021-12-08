@@ -100,8 +100,8 @@ int exec_command(struct command *cmd, struct exec_struct *ex_l)
         return exec_simple_command(cmd->s_cmd, ex_l);
     if (cmd->sh_cmd != NULL)
         return exec_shell_command(cmd->sh_cmd, ex_l);
-    //    if (cmd->fun != NULL)
-    //        return exec_fundec(cmd->fun, ex_l);
+    if (cmd->fun != NULL)
+        return exec_fundec(cmd->fun, ex_l);
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
@@ -163,15 +163,13 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
     assert(0);
 }
 
-//
-// int exec_fundec(struct funcdec *cmd, struct exec_struct *ex_l)
-//{
-//    // a faire
-//    if (cmd)
-//        return 0;
-//    return 0;
-//}
-//
+ int exec_fundec(struct funcdec *fdec, struct exec_struct *ex_l)
+{
+    ex_l->f_l = hrealloc(ex_l->f_l, ++ex_l->f_l_size * sizeof(struct fun_list));
+    ex_l->f_l[ex_l->f_l_size - 1].name = fdec->funct_name;
+    ex_l->f_l[ex_l->f_l_size - 1].cmd = fdec->sh_cmd;
+    return 0;
+}
 
 int exec_redir(struct redirection *r, struct exec_struct *ex_l)
 {

@@ -6,6 +6,7 @@
 #define INC_42SHEEEE_EXEC_STRUCT_H
 
 #include <stdio.h>
+#include "grammar_struct.h"
 
 struct exec_struct
 {
@@ -13,6 +14,8 @@ struct exec_struct
     struct redir *r_l;
     int r_l_size;
     int v_l_size;
+    struct fun_list *f_l;
+    int f_l_size;
 };
 
 struct redir
@@ -20,6 +23,12 @@ struct redir
     int new_fd;
     int old_fd;
     FILE *file;
+};
+
+struct fun_list
+{
+    char * name;
+    struct command * cmd;
 };
 
 struct var_list
