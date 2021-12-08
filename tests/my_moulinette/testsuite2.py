@@ -14,7 +14,6 @@ script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega
 
 TEST_OK = f"[ {termcolor.colored('OK', 'green')} ]"
 TEST_KO = f"[ {termcolor.colored('KO', 'red')} ]"
-RED_DOT = f"{termcolor.colored('*', 'red')}"
 
 ACTUAL = f"{termcolor.colored('---ACTUAL---', 'blue')}"
 EXPECTED = f"{termcolor.colored('---EXPECTED---', 'magenta')}"
@@ -31,7 +30,6 @@ def check_stderr(stderr_output: str):
         to_compare += stderr_output[i]
         i += 1
     return to_compare == compared
-
 
 def my_diff(expected: str, actual: str):
     expected_lines = expected.splitlines(keepends=True)
@@ -74,10 +72,9 @@ def my_check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess, 
 if __name__ == "__main__":
     parser = ArgumentParser("TestSuite")
     parser.add_argument("--binary", required=True, type=Path)
-    parser.add_argument("--type", required=True, type=str)
     arg = parser.parse_args()
+
     path_42sh = arg.binary.absolute()
-    type_of_test = arg.type
     print(f"We are testing the following binary -> {path_42sh}")
 
     if (type_of_test == "basic"):
@@ -92,9 +89,12 @@ if __name__ == "__main__":
     if (type_of_test == "hard"):
         tests_files = hard_files
 
-    cat = ""
+        #input_42sh = "-c "
+        #input_42sh = "\"" + our_input + "\""
+        print(our_input)
+        #res = str(path_42sh) + " " + input_42sh
 
-    for file_test in tests_files:
+        process_42sh = running_process(path_42sh, our_input)
 
         with open(file_test, "r") as our_yaml:
             tests_list = list(yaml.safe_load(our_yaml))

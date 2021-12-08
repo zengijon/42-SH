@@ -10,28 +10,9 @@
 #include "../test/test_parser/print_parser.h"
 #include "../utils/file2buf.h"
 #include "stdio.h"
+#include "../utils/usefull_fonction.h"
 
 struct free_list *list_malloc = NULL;
-
-char *my_itoa(int n, char *s)
-{
-    int k = 0;
-    if (n < 0)
-    {
-        s[k++] = '-';
-        n = -1 * n;
-    }
-    int i = 1;
-    for (int j = n; j >= 10; j /= 10)
-        i *= 10;
-    for (; i > 0; i /= 10)
-    {
-        s[k++] = '0' + (n / i);
-        n %= i;
-    }
-    s[k] = 0;
-    return s;
-}
 
 char *get_value_in_vl(struct exec_struct *e_x, char *name)
 {
@@ -41,18 +22,19 @@ char *get_value_in_vl(struct exec_struct *e_x, char *name)
     return NULL;
 }
 
-// char *get_path(void)
-//{
-//    char s[2048] = { 0 };
-//    getcwd(s, 2048);
-//    if (s == NULL)
-//        errx(1, "getcwd failed");
-//    char *res = hcalloc(1, strlen(s));
-//
-//    memccpy(res, s, strlen(s));
-//
-//    return res;
-//}
+char *get_path(void)
+{
+    char s[2048] = { 0 };
+    getcwd(s, 2048);
+    if (s == NULL)
+        errx(1, "getcwd failed");
+
+    char *res = hcalloc(1, strlen(s));
+
+    memccpy(res, s, '\0', strlen(s));
+
+    return res;
+}
 
 struct exec_struct *build_exec_struct(int argc, char **argv)
 {
@@ -69,9 +51,10 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
     }
     assign_var("*", A_starval, e_x);
     assign_var("#", my_itoa(argc - optind - 1, hcalloc(1, 8)), e_x);
-    assign_var("$", my_itoa(getpid(), hcalloc(1, 8)),
-               e_x); // assign_var("OLDPWD", get_path(),e_x);
-    // assign_var("PWD", get_path(), e_x);
+    assign_var("$", my_itoa(getpid(), hcalloc(1, 8)), e_x);
+    assign_var("IFS", "\n", e_x);
+    assign_var("OLDPWD", get_path(),e_x);
+    assign_var("PWD", get_path(), e_x);
     return e_x;
 }
 

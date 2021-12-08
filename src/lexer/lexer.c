@@ -1,5 +1,3 @@
-//#define _GNU_SOURCE //should be removed for mason
-
 #include "lexer.h"
 
 #include <stddef.h>
@@ -80,10 +78,16 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_NEWLINE;
         res->end = res->pos + 1;
     }
-    else if (strncmp(&input[res->pos], "\"", 1) == 0)
-        res = gestion_double_quote(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "'", 1) == 0)
+    {
         res = gestion_quote(res, &input[res->pos]);
+        res->end = res->pos + 1;
+    }
+    //    else if (strncmp(&input[res->pos], "\"", 1) == 0)
+    //    {
+    //        res = gestion_double_quote(res, &input[res->pos]);
+    //        res->end = res->pos + 1;
+    //    }
     else if (strncmp(&input[res->pos], "&", 1) == 0
              || strncmp(&input[res->pos], "|", 1) == 0)
     {
@@ -120,15 +124,7 @@ struct lexer *lexer_new(const char *input)
         size_t k = res->pos;
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
-        {
-            if (input[k] == '\\')
-            {
-                value[j++] = input[k++];
-                value[j++] = input[k++];
-            }
-            else
-                value[j++] = input[k++];
-        }
+            value[j++] = input[k++];
         res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
         res->end = k;
@@ -359,18 +355,6 @@ struct token *lexer_pop(struct lexer *res)
         res->current_tok->type = TOKEN_NEWLINE;
         res->end = res->pos + 1;
     }
-    else if (input[res->pos] == '(')
-    {
-        res->current_tok->type = TOKEN_PA_OPEN;
-        res->end = res->pos + 1;
-    }
-    else if (input[res->pos] == ')')
-    {
-        res->current_tok->type = TOKEN_PA_CLOSE;
-        res->end = res->pos + 1;
-    }
-    else if (strncmp(&input[res->pos], "\"", 1) == 0)
-        res = gestion_double_quote(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "'", 1) == 0)
         res = gestion_quote(res, &input[res->pos]);
     else if (strncmp(&input[res->pos], "&", 1) == 0
@@ -406,7 +390,20 @@ struct token *lexer_pop(struct lexer *res)
             if (input[k] == '\\')
             {
                 value[j++] = input[k++];
-                value[j++] = input[k++];
+                while(input[k] != '\0' && input[k] != '\'')
+                {
+                    value[j++] = input[k++];
+                }
+                if (input[k] == '\0')
+                {
+                    res->current_tok->type = TOKEN_ERROR;
+                    return tmp;
+                }
+            }
+            if (input[k] == '\\')
+            {
+                value[j++] = input[k + 1];
+                k += 2;
             }
             else
                 value[j++] = input[k++];

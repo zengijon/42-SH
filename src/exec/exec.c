@@ -1,14 +1,19 @@
 #include "../exec/exec.h"
 
+#include <err.h>
 #include <stdio.h>
+#include <sys/wait.h>
 
 #include "../exec_builtins/exec_cmds.h"
 #include "../lexer/lexer.h"
 #include "../memory/hmalloc.h"
-#include "../parser/parser.h"
+#include "../redir/redir.h"
+#include "../utils/usefull_fonction.h"
 #include "assert.h"
 #include "string.h"
 #include "variable_expention.h"
+#include "../lexer/lexer.h"
+#include "../redir/redir.h"
 
 int exec_list_next(struct list_next *l_n)
 {
@@ -100,8 +105,8 @@ int exec_command(struct command *cmd)
         return exec_simple_command(cmd->s_cmd);
     if (cmd->sh_cmd != NULL)
         return exec_shell_command(cmd->sh_cmd, ex_l);
-    //    if (cmd->fun != NULL)
-    //        return exec_fundec(cmd->fun, ex_l);
+    if (cmd->fun != NULL)
+        return exec_fundec(cmd->fun, ex_l);
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
@@ -122,13 +127,13 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     //                return res;
     if (cmd->size_elt < 1)
         return res;
-    char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
-    for (int i = 1 ; i < cmd->size_elt; ++i)
+    char **list = hcalloc(cmd->size_elt, sizeof(char *));
+    for (int i = 0; i < cmd->size_elt; ++i)
     {
-        list[i - 1] = remove_sep(cmd->list_elt[i]->word, ex_l);
+        list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt - 1,
-                    list); // Not in this file
+                     list, ex_l); // Not in this file
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
@@ -137,6 +142,17 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
 
 int exec_shell_command(struct shell_command *cmd)
 {
+    if (cmd->c_p != NULL && cmd->is_subshell == 1)
+    {
+        int pid = fork();
+        if (pid == 0)
+            exit( exec_compound_list(cmd->c_p, ex_l));
+        int wstatus;
+        int child_pid = waitpid(pid, &wstatus, 0);
+        if (child_pid == -1)
+            errx(1, "error in subshell wait");
+        return 0;
+    }
     if (cmd->c_p != NULL)
         return exec_compound_list(cmd->c_p);
     if (cmd->r_c != NULL)
@@ -151,15 +167,14 @@ int exec_shell_command(struct shell_command *cmd)
         return exec_rule_until(cmd->r_u, ex_l);
     assert(0);
 }
-//
-// int exec_fundec(struct funcdec *cmd, struct exec_struct *ex_l)
-//{
-//    // a faire
-//    if (cmd)
-//        return 0;
-//    return 0;
-//}
-//
+
+ int exec_fundec(struct funcdec *fdec, struct exec_struct *ex_l)
+{
+    ex_l->f_l = hrealloc(ex_l->f_l, ++ex_l->f_l_size * sizeof(struct fun_list));
+    ex_l->f_l[ex_l->f_l_size - 1].name = fdec->funct_name;
+    ex_l->f_l[ex_l->f_l_size - 1].cmd = fdec->sh_cmd;
+    return 0;
+}
 
 int exec_redir(struct redirection *r, struct exec_struct *ex_l)
 {

@@ -1,10 +1,10 @@
-#include <err.h>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-
-#include "../memory/hmalloc.h"
+#include <stdlib.h>
+#include <stdio.h>
+#include <err.h>
 #include "unistd.h"
+#include "../../memory/hmalloc.h"
+
 
 char *replace_newline(char *token)
 {
