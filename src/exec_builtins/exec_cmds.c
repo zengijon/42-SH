@@ -39,6 +39,7 @@ int exec_builtins(char *cmd, int nb_params, char **parameters, struct exec_struc
         return 0;
     else if (strcmp(cmd, "false") == 0)
         return 1;
+    //else if (exec_function(cmd, ))
     else
         return 127;
 }
