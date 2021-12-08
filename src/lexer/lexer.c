@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define _GNU_SOURCE //should be removed for mason
+#define _GNU_SOURCE // should be removed for mason
 #include <fnmatch.h>
 
 #include "../memory/free_list.h"
@@ -207,7 +207,7 @@ struct token *lexer_pop(struct lexer *res)
     i += skipspace(&res->input[i]);
     res->pos = i;
     if (is_token(&input[res->pos], "if", 2) == 0
-             && (is_separator(input + res->pos + 2, separator) == 0))
+        && (is_separator(input + res->pos + 2, separator) == 0))
     {
         res->current_tok->type = TOKEN_IF;
         if (tmp->type == TOKEN_WORDS)
@@ -305,7 +305,8 @@ struct token *lexer_pop(struct lexer *res)
         }
         res->end = res->pos + 4;
     }
-    else if (is_token(&input[res->pos], "{ ", 2) == 0)
+    else if (is_token(&input[res->pos], "{", 1) == 0
+             && (is_separator(input + res->pos + 1, separator) == 0))
     {
         res->current_tok->type = TOKEN_ACO_OPEN;
         if (res->current_tok->type == TOKEN_WORDS)
@@ -315,7 +316,8 @@ struct token *lexer_pop(struct lexer *res)
         }
         res->end = res->pos + 1;
     }
-    else if (is_token(&input[res->pos], "} ", 2) == 0)
+    else if (is_token(&input[res->pos], "}", 1) == 0
+             && (is_separator(input + res->pos + 1, separator) == 0))
     {
         res->current_tok->type = TOKEN_ACO_OPEN;
         if (res->current_tok->type == TOKEN_WORDS)
@@ -325,7 +327,7 @@ struct token *lexer_pop(struct lexer *res)
         }
         res->end = res->pos + 1;
     }
-    else if (is_token(&input[res->pos], "until", 5) == 0)
+    else if (is_token(&input[res->pos], "until", 5) == 0
              && (is_separator(input + res->pos + 5, separator) == 0))
     {
         res->current_tok->type = TOKEN_UNTIL;
@@ -390,7 +392,7 @@ struct token *lexer_pop(struct lexer *res)
                 int is_sub = 1;
                 value[j++] = input[k++];
                 value[j++] = input[k++];
-                while(input[k] != '\0' && is_sub > 0)
+                while (input[k] != '\0' && is_sub > 0)
                 {
                     if (input[k] == '(')
                         is_sub++;
@@ -413,9 +415,9 @@ struct token *lexer_pop(struct lexer *res)
         res->end = k;
     }
     return tmp;
-//     tok = lexer_pop(lexer);
-//     printf("%d\n", tok->type); //9
-//     tok = lexer_pop(lexer);
+    //     tok = lexer_pop(lexer);
+    //     printf("%d\n", tok->type); //9
+    //     tok = lexer_pop(lexer);
 }
 
 // int main(void)
