@@ -8,11 +8,10 @@
 
 #include "../memory/hmalloc.h"
 #include "string.h"
+#include "../utils/usefull_fonction.h"
 
-int is_accepted(char c)
+int is_accepted(char c, char *accepted)
 {
-    const char *accepted =
-        "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789";
     for (int i = 0; accepted[i] != 0; ++i)
         if (c == accepted[i])
             return 1;
@@ -31,7 +30,7 @@ int is_escapable(char c)
 char *get_next(char *word)
 {
     int i = 0;
-    while (is_accepted(word[i]) == 1 || (word[i] == '{'))
+    while (is_accepted(word[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 1 || (word[i] == '{'))
         i++;
     return word + i + (word[0] == '{');
 }
@@ -39,11 +38,11 @@ char *get_next(char *word)
 char *strcmp_withdelim(char *ref, char *start)
 {
     int i = 0;
-    for (; ref[i] != 0 && (is_accepted(start[i]) == 1 || start[i] == ref[i]);
+    for (; ref[i] != 0 && (is_accepted(start[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 1 || start[i] == ref[i]);
          i++)
         if (ref[i] != start[i])
             return NULL;
-    if (ref[i] != 0 || is_accepted(start[i]) == 1)
+    if (ref[i] != 0 || is_accepted(start[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 1)
         return NULL;
     return start + i;
 }
@@ -112,6 +111,11 @@ char *remove_sep(char *word, struct exec_struct *e_x)
             double_ = !double_;
         if (double_ == 0 && word[i] == '\'')
             single = !single;
+        if (double_ && is_accepted(word[i], get_value_in_vl(e_x, "IFS")))
+        {
+            res[j] = '\r';
+            j++;
+        }
         if ((word[i] == '\"' && single == 0)
             || (word[i] == '\'' && double_ == 0))
             ;
@@ -138,7 +142,7 @@ int valid_name(char *word)
         {
             if (word[i] == '=')
                 return 1;
-            if (is_accepted(word[i]) == 0)
+            if (is_accepted(word[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 0)
                 return 0;
         }
         return 1;
