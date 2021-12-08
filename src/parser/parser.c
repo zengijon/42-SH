@@ -183,19 +183,17 @@ struct simple_command *build_simple_command(struct lexer *lex)
 struct shell_command *build_shell_command(struct lexer *lex)
 {
     struct shell_command *res = hcalloc(1, sizeof(struct shell_command));
-
-    //    if (lex->current_tok->type == "{")
-    //    {
-    //        lexer_pop(lex);
-    //        res->c_p = build_compound_list(lex);
-    //        if (res->c_p == NULL)
-    //            errx(1, "missing compound list between '{}'");
-    //        if (lex->current_tok-type != "}")
-    //            errx(1, "syntax error : missing '}'");
-    //        lexer_pop(lex);
-    //        return res;
-    //    }
-    //
+        if (lex->current_tok->type == TOKEN_ACO_OPEN)
+        {
+            lexer_pop(lex);
+            res->c_p = build_compound_list(lex);
+            if (res->c_p == NULL)
+                errx(1, "missing compound list between '{}'");
+            if (lex->current_tok->type != TOKEN_ACO_CLOSE)
+                errx(1, "syntax error : missing '}'");
+            lexer_pop(lex);
+            return res;
+        }
     if (lex->current_tok->type == TOKEN_PA_OPEN)
     {
         lexer_pop(lex);
