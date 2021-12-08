@@ -1,0 +1,1 @@
+if false then echo wrong!! else echo the right thing fi

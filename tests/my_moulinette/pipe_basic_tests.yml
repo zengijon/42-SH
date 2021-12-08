@@ -1,0 +1,85 @@
+#============PIPE BASIC TESTS============
+
+- category: PIPE BASIC
+  name: echo a | echo b
+  input: echo a | echo b
+
+- category: PIPE BASIC
+  name: same with cat -e 
+  input: echo a | echo b | cat -e
+
+- category: PIPE BASIC
+  name: wc -l | xargs
+  input: echo lol | wc -l | xargs echo
+
+- category: PIPE BASIC
+  name: echo subshell
+  input: echo aaa \ | (echo bbb 1; cat -e ;echo ccc 1)
+
+- category: PIPE BASIC
+  name: exit 84
+  input: echo nimportequoi | wc | exit 84
+
+- category: PIPE BASIC
+  name: different exit 
+  input: exit 12 | exit 42 | exit 420
+
+- category: PIPE BASIC
+  name: double cat and double cat -e
+  input: echo CestRelouLesTests | cat | cat | cat -e | cat -e
+
+- category: PIPE BASIC
+  name: too much cat -e
+  input: echo caca | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e | cat -e
+
+- category: PIPE BASIC
+  name: too much echo
+  input: echo caca1 | echo caca2 | echo caca3 | echo caca4 | echo caca5 | echo caca6 | echo caca7 | echo caca8 | echo caca9 | echo caca10 | echo caca11 | echo caca12 | echo caca13 | echo cacao
+
+- category: PIPE BASIC
+  name: grep USER in env
+  input: env | grep USER | wc | cat -e
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 

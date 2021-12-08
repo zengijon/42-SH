@@ -1,0 +1,125 @@
+#============IF ERRORS============
+
+- category: IF ERRORS
+  name: if coma
+  input: if;
+
+- category: IF ERRORS
+  name: begin with double if
+  input: if if true; then echo ok; fi
+
+- category: IF ERRORS
+  name: if fi
+  input: if fi
+
+- category: IF ERRORS
+  name: then coma broken 1
+  input: if true then; echo test; fi
+
+- category: IF ERRORS
+  name: then coma broken 2
+  input: if true; then; echo test; fi
+
+- category: IF ERRORS
+  name: error 'else' unexpected
+  input: if false then echo wrong!!; else echo the right thing; fi
+
+- category: IF ERRORS
+  name: error 'fi' unexpected
+  input: if false then echo wrong!! else echo the right thing; fi
+
+- category: IF ERRORS
+  name: error expecting 'then'
+  input: if false then echo wrong!! else echo the right thing fi
+
+- category: IF ERRORS
+  name: error ';' unexpected after then
+  input: if false; then; echo wrong!!; else; echo the right thing; fi
+
+- category: IF ERRORS
+  name: error 'else' unexpected 
+  input: if false then; echo wrong!!; else; echo the right thing; fi
+
+- category: IF ERRORS
+  name: elif
+  input: if false; then echo wrong; elif false; then echo wrong; else echo sisi la famille; fi
+
+- category: IF ERRORS
+  name: expecting 'then'
+  input: if true then echo ok ! else oula fi
+
+- category: IF ERRORS
+  name: unexpected ';' 1
+  input: if false ; ; else echo ok ; fi
+
+- category: IF ERRORS
+  name: unexpected ';' 2
+  input: if false; then; else echo ok; fi
+
+- category: IF ERRORS
+  name: unexpected ';' 3
+  input: if; true; then; echo ok; fi
+
+- category: IF ERRORS
+  name: unexpected ';' 4
+  input: if true && true; then echo wrong; else ; fi
+
+- category: IF ERRORS
+  name: without fi
+  input: if true; then echo ok;
+
+- category: IF ERRORS
+  name: elif used like else
+  input: if true && false; then echo wrong; elif echo ok; fi
+
+- category: IF ERRORS
+  name: elif -> fi
+  input: if true && true; then echo wrong; elif echo ok; fi
+
+- category: IF ERRORS
+  name: missing arg 2 in if condition
+  input: if true && ; then echo wrong; else ok; fi
+
+- category: IF ERRORS
+  name: missing arg 1 in if condition
+  input: if  && true; then echo wrong; else ok; fi
+
+- category: IF ERRORS
+  name: Wrong arg 1 in if condition
+  input: if ok && true; then echo wrong; else ok; fi
+
+- category: IF ERRORS
+  name: Wrong arg 2 in if condition
+  input: if true && ok; then echo wrong; else ok; fi
+
+- category: IF ERRORS
+  name: missing one fi
+  input: if true; then if true; then echo ok; fi
+
+- category: IF ERRORS
+  name: one more 'fi'
+  input: if true; then if true; then echo ok; fi fi fi
+
+- category: IF ERRORS
+  name: wrong function
+  input: if true; then ok; else echo ok; fi
+
+- category: IF ERRORS
+  name: if false then -> if then else
+  input: if false; then if then else; else echo ok; fi
+
+- category: IF ERRORS
+  name: if false then -> if
+  input: if false; then if; else echo ok; fi
+
+- category: IF ERRORS
+  name: if echo if then else
+  input: if echo if then else; then echo then; else echo else; fi
+
+- category: IF ERRORS
+  name: else else
+  input: if echo if then else; then echo ; else else; fi
+  
+- category: IF ERRORS
+  name: if false then -> if
+  input: if false; then if then else; else echo ok; fi

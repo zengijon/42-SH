@@ -1,12 +1,14 @@
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <err.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "../memory/hmalloc.h"
 #include "unistd.h"
 
 char *replace_newline(char *token)
 {
-    char *tmp = calloc(strlen(token) * 2, sizeof(char));
+    char *tmp = hcalloc(strlen(token) * 2, sizeof(char));
     int i = 0;
     while (token[i] != '\0')
     {
@@ -27,11 +29,22 @@ char *replace_newline(char *token)
         }
         else
         {
-            char *j = calloc(2, 1);
+            char *j = hcalloc(2, 1);
             j[0] = token[i];
             strcat(tmp, j);
         }
         ++i;
+    }
+    return tmp;
+}
+
+char *create_token(char *buffer)
+{
+    int i = 0;
+    char *tmp = hcalloc(strlen(buffer) + 1, sizeof(char));
+    while (*buffer != '\0' && *buffer != ' ')
+    {
+        tmp[i++] = *buffer++;
     }
     return tmp;
 }
@@ -42,22 +55,25 @@ int my_echo(char *cmd)
     int n_flag = 0;
     int e_flag = 0;
     int word_flag = 0;
-    const char *separators = " ";
-    char *res = calloc(strlen(cmd) * 2, sizeof(char));
-    char *token = strtok(cmd, separators);
-    if (strcmp(token, "echo") != 0)
+    char *res = hcalloc(strlen(cmd) * 2, sizeof(char));
+    if (strncmp(cmd, "echo ", 5) != 0)
     {
-        write(2,"not an echo command",20);
+        write(2, "not an echo command", 20);
         return 127;
     }
-    token = strtok(NULL, separators);
-    while (token != NULL)
+    char *tmp1 = hcalloc(strlen(cmd), 1);
+    tmp1 = strcpy(tmp1, &cmd[5]);
+    char *tmp = tmp1;
+    while (strlen(tmp) != 0)
     {
+        char *token = create_token(tmp);
+        tmp += strlen(token) + 1;
         if (strcmp(token, "-n") == 0 && word_flag == 0)
             n_flag = 1;
         else if (strcmp(token, "-e") == 0 && word_flag == 0)
             e_flag = 1;
-        else if ((strcmp(token, "-ne") == 0 || strcmp(token, "-en") == 0) && word_flag == 0)
+        else if ((strcmp(token, "-ne") == 0 || strcmp(token, "-en") == 0)
+                 && word_flag == 0)
         {
             e_flag = 1;
             n_flag = 1;
@@ -69,9 +85,8 @@ int my_echo(char *cmd)
             word_flag = 1;
             if (e_flag == 1)
             {
-                char *tmp = replace_newline(token);
-                strcat(res, tmp);
-                free(tmp);
+                char *tmp_ = replace_newline(token);
+                strcat(res, tmp_);
             }
             else
             {
@@ -79,22 +94,18 @@ int my_echo(char *cmd)
             }
             first++;
         }
-
-        token = strtok(NULL, separators);
     }
     printf("%s", res);
     fflush(stdout);
-    free(res);
     if (n_flag == 0)
         printf("\n");
     return 0;
 }
 
-//int main(void)
+// int main(void)
 //{
 //    char * cmd = malloc(40);
-//    cmd = strcpy(cmd, "echo cou\\ncou");
+//    cmd = strcpy(cmd, "echo coucou bnitgjker fkfkf");
 //    my_echo(cmd);
 //    return 0;
 //}
-//

@@ -4,13 +4,14 @@
 #include "mypipe.h"
 
 #include <err.h>
-#include <sys/wait.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/wait.h>
 #include <unistd.h>
-#include <stdio.h>
 
-int my_pipe(struct command *cmd, struct pipeline_next *next, struct exec_struct *e_x) /// mis des const
+int my_pipe(struct command *cmd, struct pipeline_next *next,
+            struct exec_struct *e_x) /// mis des const
 {
     pid_t child_pid;
     pid_t child_pid2;
@@ -31,7 +32,7 @@ int my_pipe(struct command *cmd, struct pipeline_next *next, struct exec_struct 
         close(pipefd[0]); // Close read pipe du child
 
         /// execute la commande de left_side
-        exec_command(cmd,e_x);
+        exec_command(cmd, e_x);
         exit(0);
         ///
     }
@@ -41,7 +42,6 @@ int my_pipe(struct command *cmd, struct pipeline_next *next, struct exec_struct 
         int val = waitpid(child_pid, &wstatus, 0);
         if (val == -1)
             errx(1, "Waitpid failed");
-
 
         child_pid2 = fork();
 

@@ -4,15 +4,12 @@
 
 #include "parser.h"
 #inbclude "???" // chemin pour le lexer
+#include <err.h>
+#include <string.h>
+
 #include "../memory/hmalloc.h"
 
-#include <string.h>
-#include <err.h>
-
-
-
 // weird grammar not chou
-
 
 struct rule_case *build_case(struct lexer *lex)
 {
@@ -30,27 +27,27 @@ struct rule_case *build_case(struct lexer *lex)
         res->word = strdup(" "); // lexer | pop
 
         while (/*lexer | seek | attendu : \n*/)
-            ;/*lexer | pop */
+            ; /*lexer | pop */
 
-        if (! /* lexer | seek | attendu : in */)
+        if (!/* lexer | seek | attendu : in */)
             errx(1, "Missing in in case");
-        //lexer | pop
+        // lexer | pop
 
         while (/*lexer | seek | attendu : \n*/)
-            ;/*lexer | pop */
+            ; /*lexer | pop */
 
         if (/*lexer | seek | attendu : case_clause*/)
         {
-            res->case_clause = build_case_clause(lex); //lexer | pop
+            res->case_clause = build_case_clause(lex); // lexer | pop
 
             if (res->case_clause == NULL)
                 errx(1, "build_case_clause failed");
         }
 
-        if (! /*lexer | seek | attendu : esac*/)
+        if (!/*lexer | seek | attendu : esac*/)
             errx(1, "Missing Esac in case");
 
-        //res->esac = ??? //lexer |pop
+        // res->esac = ??? //lexer |pop
 
         return res;
     }
@@ -67,7 +64,7 @@ static struct case_clause_bis *build_case_clause_bis(struct lexer *lex)
         res->is_double_semi = 1;
 
         while (/*lexer | seek |atten du : \n*/)
-            ; //lexer | pop
+            ; // lexer | pop
 
         if (/*lexer |seek | attendu : case_item*/)
         {
@@ -75,7 +72,8 @@ static struct case_clause_bis *build_case_clause_bis(struct lexer *lex)
 
             if (res->case_it == NULL)
                 errx(1, "build_case_item failed");
-            return res; // pb avec l'etoile est ce au'il faut la repeter plusieurs fois avec une boucle while ou juste rec
+            return res; // pb avec l'etoile est ce au'il faut la repeter
+                        // plusieurs fois avec une boucle while ou juste rec
         }
         errx(1, "missing case_item afeter ;;");
     }
@@ -84,24 +82,25 @@ static struct case_clause_bis *build_case_clause_bis(struct lexer *lex)
 
 struct case_clause *build_case_clause(struct lexer *lex)
 {
-    struct case_clause *res =hcalloc(1, sizeof(struct cause_clause));
+    struct case_clause *res = hcalloc(1, sizeof(struct cause_clause));
     if (res == NULL)
         errx(1, "calloc failed");
 
     if (/*lexer | seek | attendu : case_item*/)
     {
-        res->case_it = build_case_item(lex); //lexer | pop
+        res->case_it = build_case_item(lex); // lexer | pop
 
         if (res->case_it == NULL)
             errx(1, "build_case_item failed");
 
         res->next = build_case_clause_bis(lex); // lexer | pop
-        //meme si c'est nul c'est pas grave car on a une etoile => donc l'etoile peut juste etre nulle
+        // meme si c'est nul c'est pas grave car on a une etoile => donc
+        // l'etoile peut juste etre nulle
         if (/*lexer | seek |attendu : ;;*/)
             res->is_double_semi = 1;
 
         while (/*lexer |seek | attendu : \n*/)
-            ;//lexer | pop
+            ; // lexer | pop
 
         return res;
     }
@@ -121,7 +120,7 @@ static char **word_list_pipe(struct lexer *lex)
         is_once = 1;
         temp = strcat(temp, "|");
         if (/*lexer |seek | attendu : word*/)
-            temp = strcat(temp, " ");// y mettre lexer |pop
+            temp = strcat(temp, " "); // y mettre lexer |pop
         else
             errx(1, "missing word after |");
     }
@@ -146,9 +145,7 @@ struct case_item *build_case_item(struct lexer *lex)
         while (lex->current_tok->type == "|")
         {
             lexer_pop(lex);
-
         }
-
 
         while (/*lexer |seek | attendu : \n*/)
             ; // lexer | pop

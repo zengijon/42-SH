@@ -3,7 +3,6 @@
 #include <err.h>
 #include <stdlib.h>
 
-
 struct token *token_new(enum token_type type)
 {
     struct token *new = malloc(sizeof(struct token));

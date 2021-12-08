@@ -1,0 +1,92 @@
+# VAR TESTS WITH -c OPTION
+
+#===========BASIC TESTS===========
+
+- category: VAR BASIC TESTS
+  name: define var
+  input: t=1
+
+- category: VAR BASIC TESTS
+  name: echo var
+  input: t=1 ; echo $t 
+
+- category: VAR BASIC TESTS
+  name: var;
+  input: t=1; echo $t
+
+- category: VAR BASIC TESTS
+  name: if var
+  input: t=true ; if $t ; then echo test ; fi
+
+- category: VAR BASIC TESTS
+  name: if not var
+  input: t=false ; if $t ; then echo test ; else echo chaud ; fi
+  
+- category: VAR BASIC TESTS
+  name: var string
+  input: t='test' ; echo $t
+
+- category: VAR BASIC TESTS
+  name: erase var
+  input: t=1 ; echo $t ; t=2 ; echo $t
+
+- category: VAR BASIC TESTS
+  name: {var}
+  input: t=1 ; echo ${t} ; t=2 ; echo ${t}
+
+- category: VAR BASIC TESTS
+  name: {true}
+  input: t=true ; if ${t} ; then echo {t} ${t} ; fi
+  
+- category: VAR BASIC TESTS
+  name: var add 1
+  input: a=1 ; b=2; c=$(($a + $b)) ; echo $c
+  
+- category: VAR BASIC TESTS
+  name: var add 2
+  input: a=1 ; b=2; c=$((a + b)) ; echo $c
+  
+- category: VAR BASIC TESTS
+  name: var add 3
+  input: a=1 ; b=2; a=$(($a + $b)) ; echo $a
+  
+- category: VAR BASIC TESTS
+  name: var add 4
+  input: a=1 ; b=2; a=$(($a + $b)) ; echo $a; echo $b
+  
+- category: VAR BASIC TESTS
+  name: var empty
+  input: echo $t
+
+  
+- category: VAR BASIC TESTS
+  name: var empty special
+  input: echo $echo
+
+
+#=========SPECIAL VAR TESTS==========
+
+- category: VAR BASICS SPECIAL TESTS
+  name: var $@
+  input: echo $@
+
+- category: VAR BASICS SPECIAL TESTS
+  name: var $*
+  input: echo $*
+
+- category: VAR BASICS SPECIAL TESTS
+  name: var $?
+  input: echo $?
+
+- category: VAR BASICS SPECIAL TESTS
+  name: var $1
+  input: echo $1
+
+- category: VAR BASICS SPECIAL TESTS
+  name: var $#
+  input: echo $#
+
+- category: VAR BASICS SPECIAL TESTS
+  name: var $IFS
+  input: echo $IFS
+

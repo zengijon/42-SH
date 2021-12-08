@@ -1,0 +1,86 @@
+# ECHO TESTS WITH -c OPTION 
+
+#===========BASIC TESTS============
+
+- category: ECHO BASIC TESTS
+  name: simple echo
+  input: echo lol
+
+- category: ECHO BASIC TESTS
+  name: echo with quotes
+  input: echo "lol"
+
+- category: ECHO BASIC TESTS  
+  name: echo with quotes protected
+  input: echo \"lol\"
+
+- category: ECHO BASIC TESTS  
+  name: echo with backslash 1
+  input: echo ./\*
+
+- category: ECHO BASIC TESTS  
+  name: echo with mutiple backslash
+  input: echo \\yo\\ma\\ptite\\gueule
+
+- category: ECHO BASIC TESTS  
+  name: echo -> IF FI
+  input: echo if fi
+
+- category: ECHO BASIC TESTS
+  name: echo -> LS
+  input: echo ls
+
+- category: ECHO BASIC TESTS
+  name: echo big spaces
+  input: echo l        o l
+
+- category: ECHO BASIC TESTS  
+  name: echo nothing
+  input: echo
+
+- category: ECHO BASIC TESTS
+  name: echo multiple things
+  input: echo def 65536 yohann 666 '' robin
+
+- category: ECHO BASIC TESTS  
+  name: echo lol l    o   l 42 -a
+  input: echo lol l    o     l    42 -a
+
+- category: ECHO BASIC TESTS  
+  name: echo all alphabet with spaces 
+  input: echo a b c d e f g h i j k l m n o p q r s t u v w x y z
+
+- category: ECHO BASIC TESTS  
+  name: echo
+   2 words separated by --
+  input: echo Armand -- Jennie
+
+- category: ECHO BASIC TESTS
+  name: echo -- Jennie
+  input: echo -- Jennie
+
+- category: ECHO BASIC TESTS
+  name: echo Armand --
+  input: echo Armand --
+
+- category: ECHO BASIC TESTS
+  name: echo -- -n crackito
+  input: echo -- -n crackito
+
+
+#============ECHO OPT TESTS===========
+- category: ECHO OPT TESTS
+  name: echo with multiple quotes and empty
+  input: echo "oulala" "" "" "jaicho"
+
+- category: ECHO OPT TESTS
+  name: echo -n
+  input: echo -n lol
+
+- category: ECHO OPT TESTS
+  name: echo -n <no args>
+  input: echo -n
+
+- category: ECHO OPT TESTS
+  name: echo -n kernel
+  input: echo -n kernel

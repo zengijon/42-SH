@@ -51,9 +51,9 @@ int main(void)
     printf("\n\n\n");
 
     printf("==============Test6===============\n");
-    struct list *res4 =
-        build_list("if echo 2 \necho 4\n\nif truc \n then lol fi \n then machin \n fi\necho "
-                   "5\n\n then \n yjtfy \n fi"); // marche pas
+    struct list *res4 = build_list("if echo 2 \necho 4\n\nif truc \n then lol "
+                                   "fi \n then machin \n fi\necho "
+                                   "5\n\n then \n yjtfy \n fi"); // marche pas
     print_list(res4);
     printf("\n\n\n");
     return 0;

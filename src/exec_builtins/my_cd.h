@@ -7,4 +7,4 @@
 
 int my_cd(char *arg);
 
-#endif //UNTITLED_CD_H
+#endif // UNTITLED_CD_H

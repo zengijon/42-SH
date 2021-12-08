@@ -1,12 +1,13 @@
+#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <fcntl.h>
+#include <unistd.h>
 
 #include "redir.h"
 
-int simple_redir(char *io, char *file, struct redir *redir, char *flag) // >| > <> <
+int simple_redir(char *io, char *file, struct redir *redir,
+                 char *flag) // >| > <> <
 {
     int io_nb;
     if (io == NULL)

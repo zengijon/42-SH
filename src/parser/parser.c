@@ -21,7 +21,8 @@ struct list_next *build_list_next(struct lexer *lex)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
-    else if (lex->current_tok->type == TOKEN_NEWLINE)
+    else if (lex->current_tok->type == TOKEN_NEWLINE
+	     || lex->current_tok->type == TOKEN_EOF)
         return res;
     else
         errx(1, "missing separator after list");
@@ -132,7 +133,7 @@ struct command *build_command(struct lexer *lex)
     while ((tmp = build_redirection(lex)) != NULL)
     {
         res->redir = hrealloc(res->redir,
-                                 ++(res->nb_redir) * sizeof(struct redirection *));
+                              ++(res->nb_redir) * sizeof(struct redirection *));
         res->redir[res->nb_redir - 1] = tmp;
     }
     if ((res->s_cmd = build_simple_command(lex)) != NULL)
@@ -147,8 +148,8 @@ struct command *build_command(struct lexer *lex)
         return NULL;
     while ((tmp = build_redirection(lex)) != NULL)
     {
-        res->redir2 = hrealloc(res->redir2,
-                              ++(res->nb_redir2) * sizeof(struct prefix *));
+        res->redir2 =
+            hrealloc(res->redir2, ++(res->nb_redir2) * sizeof(struct prefix *));
         res->redir2[res->nb_redir2 - 1] = tmp;
     }
     return res;

@@ -23,7 +23,7 @@ Test(just_word, exit_code, .init = redirect_all_stdout)
 {
     const char *input = strdup("echo coucou");
     struct lexer *test = lexer_new(input);
-    enum token_type expected[] = {TOKEN_WORDS, TOKEN_WORDS, TOKEN_EOF};
+    enum token_type expected[] = { TOKEN_WORDS, TOKEN_WORDS, TOKEN_EOF };
     cr_assert_eq(is_good(test, 3, expected), 0);
     free(test);
 }
@@ -32,8 +32,8 @@ Test(just_word_2, exit_code, .init = redirect_all_stdout)
 {
     const char *input = strdup("echo coucou toi la bas    ");
     struct lexer *test = lexer_new(input);
-    enum token_type expected[] = {TOKEN_WORDS, TOKEN_WORDS, TOKEN_WORDS,
-                                   TOKEN_WORDS, TOKEN_WORDS, TOKEN_EOF};
+    enum token_type expected[] = { TOKEN_WORDS, TOKEN_WORDS, TOKEN_WORDS,
+                                   TOKEN_WORDS, TOKEN_WORDS, TOKEN_EOF };
     cr_assert_eq(is_good(test, 6, expected), 0);
     free(test);
 }

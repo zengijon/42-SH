@@ -3,13 +3,12 @@
 #include <stdio.h>
 
 #include "../exec_builtins/exec_cmds.h"
+#include "../lexer/lexer.h"
 #include "../memory/hmalloc.h"
 #include "../parser/parser.h"
 #include "assert.h"
 #include "string.h"
 #include "variable_expention.h"
-#include "../lexer/lexer.h"
-#include "../redir/redir.h"
 
 int exec_list_next(struct list_next *l_n)
 {
@@ -75,12 +74,12 @@ int exec_pipeline(struct pipeline *p)
     if (p->next != NULL)
     {
         res = my_pipe(p->cmd, p->next, ex_l);
-        return p->negation == 0 ? res : ! res;
+        return p->negation == 0 ? res : !res;
     }
     else
     {
         res = exec_command(p->cmd, ex_l);
-        return p->negation == 0 ? res : ! res;
+        return p->negation == 0 ? res : !res;
     }
 }
 
@@ -109,7 +108,6 @@ int exec_command(struct command *cmd)
     return res;
 }
 
-
 int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
 {
     int res = 0;
@@ -119,9 +117,9 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
         exec_prefix(cmd->list_pre[i], ex_l);
     for (int i = 0; i < cmd->size_elt; ++i)
         exec_redir(cmd->list_elt[i]->redirect, ex_l);
-//        if (cmd->list_elt[i]->redirect != NULL)
-//            if ((res = exec_redir(cmd->list_elt[i]->redirect, ex_l)) != 0)
-//                return res;
+    //        if (cmd->list_elt[i]->redirect != NULL)
+    //            if ((res = exec_redir(cmd->list_elt[i]->redirect, ex_l)) != 0)
+    //                return res;
     if (cmd->size_elt < 1)
         return res;
     char **list = hcalloc(cmd->size_elt - 1, sizeof(char *));
@@ -130,7 +128,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
         list[i - 1] = remove_sep(cmd->list_elt[i]->word, ex_l);
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt - 1,
-                     list); // Not in this file
+                    list); // Not in this file
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
@@ -150,7 +148,7 @@ int exec_shell_command(struct shell_command *cmd)
     if (cmd->r_w != NULL)
         return exec_rule_while(cmd->r_w, ex_l);
     if (cmd->r_u != NULL)
-            return exec_rule_until(cmd->r_u, ex_l);
+        return exec_rule_until(cmd->r_u, ex_l);
     assert(0);
 }
 //
@@ -163,21 +161,28 @@ int exec_shell_command(struct shell_command *cmd)
 //}
 //
 
- int exec_redir(struct redirection *r, struct exec_struct *ex_l)
+int exec_redir(struct redirection *r, struct exec_struct *ex_l)
 {
     if (r == NULL)
         return 0;
     ex_l->r_l = hrealloc(ex_l->r_l, ++ex_l->r_l_size * sizeof(struct redir));
-    if (fnmatch("*>",r->redir_type, 0) == 0 || fnmatch("<>",r->redir_type, 0) == 0 || fnmatch(">|",r->redir_type, 0) == 0)
-        return simple_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1],"w");
-    if (fnmatch("*<",r->redir_type, 0) == 0)
-        return simple_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1],"w");
-    if (fnmatch("*>&",r->redir_type, 0) == 0)
-        return esp_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1], 1);
-    if (fnmatch("*<&",r->redir_type, 0) == 0)
-        return esp_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1], 0);
-    if (fnmatch("*>>",r->redir_type, 0) == 0)
-        return append_redir(strtok(r->redir_type, "><|& ") ,r->word, &ex_l->r_l[ex_l->r_l_size - 1]);
+    if (fnmatch("*>", r->redir_type, 0) == 0
+        || fnmatch("<>", r->redir_type, 0) == 0
+        || fnmatch(">|", r->redir_type, 0) == 0)
+        return simple_redir(strtok(r->redir_type, "><|& "), r->word,
+                            &ex_l->r_l[ex_l->r_l_size - 1], "w");
+    if (fnmatch("*<", r->redir_type, 0) == 0)
+        return simple_redir(strtok(r->redir_type, "><|& "), r->word,
+                            &ex_l->r_l[ex_l->r_l_size - 1], "w");
+    if (fnmatch("*>&", r->redir_type, 0) == 0)
+        return esp_redir(strtok(r->redir_type, "><|& "), r->word,
+                         &ex_l->r_l[ex_l->r_l_size - 1], 1);
+    if (fnmatch("*<&", r->redir_type, 0) == 0)
+        return esp_redir(strtok(r->redir_type, "><|& "), r->word,
+                         &ex_l->r_l[ex_l->r_l_size - 1], 0);
+    if (fnmatch("*>>", r->redir_type, 0) == 0)
+        return append_redir(strtok(r->redir_type, "><|& "), r->word,
+                            &ex_l->r_l[ex_l->r_l_size - 1]);
     assert(0);
 }
 
@@ -192,7 +197,7 @@ int exec_redir(struct redirection *cmd)
             ex_l->v_l[i].value_l = strlen(value);
             return res;
         }
-    ex_l->v_l = hrealloc(ex_l->v_l, (++ex_l->v_l_size) * sizeof(char *) );
+    ex_l->v_l = hrealloc(ex_l->v_l, (++ex_l->v_l_size) * sizeof(char *));
     ex_l->v_l[ex_l->v_l_size - 1].name = name;
     ex_l->v_l[ex_l->v_l_size - 1].value = value;
     ex_l->v_l[ex_l->v_l_size - 1].name_l =
@@ -253,7 +258,7 @@ int exec_rule_while(struct rule_while *r_w)
     return res;
 }
 
- int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
+int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
 {
     assert(r_u);
     int res = 0;

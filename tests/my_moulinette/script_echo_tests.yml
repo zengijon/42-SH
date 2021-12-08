@@ -1,0 +1,9 @@
+#ECHO SCRIPT TESTS
+
+- category: ECHO SCRIPT TESTS
+  name: SCRIPT 1
+  input: ../builtins_tests_scripts/echo_test1.sh
+
+- category: ECHO SCRIPT TESTS
+  name: SCRIPT 2
+  input: ../builtins_tests_scripts/echo_test2.sh
