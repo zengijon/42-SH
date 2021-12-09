@@ -25,4 +25,6 @@ struct my_expr
     } data;
 };
 
+int eval_expr(struct my_expr *expr);
+
 #endif /* ! EXPRESSION_H */
