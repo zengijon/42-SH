@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <string.h>
 
 //int microshell(char *cmd)
 //{
@@ -23,7 +24,13 @@ int microshell(char *cmd, char **argv)
     if (pid == -1)
         errx(1, "fork failed");
     if (pid == 0)
+    {
+        if (strcmp(cmd, "cat") == 0)
+        {
+            return execlp("/bin/sh", "blandsfkjh", "-c", "cat -e", NULL);
+        }
         return execvp(cmd, argv);
+    }
 
     int wstatus;
     int child_pid = waitpid(pid, &wstatus, 0);
