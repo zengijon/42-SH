@@ -7,11 +7,30 @@ from typing import cast
 import termcolor
 import yaml
 
+basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cmd_echo_tests.yml", "pipe_basic_tests.yml"]
+error_files = ["if_error_tests.yml", "cmd_error_var.yml"]
+hard_files = []
+script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh"]
+
 TEST_OK = f"[ {termcolor.colored('OK', 'green')} ]"
 TEST_KO = f"[ {termcolor.colored('KO', 'red')} ]"
+RED_DOT = f"{termcolor.colored('*', 'red')}"
 
 ACTUAL = f"{termcolor.colored('---ACTUAL---', 'blue')}"
 EXPECTED = f"{termcolor.colored('---EXPECTED---', 'magenta')}"
+
+
+def check_stderr(stderr_output: str):
+    length = len(stderr_output)
+    if (length < 6):
+        return False
+    to_compare = ""
+    compared = "42sh:"
+    i = 0
+    while (i < 6):
+        to_compare += stderr_output[i]
+        i += 1
+    return True
 
 
 def my_diff(expected: str, actual: str):
@@ -23,52 +42,68 @@ def my_diff(expected: str, actual: str):
 def running(shell: str, stdin: str) -> sp.CompletedProcess:
     return sp.run([shell], input=stdin, capture_output=True, text=True)
 
-def running_process(shell: str, stdin: str) -> sp.CompletedProcess:
-    return sp.run([shell, "-c",stdin], capture_output=True, text=True)
 
-def check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess):
-    assert expected.stdout == actual.stdout, \
-        f"Stdout is not the same\n{ACTUAL}\n{actual.stdout}\n{EXPECTED}\n{expected.stdout}"
-    assert expected.stderr == actual.stderr, \
-        f"Stderr is not the same\n {ACTUAL}\n{actual.stderr}\n{EXPECTED}\n"
+def running_process(shell: str, stdin: str) -> sp.CompletedProcess:
+    return sp.run([shell, "-c", stdin], capture_output=True, text=True)
+
+
+def my_check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess, flag: int, name: str, input: str):
+    if (expected.returncode != actual.returncode):
+        flag += 1
+    if (expected.stdout != actual.stdout):
+        flag += 1
+
+    if (flag == 0):
+        print(f"{TEST_OK} {name}")
+    else:
+        print(f"{TEST_KO} {name}\n")
+        print(f"INPUT: {input}")
+        if (expected.returncode != actual.returncode):
+            print(
+                f"\n{RED_DOT} Exit with return code -> {actual.returncode}, and -> {expected.returncode} was expected")
+        if (expected.stdout != actual.stdout):
+            print(f"\n{RED_DOT} Stdout is not the same\n{ACTUAL}\n{actual.stdout}\n{EXPECTED}\n{expected.stdout}")
 
 
 if __name__ == "__main__":
     parser = ArgumentParser("TestSuite")
     parser.add_argument("--binary", required=True, type=Path)
+    parser.add_argument("--type", required=True, type=str)
     arg = parser.parse_args()
-
     path_42sh = arg.binary.absolute()
+    type_of_test = arg.type
     print(f"We are testing the following binary -> {path_42sh}")
 
-    with open("tests_def.yml", "r") as our_yaml:
-        tests_list = list(yaml.safe_load(our_yaml))
+    if (type_of_test == "basic"):
+        tests_files = basic_files
 
-    cat_list = ["ECHO BASIC TESTS"]
-    i = 0
-    print(f"============ECHO TESTS============")
-    for test in tests_list:
-        cat = test["category"]
-        if (cat_list[i] != cat):
-            print(f"============{cat}============")
-            cat_list.append(cat)
-            i += 1
+    if (type_of_test == "error"):
+        tests_files = error_files
 
-        our_input = test["input"]
-        name = test["name"]
+    if (type_of_test == "script"):
+        tests_files = script_files
 
-        process_dash = running("dash", our_input)
+    if (type_of_test == "hard"):
+        tests_files = hard_files
 
-        #input_42sh = "-c "
-        #input_42sh = "\"" + our_input + "\""
-        print(our_input)
-        #res = str(path_42sh) + " " + input_42sh
+    cat = ""
 
-        process_42sh = running_process(path_42sh, our_input)
+    for file_test in tests_files:
 
-        try:
-            check_output(process_dash, process_42sh)
-        except AssertionError as err:
-            print(f"{TEST_KO} {name}\n{err}")
-        else:
-            print(f"{TEST_OK} {name}")
+        with open(file_test, "r") as our_yaml:
+            tests_list = list(yaml.safe_load(our_yaml))
+
+        for test in tests_list:
+            if cat != test["category"]:
+                cat = test["category"]
+                print(f"\n============{cat}============")
+
+            our_input = test["input"]
+            name = test["name"]
+
+            process_dash = running("dash", our_input)
+            if type_of_test == "script":
+                process_42sh = running(path_42sh, our_input)
+            else:
+                process_42sh = running_process(path_42sh, our_input)
+            my_check_output(process_dash, process_42sh, 0, name, our_input)

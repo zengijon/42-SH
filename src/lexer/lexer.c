@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define _GNU_SOURCE // should be removed for mason
+//#define _GNU_SOURCE // should be removed for mason
 #include <fnmatch.h>
 
 #include "../memory/free_list.h"
@@ -24,22 +24,26 @@ struct lexer *lexer_new(const char *input)
     struct separator *separator = build_separator_list();
     if (input[res->pos] == '\0')
         res->current_tok->type = TOKEN_EOF;
-    if (is_token(&input[res->pos], "if ", 3) == 0)
+    if (is_token(&input[res->pos], "if", 2) == 0
+	&& (is_separator(input + res->pos + 2, separator) == 0))
     {
         res->current_tok->type = TOKEN_IF;
         res->end = res->pos + 2;
     }
-    else if (is_token(&input[res->pos], "then ", 5) == 0)
+    else if (is_token(&input[res->pos], "then", 4) == 0
+	&& (is_separator(input + res->pos + 4, separator) == 0))
     {
         res->current_tok->type = TOKEN_THEN;
         res->end = res->pos + 4;
     }
-    else if (is_token(&input[res->pos], "elif ", 5) == 0)
+    else if (is_token(&input[res->pos], "elif",4) == 0
+	     && (is_separator(input + res->pos + 4, separator) == 0))
     {
         res->current_tok->type = TOKEN_ELIF;
         res->end = res->pos + 4;
     }
-    else if (is_token(&input[res->pos], "else ", 5) == 0)
+    else if (is_token(&input[res->pos], "else",4) == 0
+	     && (is_separator(input + res->pos + 4, separator) == 0))
     {
         res->current_tok->type = TOKEN_ELSE;
         res->end = res->pos + 4;
@@ -50,22 +54,26 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_FI;
         res->end = res->pos + 2;
     }
-    else if (is_token(&input[res->pos], "while ", 6) == 0)
+    else if (is_token(&input[res->pos], "while", 5) == 0
+	     && (is_separator(input + res->pos + 5, separator) == 0))
     {
         res->current_tok->type = TOKEN_WHILE;
         res->end = res->pos + 5;
     }
-    else if (is_token(&input[res->pos], "for ", 4) == 0)
+    else if (is_token(&input[res->pos], "for", 3) == 0
+	     && (is_separator(input + res->pos + 3, separator) == 0))
     {
         res->current_tok->type = TOKEN_FOR;
         res->end = res->pos + 3;
     }
-    else if (is_token(&input[res->pos], "do ", 3) == 0)
+    else if (is_token(&input[res->pos], "do", 2) == 0
+	     && (is_separator(input + res->pos + 2, separator) == 0))
     {
         res->current_tok->type = TOKEN_DO;
         res->end = res->pos + 2;
     }
-    else if (is_token(&input[res->pos], "done ", 5) == 0)
+    else if (is_token(&input[res->pos], "done",4) == 0
+	     && (is_separator(input + res->pos + 4, separator) == 0))
     {
         res->current_tok->type = TOKEN_DONE;
         res->end = res->pos + 4;

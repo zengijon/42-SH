@@ -1,2 +1,2 @@
-all_sources += files('microshell.c', 'echo.c', 'exec_cmds.c')
+all_sources += files('microshell.c', 'exec_cmds.c')
 subdir('builtins')

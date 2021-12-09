@@ -1,0 +1,45 @@
+# ERROR REDIR TESTS WITH -c OPTION
+
+#===========ERROR REDIR TESTS===========
+
+- category: ERROR REDIR TESTS
+  name: strange redir 1
+  input: echo coucou 2>>&1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 2
+  input: echo coucou 2><&1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 3
+  input: echo coucou 2><1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 4
+  input: echo coucou 2<<&1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 5
+  input: echo coucou 2&&1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 6
+  input: echo coucou 2|>>|&1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 7
+  input: echo coucou 2>&>1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 8
+  input: echo coucou 2<&<1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 9
+  input: echo coucou 2>>>1
+
+- category: ERROR REDIR TESTS
+  name: strange redir 10
+  input: echo coucou 2<<<1
+
+

@@ -1,0 +1,24 @@
+# PIPE TESTS WITH -c OPTION
+
+#===========PIPE TESTS===========
+
+- category: PIPE BASIC TESTS
+  name: return code 1
+  input: true | false
+
+- category: PIPE BASIC TESTS
+  name: return code 0
+  input: false | true
+
+- category: PIPE BASIC TESTS
+  name: pipe cat 
+  input: ls /home/ | cat -e
+
+- category: PIPE BASIC TESTS
+  name: pipe cat cat
+  input: ls /home/ | cat -e | cat -e
+
+- category: PIPE BASIC TESTS
+  name: pipe bracket
+  input: { echo te | cat | cat ; } | cat -e
+

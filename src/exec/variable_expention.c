@@ -97,17 +97,20 @@ char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
         {
             strcat(res, e_x->v_l[i].value);
             strcat(res, search_for_dollar(rest, e_x));
+	    strcat(res, "\0");
             return res;
         }
     }
-    return strcat(res, search_for_dollar(get_next(dollar_ind), e_x));
+    strcat(res, search_for_dollar(get_next(dollar_ind), e_x));
+    strcat(res, "\0");
+    return res;
 }
 
 char *search_for_dollar(char *word, struct exec_struct *e_x)
 {
     int single = 0;
     int double_ = 0;
-    for (int i = 0; word[i] != 0 && i < (int)strlen(word) - 1; i++)
+    for (int i = 0; word[i] != 0 && i < (int) (strlen(word) - 1); i++)
     {
         if (word[i] == '"')
             double_ = !double_;
