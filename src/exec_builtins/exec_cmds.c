@@ -16,27 +16,50 @@ int indice_search_name(char *name, struct exec_struct *e_x)
             return i;
     return -1;
 }
-
-int exec_function(int indic, char **parameters,struct exec_struct *e_x)
+struct exec_struct *fill_copy_var_list(struct exec_struct *e_x, int nb, int nb_param, char **parameters)
 {
-    struct var_list *save = hcalloc(e_x->v_l_size, sizeof(struct var_list));
-    memcpy(save, e_x->v_l, e_x->v_l_size * sizeof(struct var_list));
-    char *empty = hcalloc(1,1);;
-    int nb = atoi(get_value_in_vl( e_x, "#"));
-    int nb_param = 0;
-    for (int i = 0; parameters[i] != 0; ++i)
-        nb_param++;
+    char *empty = hcalloc(1,1);
     for (int i = 0; i <= nb; ++i)
-            e_x->v_l[i].value = empty;
+        e_x->v_l[i].value = empty;
     for (int i = 0; i < nb_param; ++i)
         assign_var(my_itoa(i, hcalloc(1, 8)), parameters[i], e_x);
     assign_var("#", my_itoa(nb_param - 1, hcalloc(10,1)), e_x);
-    int res = exec_command(e_x->f_l[indic].cmd, e_x);
+    return e_x;
+}
+
+struct exec_struct *restore_var_list(struct exec_struct *e_x, int nb, int nb_param, struct var_list *save)
+{
+    char *empty = hcalloc(1,1);
     for (int i = 0; i < nb_param; ++i)
         assign_var(my_itoa(i, hcalloc(1, 8)), empty, e_x);
     for (int i = 0; i <= nb; ++i)
         assign_var(my_itoa(i, hcalloc(1, 8)), save[i].value, e_x);
     assign_var("#", my_itoa(nb, hcalloc(10,1)), e_x);
+    return e_x;
+}
+
+int exec_function(int indic, char **parameters, struct exec_struct *e_x)
+{
+    struct var_list *save = hcalloc(e_x->v_l_size, sizeof(struct var_list));
+    memcpy(save, e_x->v_l, e_x->v_l_size * sizeof(struct var_list));
+    //char *empty = hcalloc(1,1);
+    int nb = atoi(get_value_in_vl( e_x, "#"));
+    int nb_param = 0;
+    for (int i = 0; parameters[i] != 0; ++i)
+        nb_param++;
+    e_x = fill_copy_var_list(e_x, nb, nb_param, parameters);
+//    for (int i = 0; i <= nb; ++i)
+//            e_x->v_l[i].value = empty;
+//    for (int i = 0; i < nb_param; ++i)
+//        assign_var(my_itoa(i, hcalloc(1, 8)), parameters[i], e_x);
+//    assign_var("#", my_itoa(nb_param - 1, hcalloc(10,1)), e_x);
+    int res = exec_command(e_x->f_l[indic].cmd, e_x);
+    e_x = restore_var_list(e_x, nb, nb_param, save);
+//    for (int i = 0; i < nb_param; ++i)
+//        assign_var(my_itoa(i, hcalloc(1, 8)), empty, e_x);
+//    for (int i = 0; i <= nb; ++i)
+//        assign_var(my_itoa(i, hcalloc(1, 8)), save[i].value, e_x);
+//    assign_var("#", my_itoa(nb, hcalloc(10,1)), e_x);
     return res;
 }
 
@@ -67,7 +90,7 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
     else if (strcmp(cmd, "dot") == 0)
         return 0;
     else if (strcmp(cmd, "unset") == 0)
-        return 0;
+        return my_unset(parameters, e_x);
     else if (strcmp(cmd, "true") == 0)
         return 0;
     else if (strcmp(cmd, "false") == 0)

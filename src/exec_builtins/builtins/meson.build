@@ -1,1 +1,1 @@
-all_sources += files('echo.c', 'my_cd.c')
+all_sources += files('echo.c', 'my_cd.c', 'unset.c')
