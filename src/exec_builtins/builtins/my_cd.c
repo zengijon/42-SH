@@ -15,10 +15,11 @@
 #include <unistd.h>
 
 #include "../../struct/exec_struct.h"
+#include "../../memory/hmalloc.h"
 
 char *final_path(char *name, char *current_path)
 {
-    char *path = calloc(1, strlen(name) + strlen(current_path) + 2); // null terminated
+    char *path = hcalloc(1, strlen(name) + strlen(current_path) + 7); // null terminated
     path = strcat(path, current_path);
     if (current_path[strlen(current_path)] != '/')
         path = strcat(path, "/");
@@ -29,18 +30,14 @@ char *final_path(char *name, char *current_path)
 size_t len_path(char *current_path)
 {
     size_t nb = 0;
-    char *token = strdup(current_path);
-    if (token != NULL)
+    if (current_path != NULL)
     {
-        token = strtok(token, "/");
-        nb = 1;
-        while(token != NULL)
+        for (int i = 0; current_path[i] != '\0'; ++i)
         {
-            token = strtok(NULL, "/");
-            nb++;
+            if (current_path[i] == '/')
+                nb+= 1;
         }
     }
-    free(token);
     return nb;
 }
 
@@ -58,14 +55,15 @@ int is_valid_dir(char *path) // PB : clion enlever toujours le dernier dir donc 
 
 int is_valid_symlink(char *path)
 {
-    struct stat p_statbuf;
+    struct stat buf;
 
-    if (lstat(path, &p_statbuf) < 0) {  /* if error occured */
+    if (stat(path, &buf) < 0)
+    {
         perror("calling stat()");
-        exit(1);  /* end progam here */
+        exit(1);
     }
 
-    if (S_ISLNK(p_statbuf.st_mode) == 1)
+    if (S_ISLNK(buf.st_mode) == 1)
         return 1;
     else
         return 0;
@@ -145,7 +143,9 @@ const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct
     else
     {
         if (is_valid_symlink(path) == 1)
+        {
             return arg;
+        }
         return is_valid_dir(path) == 1 ? arg : NULL;
     }
 }
