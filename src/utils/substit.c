@@ -50,15 +50,15 @@ int exec_subshell(char *buffer, struct exec_struct *e_x, char **buf)
     int res = exec_42sh(subshell_buff, 1, e_x);//include ??
     FILE *file = fopen("fabbec_42", "r");
     int le = 0;
-    *buf = hcalloc(100, sizeof(char));
+    *buf = hcalloc(100 + 8192, sizeof(char));
     while ((len = read(fileno(file), *buf + le, 100)) && len != 0)
     {
         if ( len == -1)
             errx(2, "read error");
         le += len;
-        *buf = realloc(*buf, le * 2);
+        //*buf = hrealloc(*buf, le * 2 + 1);
     }
-    char *tmp = hcalloc(strlen(*buf) + 1, sizeof(char));
+    char *tmp = hcalloc(strlen(*buf) + 8192, sizeof(char));
     strncpy(tmp,*buf, strlen(*buf) - 1);
     *buf = strcat(tmp, search_for_dollar(buffer + k, e_x));
     return res;

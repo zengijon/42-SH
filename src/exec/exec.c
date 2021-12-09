@@ -125,7 +125,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     //                return res;
     if (cmd->size_elt < 1)
         return res;
-    char **list = hcalloc(cmd->size_elt, sizeof(char *));
+    char **list = hcalloc(cmd->size_elt + 1, sizeof(char *));
     for (int i = 0; i < cmd->size_elt; ++i)
     {
         list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
