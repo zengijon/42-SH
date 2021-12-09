@@ -1,6 +1,7 @@
 #include "../exec/exec.h"
 
 #include <err.h>
+#include <fnmatch.h>
 #include <stdio.h>
 #include <sys/wait.h>
 
@@ -13,9 +14,6 @@
 #include "mypipe.h"
 #include "string.h"
 #include "variable_expention.h"
-#include "../lexer/lexer.h"
-#include "../redir/redir.h"
-#include <fnmatch.h>
 
 int exec_list_next(struct list_next *l_n, struct exec_struct *ex_s)
 {
@@ -126,12 +124,16 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     if (cmd->size_elt < 1)
         return res;
     char **list = hcalloc(cmd->size_elt + 1, sizeof(char *));
+    int j = 0;
     for (int i = 0; i < cmd->size_elt; ++i)
     {
-        list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
+        char *tmp = NULL;
+        if ((tmp = remove_sep(cmd->list_elt[i]->word, ex_l)) != 0
+            && strlen(tmp) > 0)
+            list[j++] = tmp;
     }
-    res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt,
-                     list, ex_l); // Not in this file
+    res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), list,
+                    ex_l); // Not in this file
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
@@ -144,7 +146,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
     {
         int pid = fork();
         if (pid == 0)
-            exit( exec_compound_list(cmd->c_p, ex_l));
+            exit(exec_compound_list(cmd->c_p, ex_l));
         int wstatus;
         int child_pid = waitpid(pid, &wstatus, 0);
         if (child_pid == -1)
@@ -169,7 +171,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
     assert(0);
 }
 
- int exec_fundec(struct funcdec *fdec, struct exec_struct *ex_l)
+int exec_fundec(struct funcdec *fdec, struct exec_struct *ex_l)
 {
     ex_l->f_l = hrealloc(ex_l->f_l, ++ex_l->f_l_len * sizeof(struct fun_list));
     ex_l->f_l[ex_l->f_l_len - 1].name = fdec->funct_name;
@@ -263,8 +265,10 @@ int exec_rule_for(struct rule_for *r_f, struct exec_struct *ex_l)
     int res = 0;
     for (int i = 0; i < r_f->wl_s; i++)
     {
-//        for (int j = -1; r_f->word_list[i][j] != 0; assign_var(r_f->word, r_f->word_list[i] + next_sep(r_f->word_list[i], j), ex_l))
-//            ;
+        //        for (int j = -1; r_f->word_list[i][j] != 0;
+        //        assign_var(r_f->word, r_f->word_list[i] +
+        //        next_sep(r_f->word_list[i], j), ex_l))
+        //            ;
         assign_var(r_f->word, r_f->word_list[i], ex_l);
         res = exec_do_group(r_f->do_gp, ex_l);
     }

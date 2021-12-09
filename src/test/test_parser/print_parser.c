@@ -139,10 +139,10 @@ void print_shell_command(struct shell_command *sh_cmd)
 
 void print_funcdec(struct funcdec *f)
 {
-    printf("(funcdec) [");
+    printf("(funcdec) [ ");
     if (f != NULL)
     {
-        printf("(function name : %s )", f->funct_name);
+        printf("\n(function name : %s ) ", f->funct_name);
         print_command(f->sh_cmd);
     }
     printf("]");

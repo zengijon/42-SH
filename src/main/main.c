@@ -21,7 +21,7 @@ char *get_path(void)
     if (s == NULL)
         errx(1, "getcwd failed");
 
-    char *res = hcalloc(1, strlen(s) + 1);
+    char *res = hcalloc(1, strlen(s) + 5);
 
     memccpy(res, s, '\0', strlen(s));
 

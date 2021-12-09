@@ -1,4 +1,4 @@
-//#define _GNU_SOURCE //should be removed for mason
+#define _GNU_SOURCE //should be removed for mason
 
 #include "lexer.h"
 
