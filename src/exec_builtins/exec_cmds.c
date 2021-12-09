@@ -16,15 +16,15 @@ int indice_search_name(char *name, struct exec_struct *e_x)
     return -1;
 }
 
-int exec_builtins(char *cmd, int nb_params, char **parameters, struct exec_struct *e_x)
+int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
 {
     int indic = 0;
-    char *buffer = hcalloc(strlen(cmd) + 2, sizeof(char));
+    char *buffer = hcalloc(strlen(cmd) + 8192, sizeof(char));
     strcat(buffer, cmd);
     strcat(buffer, " ");
-    for (int j = 1; j < nb_params; ++j)
+    for (int j = 1; parameters[j] != 0; ++j)
     {
-        buffer = hrealloc(buffer, strlen(parameters[j]) + strlen(buffer) + 2);
+        //buffer = hrealloc(buffer, strlen(parameters[j]) + strlen(buffer) + 2);
         strcat(buffer, parameters[j]);
         strcat(buffer, " ");
     }
@@ -55,7 +55,7 @@ int exec_builtins(char *cmd, int nb_params, char **parameters, struct exec_struc
         return 127;
 }
 
-int exec_cmds(char *cmd, int nb_params, char **parameters, struct exec_struct *e_x)
+int exec_cmds(char *cmd, char **parameters, struct exec_struct *e_x)
 {
     int nb_cmd = 4;
     if (strlen(cmd) == 0)
@@ -65,7 +65,7 @@ int exec_cmds(char *cmd, int nb_params, char **parameters, struct exec_struct *e
         if (strcmp(cmd, all_cmd[i]) == 0)
             return microshell(cmd, parameters);
     }
-    return exec_builtins(cmd, nb_params, parameters, e_x);
+    return exec_builtins(cmd, parameters, e_x);
 }
 
 //int exec_function(int indic, char **parameters, int nb_param, struct exec_struct *e_x)
