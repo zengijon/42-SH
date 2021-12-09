@@ -186,7 +186,6 @@ struct shell_command *build_shell_command(struct lexer *lex)
         if (lex->current_tok->type == TOKEN_ACO_OPEN)
         {
             lexer_pop(lex);
-            printf("previous\n");
             if ((res->c_p = build_compound_list(lex)) == NULL)
                 errx(1, "missing compound list between '{}'");
             if (lex->current_tok->type != TOKEN_ACO_CLOSE)
@@ -315,10 +314,8 @@ struct compound_list *build_compound_list(struct lexer *lex)
 
     while (lex->current_tok->type == TOKEN_NEWLINE)
         lexer_pop(lex);
-    printf("first\n");
     if ((res->and_or = build_and_or(lex)) != NULL)
     {
-        printf("second\n");
         if (lex->current_tok->type == TOKEN_ESP)
             res->esp = 1;
         else if (lex->current_tok->type == TOKEN_NEWLINE)
@@ -332,7 +329,6 @@ struct compound_list *build_compound_list(struct lexer *lex)
         res->next = build_compound_next(lex);
         return res;
     }
-    printf("lex\n");
     return NULL;
 }
 

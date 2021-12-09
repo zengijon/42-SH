@@ -13,7 +13,7 @@ int exec_builtins(char *cmd, int nb_params, char **parameters, struct exec_struc
     char *buffer = hcalloc(strlen(cmd) + 2, sizeof(char));
     strcat(buffer, cmd);
     strcat(buffer, " ");
-    for (int j = 0; j < nb_params; ++j)
+    for (int j = 1; j < nb_params; ++j)
     {
         buffer = hrealloc(buffer, strlen(parameters[j]) + strlen(buffer) + 2);
         strcat(buffer, parameters[j]);

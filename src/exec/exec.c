@@ -130,7 +130,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     {
         list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
     }
-    res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt - 1,
+    res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt,
                      list, ex_l); // Not in this file
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
@@ -258,9 +258,11 @@ int exec_compound_list(struct compound_list *cp_list, struct exec_struct *ex_l)
 int exec_rule_for(struct rule_for *r_f, struct exec_struct *ex_l)
 {
     int res = 0;
-    for (int i = 0; i < r_f->wl_s;)
+    for (int i = 0; i < r_f->wl_s; i++)
     {
-        assign_var(r_f->word, r_f->word_list[i++], ex_l);
+//        for (int j = -1; r_f->word_list[i][j] != 0; assign_var(r_f->word, r_f->word_list[i] + next_sep(r_f->word_list[i], j), ex_l))
+//            ;
+        assign_var(r_f->word, r_f->word_list[i], ex_l);
         res = exec_do_group(r_f->do_gp, ex_l);
     }
     return res;

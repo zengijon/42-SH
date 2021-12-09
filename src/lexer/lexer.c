@@ -319,7 +319,7 @@ struct token *lexer_pop(struct lexer *res)
     else if (is_token(&input[res->pos], "}", 1) == 0
              && (is_separator(input + res->pos + 1, separator) == 0))
     {
-        res->current_tok->type = TOKEN_ACO_OPEN;
+        res->current_tok->type = TOKEN_ACO_CLOSE;
         if (res->current_tok->type == TOKEN_WORDS)
         {
             res->current_tok->type = TOKEN_WORDS;

@@ -9,7 +9,7 @@
 #include "../../exec/exec.h"
 
 int my_echo(char *cmd);
-
+char *concat_all(char **argv);
 int my_cd(char **argv, struct exec_struct *e_x);
 
 #endif // INC_42SHEEEE_BUILTINS_H
