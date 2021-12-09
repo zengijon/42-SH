@@ -168,9 +168,9 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
 
  int exec_fundec(struct funcdec *fdec, struct exec_struct *ex_l)
 {
-    ex_l->f_l = hrealloc(ex_l->f_l, ++ex_l->f_l_size * sizeof(struct fun_list));
-    ex_l->f_l[ex_l->f_l_size - 1].name = fdec->funct_name;
-    ex_l->f_l[ex_l->f_l_size - 1].cmd = fdec->sh_cmd;
+    ex_l->f_l = hrealloc(ex_l->f_l, ++ex_l->f_l_len * sizeof(struct fun_list));
+    ex_l->f_l[ex_l->f_l_len - 1].name = fdec->funct_name;
+    ex_l->f_l[ex_l->f_l_len - 1].cmd = fdec->sh_cmd;
     return 0;
 }
 
