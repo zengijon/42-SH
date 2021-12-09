@@ -6,7 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define _GNU_SOURCE // should be removed for mason
+//#define _GNU_SOURCE // should be removed for mason
 #include <fnmatch.h>
 
 #include "../memory/free_list.h"

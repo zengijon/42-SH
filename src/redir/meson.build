@@ -1,1 +1,1 @@
-all_sources += files('simple_redir.c')
+all_sources += files('redir.c')
