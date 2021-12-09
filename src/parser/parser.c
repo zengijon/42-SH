@@ -301,7 +301,7 @@ static struct compound_next *build_compound_next(struct lexer *lex)
     else if (lex->current_tok->type == TOKEN_NEWLINE)
         ;
     else
-        return NULL;
+        return res;
     lexer_pop(lex);
 
     res->next = build_compound_next(lex);
