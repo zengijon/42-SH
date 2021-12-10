@@ -41,8 +41,36 @@
   input: env | grep USER | wc | cat -e
 
 - category: PIPE BASIC
-  name:
-  input: 
+  name: if true | false
+  input: if true | false; then echo true; else echo false; fi
+
+- category: PIPE BASIC
+  name: if false | true
+  input: if false | true; then echo true; else echo false; fi
+
+- category: PIPE BASIC
+  name: with some errors
+  input: echu noir | echo Noir | echo NOIR | echu NWAAAR | echo TRES NWAAAAR
+
+- category: PIPE BASIC
+  name: mutiple echos
+  input: echo noir | echo Noir | echo NOir | echo NOIr | echo NOIR | echo TRES NWAAR
+
+- category: PIPE BASIC
+  name: if_pipes
+  input: if echo Caca | echu Pipi; then echo bitch | echo bad bitch; else echo mega bitch | echo mega bad bitch ; fi
+
+- category: PIPE BASIC
+  name: if_pipes_2
+  input: if echo Caca | echu Pipi | echo popo; then echo bitch | echo bad bitch; else echo mega bitch | echo mega bad bitch ; fi
+
+- category: PIPE BASIC
+  name: if_pipes_3
+  input: if true; then echo ok; fi | if true; then echo ko; fi
+
+- category: PIPE BASIC
+  name: erreur qui n'a rien a faire la
+  input: if true; then echo ok; fi | if true then echo ko fi | if true; then echo ko; fi 
 
 - category: PIPE BASIC
   name:
@@ -56,30 +84,4 @@
   name:
   input: 
 
-- category: PIPE BASIC
-  name:
-  input: 
 
-- category: PIPE BASIC
-  name:
-  input: 
-
-- category: PIPE BASIC
-  name:
-  input: 
-
-- category: PIPE BASIC
-  name:
-  input: 
-
-- category: PIPE BASIC
-  name:
-  input: 
-
-- category: PIPE BASIC
-  name:
-  input: 
-
-- category: PIPE BASIC
-  name:
-  input: 
