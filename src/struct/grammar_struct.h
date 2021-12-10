@@ -214,7 +214,7 @@ struct do_group
 
 struct case_clause_bis
 {
-    int is_double_semi;
+    // semi
     // any \n we want
     struct case_item *case_it;
 };
@@ -222,18 +222,16 @@ struct case_clause_bis
 struct case_clause
 {
     struct case_item *case_it;
-    struct case_clause_bis *next;
+    struct case_item *next;
+    int next_size;
     // optional ;;
-    int is_double_semi;
     // any \n we want
 };
 
 struct case_item
 {
-    int is_open_bracket;
-    char *word;
-    // '|; carac
-    char **word_list; // can be NULL but need to be preceded by a '|' carat
+    //possible open paren
+    char **word_list; // can not be NULL but need to be preceded by a '|' carat
     /// rajouter une size pour la word list
     // ')' carac
     // any \n we want

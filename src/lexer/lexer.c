@@ -78,6 +78,18 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->type = TOKEN_DONE;
         res->end = res->pos + 4;
     }
+    else if (is_token(&input[res->pos], "case", 2) == 0
+             && (is_separator(input + res->pos + 2, separator) == 0))
+    {
+        res->current_tok->type = TOKEN_CASE;
+        res->end = res->pos + 2;
+    }
+    else if (is_token(&input[res->pos], "esac",4) == 0
+             && (is_separator(input + res->pos + 4, separator) == 0))
+    {
+        res->current_tok->type = TOKEN_ESAC;
+        res->end = res->pos + 4;
+    }
     else if (strncmp(&input[res->pos], ";", 1) == 0)
     {
         res->current_tok->type = TOKEN_PTCOMA;

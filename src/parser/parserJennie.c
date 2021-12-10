@@ -13,42 +13,32 @@
 
 struct rule_case *build_case(struct lexer *lex)
 {
-    struct rule_case 8res = hcalloc(1, sizeof(struct rule_case));
+    struct rule_case *res = hcalloc(1, sizeof(struct rule_case));
 
-    if (res == NULL)
-        errx(1, "Calloc failed");
-
-    if (!/* lexer | seek | attendu : case */)
+    if (lex->current_tok->type != TOKEN_CASE)
         return NULL;
 
-    /* lexer | pop */
-    if (/* lexer | seek | attendu : word*/)
+    lexer_pop(lex);
+    if (lex->current_tok->type = TOKEN_WORDS)
     {
-        res->word = strdup(" "); // lexer | pop
+        res->word = lexer_pop(lex);
 
-        while (/*lexer | seek | attendu : \n*/)
-            ; /*lexer | pop */
+        while (lex->current_tok->type = TOKEN_NEWLINE)
+            lexer_pop(lex);
 
-        if (!/* lexer | seek | attendu : in */)
+        if (lex->current_tok->type != TOKEN_WORDS
+            || strcmp("in", lex->current_tok->value) != 0)
             errx(1, "Missing in in case");
-        // lexer | pop
+        lexer_pop(lex);
 
-        while (/*lexer | seek | attendu : \n*/)
-            ; /*lexer | pop */
+        while (lex->current_tok->type = TOKEN_NEWLINE)
+            lexer_pop(lex);
 
-        if (/*lexer | seek | attendu : case_clause*/)
-        {
-            res->case_clause = build_case_clause(lex); // lexer | pop
+        res->case_cl = build_case_clause(lex);
 
-            if (res->case_clause == NULL)
-                errx(1, "build_case_clause failed");
-        }
-
-        if (!/*lexer | seek | attendu : esac*/)
-            errx(1, "Missing Esac in case");
-
-        // res->esac = ??? //lexer |pop
-
+        if (lex->current_tok->type != TOKEN_ESAC)
+            errx(2, "missing esac after case");
+        lexer_pop(lex);
         return res;
     }
     errx(1, "Missing word after case");
@@ -83,28 +73,25 @@ static struct case_clause_bis *build_case_clause_bis(struct lexer *lex)
 struct case_clause *build_case_clause(struct lexer *lex)
 {
     struct case_clause *res = hcalloc(1, sizeof(struct cause_clause));
-    if (res == NULL)
-        errx(1, "calloc failed");
 
-    if (/*lexer | seek | attendu : case_item*/)
+    if ((res->case_it = build_case_item(lex)) == NULL)
+        return NULL;
+
+    while (lex->current_tok->type != TOKEN_PTCOMA
+           || lexer_peek(lex) != TOKEN_PTCOMA)
     {
-        res->case_it = build_case_item(lex); // lexer | pop
+        lexer_pop(lex);
+        lexer_pop(lex);
 
-        if (res->case_it == NULL)
-            errx(1, "build_case_item failed");
-
-        res->next = build_case_clause_bis(lex); // lexer | pop
-        // meme si c'est nul c'est pas grave car on a une etoile => donc
-        // l'etoile peut juste etre nulle
-        if (/*lexer | seek |attendu : ;;*/)
-            res->is_double_semi = 1;
-
-        while (/*lexer |seek | attendu : \n*/)
-            ; // lexer | pop
-
-        return res;
+        while (lex->current_tok->type = TOKEN_NEWLINE)
+            lexer_pop(lex);
+        res->next = hrealloc(res->next, ++res->next_size * sizeof(struct case_item));
+        if ((res->next[res->next_size - 1] = build_case_item(lex)) == NULL)
+            return res;
     }
-    return NULL;
+    while (lex->current_tok->type = TOKEN_NEWLINE)
+        lexer_pop(lex);
+    return res;
 }
 
 static char **word_list_pipe(struct lexer *lex)
