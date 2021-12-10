@@ -222,7 +222,7 @@ struct case_clause_bis
 struct case_clause
 {
     struct case_item *case_it;
-    struct case_item *next;
+    struct case_item **next;
     int next_size;
     // optional ;;
     // any \n we want
@@ -232,6 +232,7 @@ struct case_item
 {
     //possible open paren
     char **word_list; // can not be NULL but need to be preceded by a '|' carat
+    int w_l_size;
     /// rajouter une size pour la word list
     // ')' carac
     // any \n we want

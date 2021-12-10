@@ -158,8 +158,8 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
     }
     if (cmd->c_p != NULL)
         return exec_compound_list(cmd->c_p, ex_l);
-    //    if (cmd->r_c != NULL)
-    //        return exec_rule_case(cmd->r_c, ex_l);
+    if (cmd->r_c != NULL)
+        return exec_rule_case(cmd->r_c, ex_l);
     if (cmd->r_f != NULL)
         return exec_rule_for(cmd->r_f, ex_l);
     if (cmd->r_i != NULL)
@@ -293,12 +293,12 @@ int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
     return res;
 }
 
-// int exec_rule_case(struct rule_case *r_c, struct exec_struct *ex_l)
-//{
-//     if (r_c)
-//         return 0;
-//     return 0;
-// }
+int exec_rule_case(struct rule_case *r_c, struct exec_struct *ex_l)
+{
+    if (r_c->case_cl != NULL)
+        return exec_case_clause(r_c->case_cl, r_c->word, ex_l);
+    return 0;
+}
 
 int exec_rule_if(struct rule_if *r_i, struct exec_struct *ex_l)
 {
@@ -323,17 +323,20 @@ int exec_do_group(struct do_group *do_gp, struct exec_struct *ex_l)
     assert(do_gp);
     return exec_compound_list(do_gp->cp_list, ex_l);
 }
-//
-// int exe_case_clause(struct case_clause *c_c, struct exec_struct *ex_l)
-//{
-//    if (c_c)
-//        return 0;
-//    return 0;
-//}
 
-// int exec_case_item(struct case_item *c_i, struct exec_struct *ex_l)
-//{
-//     if (c_i)
-//         return 0;
-//     return 0;
-// }
+int exec_case_clause(struct case_clause *c_c, char *word,
+                    struct exec_struct *ex_l)
+{
+    int res = exec_case_item(c_c->case_it, word, ex_l);
+    for (int i = 0; i < c_c->next_size; ++i)
+        res = exec_case_item(c_c->next[i], word, ex_l);
+    return res;
+}
+
+int exec_case_item(struct case_item *c_i, char *word, struct exec_struct *ex_l)
+{
+    for (int i = 0; i < c_i->w_l_size; ++i)
+        if (strcmp(word, c_i->word_list[i]) == 0)
+            return exec_compound_list(c_i->cp_list, ex_l);
+    return 0;
+}

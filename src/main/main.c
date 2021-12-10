@@ -18,8 +18,8 @@ char *get_path(void)
 {
     char s[2048] = { 0 };
     getcwd(s, 2048);
-    if (s == NULL)
-        errx(1, "getcwd failed");
+//    if (s == NULL)
+//        errx(1, "getcwd failed");
 
     char *res = hcalloc(1, strlen(s) + 5);
 
@@ -32,7 +32,7 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
 {
     char *A_starval = hcalloc(15536, 1);
     struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
-    for (int i = optind; i <= argc - optind; ++i)
+    for (int i = optind; i < argc; ++i)
     {
         assign_var(my_itoa(i - optind, hcalloc(1, 8)), argv[i], e_x);
         if (i != optind)

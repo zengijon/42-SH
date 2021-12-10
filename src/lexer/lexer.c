@@ -79,10 +79,10 @@ struct lexer *lexer_new(const char *input)
         res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "case", 2) == 0
-             && (is_separator(input + res->pos + 2, separator) == 0))
+             && (is_separator(input + res->pos + 4, separator) == 0))
     {
         res->current_tok->type = TOKEN_CASE;
-        res->end = res->pos + 2;
+        res->end = res->pos + 4;
     }
     else if (is_token(&input[res->pos], "esac",4) == 0
              && (is_separator(input + res->pos + 4, separator) == 0))
@@ -267,6 +267,28 @@ struct token *lexer_pop(struct lexer *res)
         {
             res->current_tok->type = TOKEN_WORDS;
             res->current_tok->value = "else";
+        }
+        res->end = res->pos + 4;
+    }
+    else if (is_token(&input[res->pos], "case", 4) == 0
+             && (is_separator(input + res->pos + 4, separator) == 0))
+    {
+        res->current_tok->type = TOKEN_CASE;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "case";
+        }
+        res->end = res->pos + 4;
+    }
+    else if (is_token(&input[res->pos], "esac", 4) == 0
+             && (is_separator(input + res->pos + 4, separator) == 0))
+    {
+        res->current_tok->type = TOKEN_ESAC;
+        if (tmp->type == TOKEN_WORDS)
+        {
+            res->current_tok->type = TOKEN_WORDS;
+            res->current_tok->value = "esac";
         }
         res->end = res->pos + 4;
     }
