@@ -101,7 +101,7 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
         //return exec_function(indic, parameters, nb_params, e_x);
         return exec_function(indic, parameters, e_x);
     else
-        return 127;
+        return 127; // pb si la fonction n'existe plus il faut le dire et pas renvoye 127 + finir avec 0
 }
 
 int exec_cmds(char *cmd, char **parameters, struct exec_struct *e_x)

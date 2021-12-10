@@ -21,10 +21,6 @@ int remove_fun(int i, struct exec_struct *e_x)
 
 int remove_elt(struct exec_struct *e_x, char *name)
 {
-    for (int i = 0; i < e_x->f_l_len; ++i)
-        if (strcmp(name, e_x->f_l[i].name) == 0)
-            remove_fun(i, e_x);
-
     for (int i = 0; i < e_x->v_l_size; ++i)
         if (strcmp(name, e_x->v_l[i].name) == 0)
             remove_var(i, e_x);
@@ -33,20 +29,27 @@ int remove_elt(struct exec_struct *e_x, char *name)
 
 int my_unset(char **params, struct exec_struct *e_x)
 {
-    if (strcmp(params[0], "-v") == 0)
+    if (params[1] == NULL || params[2] == NULL)
+        return 0;
+    if (strcmp(params[1], "-v") == 0)
     {
         for (int i = 0; e_x->v_l_size; ++i)
         {
-            if (strcmp(params[1], e_x->v_l[i].name))
+            if (e_x->f_l[i].name == NULL)
+                break;
+            if (strcmp(params[2], e_x->v_l[i].name))
                 remove_var(i, e_x);
         }
-        // il ne faut pas raise un erreur
     }
-    else if (strcmp(params[0], "-f") == 0)
+    else if (strcmp(params[1], "-f") == 0)
     {
         for (int i = 0; e_x->f_l_len; ++i)
-            if (strcmp(params[i], e_x->f_l[i].name) == 0)
+        {
+            if (e_x->f_l[i].name == NULL)
+                break;
+            if (strcmp(params[2], e_x->f_l[i].name) == 0)
                 remove_fun(i, e_x);
+        }
     }
     else
         remove_elt(e_x, params[1]);
