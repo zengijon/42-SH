@@ -22,7 +22,7 @@ struct list_next *build_list_next(struct lexer *lex)
     else if (lex->current_tok->type == TOKEN_ESP)
         res->esp = 1;
     else if (lex->current_tok->type == TOKEN_NEWLINE
-	     || lex->current_tok->type == TOKEN_EOF)
+             || lex->current_tok->type == TOKEN_EOF)
         return res;
     else
         errx(2, "missing separator after list");
@@ -183,16 +183,16 @@ struct simple_command *build_simple_command(struct lexer *lex)
 struct shell_command *build_shell_command(struct lexer *lex)
 {
     struct shell_command *res = hcalloc(1, sizeof(struct shell_command));
-        if (lex->current_tok->type == TOKEN_ACO_OPEN)
-        {
-            lexer_pop(lex);
-            if ((res->c_p = build_compound_list(lex)) == NULL)
-                errx(2, "missing compound list between '{}'");
-            if (lex->current_tok->type != TOKEN_ACO_CLOSE)
-                errx(2, "syntax error : missing '}'");
-            lexer_pop(lex);
-            return res;
-        }
+    if (lex->current_tok->type == TOKEN_ACO_OPEN)
+    {
+        lexer_pop(lex);
+        if ((res->c_p = build_compound_list(lex)) == NULL)
+            errx(2, "missing compound list between '{}'");
+        if (lex->current_tok->type != TOKEN_ACO_CLOSE)
+            errx(2, "syntax error : missing '}'");
+        lexer_pop(lex);
+        return res;
+    }
     if (lex->current_tok->type == TOKEN_PA_OPEN)
     {
         lexer_pop(lex);
@@ -211,8 +211,8 @@ struct shell_command *build_shell_command(struct lexer *lex)
         ;
     else if ((res->r_u = build_rule_until(lex)) != NULL)
         ;
-    //    else if ((res->r_c = build_rule_case(lex)) != NULL)
-    //        ;
+    else if ((res->r_c = build_rule_case(lex)) != NULL)
+        ;
     else if ((res->r_i = build_rule_if(lex)) != NULL)
         ;
     else
@@ -220,29 +220,29 @@ struct shell_command *build_shell_command(struct lexer *lex)
     return res;
 }
 
- struct funcdec *build_funcdec(struct lexer *lex)
+struct funcdec *build_funcdec(struct lexer *lex)
 {
-     struct funcdec *res = hcalloc(1, sizeof(struct funcdec));
+    struct funcdec *res = hcalloc(1, sizeof(struct funcdec));
 
-     if (lex->current_tok->type == TOKEN_WORDS)
-     {
-         if (lexer_peek(lex)->type != TOKEN_PA_OPEN)
-              return NULL;
-         res->funct_name = lexer_pop(lex)->value;
-         lexer_pop(lex);
-         if (lex->current_tok->type != TOKEN_PA_CLOSE)
-             errx(2, "Open parenthethis in weird context");
+    if (lex->current_tok->type == TOKEN_WORDS)
+    {
+        if (lexer_peek(lex)->type != TOKEN_PA_OPEN)
+            return NULL;
+        res->funct_name = lexer_pop(lex)->value;
+        lexer_pop(lex);
+        if (lex->current_tok->type != TOKEN_PA_CLOSE)
+            errx(2, "Open parenthethis in weird context");
 
-         lexer_pop(lex);
+        lexer_pop(lex);
 
-         while (lex->current_tok->type == TOKEN_NEWLINE)
-             lexer_pop(lex);
-         if ((res->sh_cmd = build_command(lex)) == NULL)
-             errx(2, "Missing shell cmd after word () new line");
-         return res;
-     }
-     return NULL;
- }
+        while (lex->current_tok->type == TOKEN_NEWLINE)
+            lexer_pop(lex);
+        if ((res->sh_cmd = build_command(lex)) == NULL)
+            errx(2, "Missing shell cmd after word () new line");
+        return res;
+    }
+    return NULL;
+}
 
 struct redirection *build_redirection(struct lexer *lex)
 {
@@ -483,4 +483,94 @@ struct do_group *build_do_group(struct lexer *lex)
         return res;
     }
     errx(2, "Missing compound_list after do for do_group");
+}
+
+struct rule_case *build_rule_case(struct lexer *lex)
+{
+    struct rule_case *res = hcalloc(1, sizeof(struct rule_case));
+
+    if (lex->current_tok->type != TOKEN_CASE)
+        return NULL;
+
+    lexer_pop(lex);
+    if (lex->current_tok->type == TOKEN_WORDS)
+    {
+        res->word = lexer_pop(lex)->value;
+
+        while (lex->current_tok->type == TOKEN_NEWLINE)
+            lexer_pop(lex);
+
+        if (lex->current_tok->type != TOKEN_WORDS
+            || strcmp("in", lex->current_tok->value) != 0)
+            errx(1, "Missing in in case");
+        lexer_pop(lex);
+
+        while (lex->current_tok->type == TOKEN_NEWLINE)
+            lexer_pop(lex);
+
+        res->case_cl = build_case_clause(lex);
+
+        if (lex->current_tok->type != TOKEN_ESAC)
+            errx(2, "missing esac after case");
+        lexer_pop(lex);
+        return res;
+    }
+    errx(1, "Missing word after case");
+}
+
+struct case_clause *build_case_clause(struct lexer *lex)
+{
+    struct case_clause *res = hcalloc(1, sizeof(struct case_clause));
+
+    if ((res->case_it = build_case_item(lex)) == NULL)
+        return NULL;
+
+    while (lex->current_tok->type == TOKEN_PTCOMA
+           && lexer_peek(lex)->type == TOKEN_PTCOMA)
+    {
+        lexer_pop(lex);
+        lexer_pop(lex);
+
+        while (lex->current_tok->type == TOKEN_NEWLINE)
+            lexer_pop(lex);
+        res->next =
+            hrealloc(res->next, ++res->next_size * sizeof(struct case_item));
+        if ((res->next[res->next_size - 1] = build_case_item(lex)) == NULL)
+        {
+            res->next_size--;
+            return res;
+        }
+    }
+    while (lex->current_tok->type == TOKEN_NEWLINE)
+        lexer_pop(lex);
+    return res;
+}
+
+struct case_item *build_case_item(struct lexer *lex)
+{
+    struct case_item *res = hcalloc(1, sizeof(struct case_item));
+
+    if (lex->current_tok->type == TOKEN_PA_OPEN)
+        lexer_pop(lex); // error handling aproximative
+
+    if (lex->current_tok->type != TOKEN_WORDS)
+        return NULL;
+    res->word_list = hcalloc(1, sizeof(char *));
+    res->word_list[res->w_l_size++] = lexer_pop(lex)->value;
+    while (lex->current_tok->type == TOKEN_PIPE)
+    {
+        lexer_pop(lex);
+        res->word_list =
+            hrealloc(res->word_list, ++res->w_l_size * sizeof(char *));
+        if ((res->word_list[res->w_l_size - 1] = lexer_pop(lex)->value) == NULL)
+            errx(2, "missing word after pipe in case item");
+    }
+
+    if (lexer_pop(lex)->type != TOKEN_PA_CLOSE)
+        errx(2, "missing paren after word list in case item");
+    while (lex->current_tok->type == TOKEN_NEWLINE)
+        lexer_pop(lex);
+
+    res->cp_list = build_compound_list(lex);
+    return res;
 }

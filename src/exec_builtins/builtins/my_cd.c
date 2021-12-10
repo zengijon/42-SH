@@ -19,7 +19,7 @@
 
 char *final_path(char *name, char *current_path)
 {
-    char *path = hcalloc(1, strlen(name) + strlen(current_path) + 7); // null terminated
+    char *path = hcalloc(1, strlen(name) + strlen(current_path) + 7); // null terminated //possible segfault name= null
     path = strcat(path, current_path);
     if (current_path[strlen(current_path)] != '/')
         path = strcat(path, "/");
@@ -41,7 +41,7 @@ size_t len_path(char *current_path)
     return nb;
 }
 
-int is_valid_dir(char *path) // PB : clion enlever toujours le dernier dir donc le working directory est faux
+int is_valid_dir(char *path)
 {
     DIR *pDir = opendir(path);
     if (pDir == NULL)
@@ -59,8 +59,7 @@ int is_valid_symlink(char *path)
 
     if (stat(path, &buf) < 0)
     {
-        perror("calling stat()");
-        exit(1);
+        return 0;
     }
 
     if (S_ISLNK(buf.st_mode) == 1)
@@ -114,10 +113,9 @@ char *find_old_path(struct exec_struct *e_x, char *name)
 
 const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x, int *need_pwd)
 {
-    char *path = final_path(arg, current_path);
     if (arg == NULL)
         return "/home";
-
+    char *path = final_path(arg, current_path);
     if (strcmp(arg, "-") == 0)
     {
         char *old_path = find_old_path(e_x, "OLDPWD");
@@ -142,10 +140,10 @@ const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct
     }
     else
     {
-        if (is_valid_symlink(path) == 1)
-        {
-            return arg;
-        }
+//        if (is_valid_symlink(path) == 1)
+//        {
+//            return arg;
+//        }
         return is_valid_dir(path) == 1 ? arg : NULL;
     }
 }
@@ -162,7 +160,7 @@ int my_cd(char **argv, struct exec_struct *e_x)
     const char *arg_cd = get_cd_arg(argv[1], current_path, len_current_path, e_x, &need_pwd);
 
     if (arg_cd == NULL)
-        errx(1, "This is not a valid operator");
+        errx(1, "This is not a valid operator"); //to be change
     assign_var("OLDPWD", current_path, e_x);
     if (chdir(arg_cd) == -1)
         errx(1, "Chdir failed");

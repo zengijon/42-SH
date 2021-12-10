@@ -29,7 +29,9 @@ enum token_type
     TOKEN_PA_CLOSE, /// ')' -> 22
     TOKEN_ACO_OPEN,///< '{' -> 23
     TOKEN_ACO_CLOSE,///< '}' -> 24
-    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 25
+    TOKEN_CASE, ///< 'if'-> 25
+    TOKEN_ESAC, ///< 'then' -> 26
+    TOKEN_ERROR ///< it's not a real token, it's returned in case of invalid -> 27
 };
 
 // drfhfjfgj
