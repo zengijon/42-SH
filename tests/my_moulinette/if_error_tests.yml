@@ -29,7 +29,7 @@
   input: if false then echo wrong!! else echo the right thing; fi
 
 - category: IF ERRORS
-  name: error expecting 'then'
+  name: bad_if_no_separator
   input: if false then echo wrong!! else echo the right thing fi
 
 - category: IF ERRORS
@@ -69,7 +69,7 @@
   input: if true; then echo ok;
 
 - category: IF ERRORS
-  name: elif used like else
+  name: bad_if_elif_without_then
   input: if true && false; then echo wrong; elif echo ok; fi
 
 - category: IF ERRORS
@@ -123,3 +123,25 @@
 - category: IF ERRORS
   name: if false then -> if
   input: if false; then if then else; else echo ok; fi
+
+- category: IF ERRORS
+  name: bad_if_no_condition
+  input: if ; then true; fi
+
+- category: IF ERRORS
+  name: bad_if_no_second_separator
+  input: if true; then true fi
+
+- category: IF ERRORS
+  name: bad_if_no_body
+  input: if true; fi
+
+- category: IF ERRORS
+  name: bad_if_no_then
+  input: if true; echo ok; fi
+
+- category: IF ERRORS
+  name: bad_if_no_fi
+  input: if true; then true;
+
+
