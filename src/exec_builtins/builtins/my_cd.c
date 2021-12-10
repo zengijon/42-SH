@@ -113,10 +113,9 @@ char *find_old_path(struct exec_struct *e_x, char *name)
 
 const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x, int *need_pwd)
 {
-    char *path = final_path(arg, current_path);
     if (arg == NULL)
         return "/home";
-
+    char *path = final_path(arg, current_path);
     if (strcmp(arg, "-") == 0)
     {
         char *old_path = find_old_path(e_x, "OLDPWD");
