@@ -7,8 +7,9 @@
 #include <stdio.h>
 
 #include "../memory/hmalloc.h"
-#include "string.h"
+#include "../utils/substit.h"
 #include "../utils/usefull_fonction.h"
+#include "string.h"
 
 int is_accepted(char c, char *accepted)
 {
@@ -30,7 +31,12 @@ int is_escapable(char c)
 char *get_next(char *word)
 {
     int i = 0;
-    while (is_accepted(word[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 1 || (word[i] == '{'))
+    while (
+        is_accepted(
+            word[i],
+            "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789")
+            == 1
+        || (word[i] == '{'))
         i++;
     return word + i + (word[0] == '{');
 }
@@ -38,11 +44,20 @@ char *get_next(char *word)
 char *strcmp_withdelim(char *ref, char *start)
 {
     int i = 0;
-    for (; ref[i] != 0 && (is_accepted(start[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 1 || start[i] == ref[i]);
+    for (; ref[i] != 0
+         && (is_accepted(start[i],
+                         "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_"
+                         "0123456789")
+                 == 1
+             || start[i] == ref[i]);
          i++)
         if (ref[i] != start[i])
             return NULL;
-    if (ref[i] != 0 || is_accepted(start[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 1)
+    if (ref[i] != 0
+        || is_accepted(start[i],
+                       "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_"
+                       "0123456789")
+            == 1)
         return NULL;
     return start + i;
 }
@@ -64,8 +79,15 @@ char *strcmp_withhook(char *ref, char *start)
 char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
 { // unacurate buffer size
     char *res = hcalloc(1, dollar_ind - start + 8096);
-    char *rest = NULL;
     strncpy(res, start, dollar_ind - start - 1);
+    if (dollar_ind[0] == '(' && dollar_ind[1] != '(')
+    {
+        char *buf = NULL;
+        exec_subshell(dollar_ind + 1, e_x, &buf); // valleur de retour peux échouer
+        return strcat(res, buf);
+        return buf;
+    }
+    char *rest = NULL;
     for (int i = 0; i < e_x->v_l_size; ++i)
     {
         char tmp[8096] = { 0 };
@@ -145,7 +167,10 @@ int valid_name(char *word)
         {
             if (word[i] == '=')
                 return 1;
-            if (is_accepted(word[i], "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCVBN_0123456789") == 0)
+            if (is_accepted(word[i],
+                            "azertyuiopqsdfghjklmwxcvbnAZERTYUIOPQSDFGHJKLMWXCV"
+                            "BN_0123456789")
+                == 0)
                 return 0;
         }
         return 1;

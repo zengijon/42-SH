@@ -6,7 +6,7 @@
 #include "builtins/builtins.h"
 #include "microshell.h"
 
-char *all_cmd[] = {"ls", "pwd", "exit"};
+char *all_cmd[] = {"ls", "pwd", "exit", "cat"};
 
 int exec_builtins(char *cmd, int nb_params, char **parameters, struct exec_struct *e_x)
 {
@@ -46,7 +46,7 @@ int exec_builtins(char *cmd, int nb_params, char **parameters, struct exec_struc
 
 int exec_cmds(char *cmd, int nb_params, char **parameters, struct exec_struct *e_x)
 {
-    int nb_cmd = 3;
+    int nb_cmd = 4;
     if (strlen(cmd) == 0)
         return 127;
     for (int i = 0; i < nb_cmd; ++i)

@@ -125,7 +125,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     //                return res;
     if (cmd->size_elt < 1)
         return res;
-    char **list = hcalloc(cmd->size_elt, sizeof(char *));
+    char **list = hcalloc(cmd->size_elt + 1, sizeof(char *));
     for (int i = 0; i < cmd->size_elt; ++i)
     {
         list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
@@ -149,7 +149,10 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         int child_pid = waitpid(pid, &wstatus, 0);
         if (child_pid == -1)
             errx(1, "error in subshell wait");
-        return 0;
+        while (ex_l->r_l_size-- > 0)
+            reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
+        ex_l->r_l_size = 0;
+        return wstatus;
     }
     if (cmd->c_p != NULL)
         return exec_compound_list(cmd->c_p, ex_l);
