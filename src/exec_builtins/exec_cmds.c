@@ -82,12 +82,10 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
     else if (strcmp(cmd, "cd") == 0)
         return my_cd(parameters, e_x);
     else if (strcmp(cmd, "export") == 0)
-        return 0;
+        return my_export(parameters, e_x);
     else if (strcmp(cmd, "continue") == 0)
         return 0;
     else if (strcmp(cmd, "break") == 0)
-        return 0;
-    else if (strcmp(cmd, "pitfall") == 0)
         return 0;
     else if (strcmp(cmd, "dot") == 0)
         return 0;

@@ -108,7 +108,7 @@ int is_separator(const char *input, struct separator *separator)
 
 int is_token(const char *input, char *token, int n)
 {
-    char *test = hcalloc(n + 1, 2);
+    char *test = hcalloc(n + 1, 10);
     strcpy(test, token);
     if (strncmp(input, test, n) == 0)
         return 0;
