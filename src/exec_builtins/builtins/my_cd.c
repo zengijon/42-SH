@@ -41,7 +41,7 @@ size_t len_path(char *current_path)
     return nb;
 }
 
-int is_valid_dir(char *path) // PB : clion enlever toujours le dernier dir donc le working directory est faux
+int is_valid_dir(char *path)
 {
     DIR *pDir = opendir(path);
     if (pDir == NULL)
