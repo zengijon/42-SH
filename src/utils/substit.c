@@ -61,6 +61,7 @@ int exec_subshell(char *buffer, struct exec_struct *e_x, char **buf)
     char *tmp = hcalloc(strlen(*buf) + 8192, sizeof(char));
     strncpy(tmp,*buf, strlen(*buf) - 1);
     *buf = strcat(tmp, search_for_dollar(buffer + k, e_x));
+    remove("fabbec_42");
     return res;
 }
 

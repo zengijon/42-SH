@@ -27,7 +27,7 @@ int remove_elt(struct exec_struct *e_x, char *name)
     return 0;
 }
 
-int my_unset(char **params, struct exec_struct *e_x)
+int my_unset(char **params, struct exec_struct *e_x) // print d'une maniere speciale les variables set dans l'environement
 {
     if (params[1] == NULL || params[2] == NULL)
         return 0;
@@ -52,6 +52,10 @@ int my_unset(char **params, struct exec_struct *e_x)
         }
     }
     else
-        remove_elt(e_x, params[1]);
+    {
+        if (unsetenv(params[1]) == -1) // est ce qu'on rajoute les variables d'env dans notre liste de var ?
+        //si oui il faudra changer des choses.
+            remove_elt(e_x, params[1]);
+    }
     return 0;
 }

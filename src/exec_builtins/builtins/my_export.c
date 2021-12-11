@@ -2,9 +2,11 @@
 // Created by jennie on 10/12/2021.
 //
 
-#include "builtins.h"
-#include <string.h>
 #include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "builtins.h"
 
 int is_valid_name(char *name)
 {
@@ -26,9 +28,9 @@ int is_valid_name(char *name)
             else
                 return 1;
         }
-        return 0;
+        return 1;
     }
-    return 1;
+    return 0;
 }
 char *find_value_with_name(struct exec_struct *e_x, char *name)
 {
@@ -38,17 +40,20 @@ char *find_value_with_name(struct exec_struct *e_x, char *name)
     return NULL;
 }
 
-int exporting_var(char **params, struct exec_struct *e_x)
+int exporting_var(char *params, struct exec_struct *e_x)
 {
-    if (params[2] == NULL)
+    char *name = strtok(params, "=");
+    char *value;
+    if (params == NULL)
     {
-        char *value = find_value_with_name(e_x, params[1]);
+        value = find_value_with_name(e_x, params);
         printf("--%s\n", value);
     }
-
+    else
+        value = strtok(NULL, "\0");
+    setenv(name, value, 1);
     return 0;
 }
-// can not export function ?
 
 int my_export(char **params, struct exec_struct *e_x)
 {
@@ -57,7 +62,7 @@ int my_export(char **params, struct exec_struct *e_x)
     if (strcmp(params[1], "-p") == 0) // need to print the name + value of the exported variable
         return 0;// print_var_env();
     if (is_valid_name(params[1]) == 1)
-        return exporting_var(params, e_x); // name[=word] => ifndef define it
+        return exporting_var(params[1], e_x); // name[=word] => ifndef define it
     return 0;
 }
 
