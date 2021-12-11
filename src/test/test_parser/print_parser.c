@@ -129,8 +129,8 @@ void print_shell_command(struct shell_command *sh_cmd)
             print_rule_while(sh_cmd->r_w);
         else if (sh_cmd->r_u != NULL)
             print_rule_until(sh_cmd->r_u);
-        // else if (sh_cmd->r_c != NULL)
-        // print_rule_case(sh_cmd->r_c);
+        else if (sh_cmd->r_c != NULL)
+            print_rule_case(sh_cmd->r_c);
         else if (sh_cmd->r_i != NULL)
             print_rule_if(sh_cmd->r_i);
         printf("]");
@@ -139,10 +139,10 @@ void print_shell_command(struct shell_command *sh_cmd)
 
 void print_funcdec(struct funcdec *f)
 {
-    printf("(funcdec) [");
+    printf("(funcdec) [ ");
     if (f != NULL)
     {
-        printf("(function name : %s )", f->funct_name);
+        printf("\n(function name : %s ) ", f->funct_name);
         print_command(f->sh_cmd);
     }
     printf("]");
@@ -260,23 +260,19 @@ void print_rule_until(struct rule_until *r_u) // never used normal
     printf("] ");
 }
 
-// void print_rule_case(struct rule_case *r_c)
-//{
-//     printf("(rule case) [ ");
-//     if (r_c != NULL)
-//     {
-//         printf("( case ) ");
-//         if (r_c->word != NULL)
-//             printf("(word : %s ) ", r_c->word);
-//         printf("( new line ) ");
-//         printf("( in ) ");
-//         printf("( new line ) ");
-//         if (r_c->case_cl != NULL)
-//             print_case_clause(r_c->case_cl);
-//         //printf("ESAC"); ???
-//     }
-//     printf("]");
-// }
+ void print_rule_case(struct rule_case *r_c)
+{
+     printf("(rule case) [ ");
+     if (r_c != NULL)
+     {
+         printf("( case ) ");
+         printf("(word : %s ) ", r_c->word);
+         if (r_c->case_cl != NULL)
+             print_case_clause(r_c->case_cl);
+         printf("( esac ) ");
+     }
+     printf("]");
+ }
 
 void print_rule_if(struct rule_if *r_i)
 {
@@ -331,49 +327,27 @@ void print_do_group(struct do_group *d_g)
     printf(" ] ");
 }
 
-// void print_case_clause_bis(struct case_clause_bis *c)
-//{
-//     if (c != NULL)
-//     {
-//         if (c->is_double_semi == 1)
-//             printf("( ; )");
-//         printf("( new line )");
-//         if (c->case_it != NULL)
-//             print_case_item(c->case_it);
-//     }
-// }
-//
-// void print_case_clause(struct case_clause *c_c)
-//{
-//     printf("(case_clause) [");
-//     if (c_c != NULL)
-//     {
-//         if (c_c->case_it != NULL)
-//             print_case_item(c_c->case_it);
-//         if (c_c->next)
-//             print_case_clause_bis(c_c->next);
-//         if (c_c->is_double_semi == 1)
-//             printf("( ;; )");
-//         printf("( new line )");
-//     }
-//     printf("]");
-// }
+ void print_case_clause(struct case_clause *c_c)
+{
+     printf("(case_clause) [ ");
+     if (c_c != NULL)
+     {
+         print_case_item(c_c->case_it);
+         for (int i = 0; i < c_c->next_size; ++i)
+             print_case_item(c_c->next[i]);
+         printf("( ;; ) ");
+     }
+     printf("] ");
+ }
 
-// void print_case_item(struct case_item *c_i)
-//{
-//     printf("(case item) [");
-//     if (c_i != NULL)
-//     {
-//         if (c_i->is_open_bracket != 0)
-//             printf("( ( ");
-//         if (c_i->word != NULL)
-//             printf("%s", c_i->word);
-//         printf(" |");
-//         //for (int i = 0; i < c_i->size_word_list; ++i)
-//             //printf(" %s", c_i->word_list[i]);
-//         printf(")");
-//         printf("( new line )");
-//         print_compound_list(c_i->cp_list);
-//     }
-//     printf("]");
-// }
+ void print_case_item(struct case_item *c_i)
+{
+     printf("(case item) [");
+     if (c_i != NULL)
+     {
+         for (int i = 0; i < c_i->w_l_size; ++i)
+             printf("%s", c_i->word_list[i]);
+         print_compound_list(c_i->cp_list);
+     }
+     printf("]");
+ }

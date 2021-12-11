@@ -15,7 +15,7 @@ struct exec_struct
     int r_l_size;
     int v_l_size;
     struct fun_list *f_l;
-    int f_l_size;
+    int f_l_len;
 };
 
 struct redir
@@ -27,8 +27,9 @@ struct redir
 
 struct fun_list
 {
-    char * name;
-    struct command * cmd;
+    char *name;
+    char **args;
+    struct command *cmd;
 };
 
 struct var_list

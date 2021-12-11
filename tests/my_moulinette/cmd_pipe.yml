@@ -22,6 +22,3 @@
   name: pipe bracket
   input: { echo te | cat | cat ; } | cat -e
 
-- category: PIPE BASIC TESTS
-  name: return code 0
-  input: false | true 

@@ -2,6 +2,17 @@
 // Created by clousty8 on 08/12/2021.
 //
 
+#include "string.h"
+#include "../struct/exec_struct.h"
+
+char *get_value_in_vl(struct exec_struct *e_x, char *name)
+{
+    for (int i = 0; i < e_x->v_l_size; i++)
+        if (strcmp(name, e_x->v_l[i].name) == 0)
+            return e_x->v_l[i].value;
+    return NULL;
+}
+
 char *my_itoa(int n, char *s)
 {
     int k = 0;

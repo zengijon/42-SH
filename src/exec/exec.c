@@ -1,6 +1,7 @@
 #include "../exec/exec.h"
 
 #include <err.h>
+#include <fnmatch.h>
 #include <stdio.h>
 #include <sys/wait.h>
 
@@ -12,8 +13,6 @@
 #include "assert.h"
 #include "string.h"
 #include "variable_expention.h"
-#include "../lexer/lexer.h"
-#include "../redir/redir.h"
 
 int exec_list_next(struct list_next *l_n)
 {
@@ -127,13 +126,17 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     //                return res;
     if (cmd->size_elt < 1)
         return res;
-    char **list = hcalloc(cmd->size_elt, sizeof(char *));
+    char **list = hcalloc(cmd->size_elt + 1, sizeof(char *));
+    int j = 0;
     for (int i = 0; i < cmd->size_elt; ++i)
     {
-        list[i] = remove_sep(cmd->list_elt[i]->word, ex_l);
+        char *tmp = NULL;
+        if ((tmp = remove_sep(cmd->list_elt[i]->word, ex_l)) != 0
+            && strlen(tmp) > 0)
+            list[j++] = tmp;
     }
-    res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), cmd->size_elt - 1,
-                     list, ex_l); // Not in this file
+    res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), list,
+                    ex_l); // Not in this file
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
@@ -146,17 +149,20 @@ int exec_shell_command(struct shell_command *cmd)
     {
         int pid = fork();
         if (pid == 0)
-            exit( exec_compound_list(cmd->c_p, ex_l));
+            exit(exec_compound_list(cmd->c_p, ex_l));
         int wstatus;
         int child_pid = waitpid(pid, &wstatus, 0);
         if (child_pid == -1)
             errx(1, "error in subshell wait");
-        return 0;
+        while (ex_l->r_l_size-- > 0)
+            reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
+        ex_l->r_l_size = 0;
+        return wstatus;
     }
     if (cmd->c_p != NULL)
-        return exec_compound_list(cmd->c_p);
+        return exec_compound_list(cmd->c_p, ex_l);
     if (cmd->r_c != NULL)
-        return exec_rule_case(cmd->r_c);
+        return exec_rule_case(cmd->r_c, ex_l);
     if (cmd->r_f != NULL)
         return exec_rule_for(cmd->r_f);
     if (cmd->r_i != NULL)
@@ -168,11 +174,11 @@ int exec_shell_command(struct shell_command *cmd)
     assert(0);
 }
 
- int exec_fundec(struct funcdec *fdec, struct exec_struct *ex_l)
+int exec_fundec(struct funcdec *fdec, struct exec_struct *ex_l)
 {
-    ex_l->f_l = hrealloc(ex_l->f_l, ++ex_l->f_l_size * sizeof(struct fun_list));
-    ex_l->f_l[ex_l->f_l_size - 1].name = fdec->funct_name;
-    ex_l->f_l[ex_l->f_l_size - 1].cmd = fdec->sh_cmd;
+    ex_l->f_l = hrealloc(ex_l->f_l, ++ex_l->f_l_len * sizeof(struct fun_list));
+    ex_l->f_l[ex_l->f_l_len - 1].name = fdec->funct_name;
+    ex_l->f_l[ex_l->f_l_len - 1].cmd = fdec->sh_cmd;
     return 0;
 }
 
@@ -259,9 +265,17 @@ int exec_compound_list(struct compound_list *cp_list)
 
 int exec_rule_for(struct rule_for *r_f)
 {
-    if (r_f)
-        return 0;
-    return 0;
+    int res = 0;
+    for (int i = 0; i < r_f->wl_s; i++)
+    {
+        //        for (int j = -1; r_f->word_list[i][j] != 0;
+        //        assign_var(r_f->word, r_f->word_list[i] +
+        //        next_sep(r_f->word_list[i], j), ex_l))
+        //            ;
+        assign_var(r_f->word, r_f->word_list[i], ex_l);
+        res = exec_do_group(r_f->do_gp, ex_l);
+    }
+    return res;
 }
 
 int exec_rule_while(struct rule_while *r_w)
@@ -282,12 +296,12 @@ int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
     return res;
 }
 
-// int exec_rule_case(struct rule_case *r_c, struct exec_struct *ex_l)
-//{
-//     if (r_c)
-//         return 0;
-//     return 0;
-// }
+int exec_rule_case(struct rule_case *r_c, struct exec_struct *ex_l)
+{
+    if (r_c->case_cl != NULL)
+        return exec_case_clause(r_c->case_cl, r_c->word, ex_l);
+    return 0;
+}
 
 int exec_rule_case(struct rule_case *r_c)
 {
@@ -321,16 +335,19 @@ int exec_do_group(struct do_group *do_gp)
     return 0;
 }
 
-int exe_case_clause(struct case_clause *c_c)
+int exec_case_clause(struct case_clause *c_c, char *word,
+                    struct exec_struct *ex_l)
 {
-    if (c_c)
-        return 0;
-    return 0;
+    int res = exec_case_item(c_c->case_it, word, ex_l);
+    for (int i = 0; i < c_c->next_size; ++i)
+        res = exec_case_item(c_c->next[i], word, ex_l);
+    return res;
 }
 
-int exec_case_item(struct case_item *c_i)
+int exec_case_item(struct case_item *c_i, char *word, struct exec_struct *ex_l)
 {
-    if (c_i)
-        return 0;
+    for (int i = 0; i < c_i->w_l_size; ++i)
+        if (strcmp(word, c_i->word_list[i]) == 0)
+            return exec_compound_list(c_i->cp_list, ex_l);
     return 0;
 }

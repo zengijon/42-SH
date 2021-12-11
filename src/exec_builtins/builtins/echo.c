@@ -6,6 +6,14 @@
 #include "../../memory/hmalloc.h"
 
 
+char *concat_all(char **argv)
+{
+    char *res = hcalloc(1, 65432);
+    for (int i = 0; argv[i] != 0; ++i)
+        strcat(res, argv[i]);
+    return 0;
+}
+
 char *replace_newline(char *token)
 {
     char *tmp = hcalloc(strlen(token) * 2, sizeof(char));
@@ -99,6 +107,7 @@ int my_echo(char *cmd)
     fflush(stdout);
     if (n_flag == 0)
         printf("\n");
+    hfree(cmd);
     return 0;
 }
 

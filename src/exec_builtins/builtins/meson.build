@@ -1,0 +1,1 @@
+all_sources += files('echo.c', 'my_cd.c', 'unset.c', 'my_exit.c, 'my_export.c')

@@ -15,31 +15,34 @@
 #include <unistd.h>
 
 #include "../../struct/exec_struct.h"
+#include "../../memory/hmalloc.h"
+
+char *final_path(char *name, char *current_path)
+{
+    char *path = hcalloc(1, strlen(name) + strlen(current_path) + 7); // null terminated //possible segfault name= null
+    path = strcat(path, current_path);
+    if (current_path[strlen(current_path)] != '/')
+        path = strcat(path, "/");
+    path = strcat(path, name); // path abs
+    return path;
+}
 
 size_t len_path(char *current_path)
 {
     size_t nb = 0;
-    char *token = current_path;
-    if (token != NULL)
+    if (current_path != NULL)
     {
-        token = strtok(current_path, "/");
-        nb = 1;
-        while(token != NULL)
+        for (int i = 0; current_path[i] != '\0'; ++i)
         {
-            token = strtok(NULL, "/");
-            nb++;
+            if (current_path[i] == '/')
+                nb+= 1;
         }
     }
     return nb;
 }
 
-int is_valid_dir(char *name, char *current_path) // PB : clion enlever toujours le dernier dir donc le working directory est faux
+int is_valid_dir(char *path)
 {
-    char *path = calloc(1, strlen(name) + strlen(current_path) + 2); // null terminated
-    path = strcat(path, current_path);
-    path = strcat(path, "/");
-    path = strcat(path, name); // path abs
-
     DIR *pDir = opendir(path);
     if (pDir == NULL)
     {
@@ -48,6 +51,21 @@ int is_valid_dir(char *name, char *current_path) // PB : clion enlever toujours 
     }
     closedir (pDir);
     return 1;
+}
+
+int is_valid_symlink(char *path)
+{
+    struct stat buf;
+
+    if (stat(path, &buf) < 0)
+    {
+        return 0;
+    }
+
+    if (S_ISLNK(buf.st_mode) == 1)
+        return 1;
+    else
+        return 0;
 }
 
 int is_valid_d_coma(char *arg, size_t nb_tok_path)
@@ -84,6 +102,7 @@ int is_valid_d_coma(char *arg, size_t nb_tok_path)
     }
     return 0; // not a sequence of ../
 }
+
 char *find_old_path(struct exec_struct *e_x, char *name)
 {
     for (int i = 0; i < e_x->v_l_size; i++)
@@ -95,16 +114,15 @@ char *find_old_path(struct exec_struct *e_x, char *name)
 const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x, int *need_pwd)
 {
     if (arg == NULL)
-        return "/home"; // Marhce sur le long terme ?
-
+        return "/home";
+    char *path = final_path(arg, current_path);
     if (strcmp(arg, "-") == 0)
     {
-        char *old_path = NULL; //find_old_path(e_x, "OLDPWD");
+        char *old_path = find_old_path(e_x, "OLDPWD");
         if (old_path == NULL)
             errx(1, "OLDPWD not inizialized");
-        assign_var("OLDPWD", current_path, e_x);
         *need_pwd = 1;
-        return NULL;
+        return old_path;
     }
 
     if (strcmp(arg, ".") == 0)
@@ -116,12 +134,18 @@ const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct
     if (arg[0] == '.')
     {
         if (strlen(arg) > 1 && isalpha(arg[1]) != 0)
-            return is_valid_dir(arg, current_path) == 1 ? arg : NULL; // hidden dir
+            return is_valid_dir(path) == 1 ? arg : NULL; // hidden dir
 
         return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL; // sequence of ../
     }
     else
-        return is_valid_dir(arg, current_path) == 1 ? arg : NULL; // dir
+    {
+//        if (is_valid_symlink(path) == 1)
+//        {
+//            return arg;
+//        }
+        return is_valid_dir(path) == 1 ? arg : NULL;
+    }
 }
 
 int my_cd(char **argv, struct exec_struct *e_x)
@@ -132,18 +156,17 @@ int my_cd(char **argv, struct exec_struct *e_x)
 
     if (current_path == NULL)
         errx(1, "getcwd failed");
-
     size_t len_current_path = len_path(current_path);
     const char *arg_cd = get_cd_arg(argv[1], current_path, len_current_path, e_x, &need_pwd);
 
     if (arg_cd == NULL)
-        errx(1, "This is not a valid operator");
-
+        errx(1, "This is not a valid operator"); //to be change
+    assign_var("OLDPWD", current_path, e_x);
     if (chdir(arg_cd) == -1)
         errx(1, "Chdir failed");
 
     if (need_pwd == 1)
-        printf("---%s\n", getcwd(s, 2048));
+        printf("%s\n", getcwd(s, 2048));
 
     return 0;
 }
