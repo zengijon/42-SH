@@ -1,4 +1,4 @@
-#define _GNU_SOURCE //should be removed for mason
+#define _GNU_SOURCE
 
 #include "lexer.h"
 
@@ -6,12 +6,13 @@
 #include <stdio.h>
 #include <string.h>
 
-//#define _GNU_SOURCE // should be removed for mason
+
 #include <fnmatch.h>
 
 #include "../memory/free_list.h"
 #include "../memory/hmalloc.h"
 #include "utils.h"
+
 
 struct free_list *list_malloc = NULL;
 

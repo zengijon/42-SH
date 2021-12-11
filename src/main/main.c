@@ -61,7 +61,7 @@ int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x)
     {
         if (pretty_print == 1)
             print_list(list);
-        res = exec_list(list);
+        res = exec_list(list, e_x);
     }
     return res;
 }
@@ -70,13 +70,13 @@ int main(int argc, char **argv)
 {
     if (argc == 1)
     {
-        if (isatty(STDIN_FILENO) == 1);
+        if (isatty(STDIN_FILENO) == 1)
         {
             fprintf(stderr, "need input to run a programme\n");
             return 2;
         }
         char *buffer = stdin2buf();
-        return exec_42sh(buffer, pretty_print, build_exec_struct(argc, argv));
+        return exec_42sh(buffer, 0, build_exec_struct(argc, argv));
     }
 
     static const struct option longOpts[] = {
