@@ -461,10 +461,10 @@ struct token *lexer_pop(struct lexer *res)
     //     printf("%d\n", tok->type); //9
     //     tok = lexer_pop(lexer);
 }
-//
+
 //int main(void)
 //{
-//    struct lexer *lexer = lexer_new("#! /usr/bin/dash\n\necho quelque chose\n\nuyg ()\n\nif echo truc ; echo lol ;then\n    echo much\nelse echo lol\nfi \n \n");
+//    struct lexer *lexer = lexer_new("3kfdffff\necho a\n echo b");
 //    //    printf("%d\n", lexer->current_tok->type);
 //    //    struct token *tok = lexer_peek(lexer);
 //    //    printf("%d\n", tok->type);
