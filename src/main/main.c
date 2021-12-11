@@ -77,7 +77,16 @@ int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x)
 int main(int argc, char **argv)
 {
     if (argc == 1)
-        return 0;
+    {
+        if (isatty(STDIN_FILENO) == 1);
+        {
+            fprintf(stderr, "need input to run a programme\n");
+            return 2;
+        }
+        char *buffer = stdin2buf();
+        return exec_42sh(buffer, pretty_print, build_exec_struct(argc, argv));
+    }
+
     static const struct option longOpts[] = {
         { "pretty_print", no_argument, NULL, 'p' },
         { "cmd", required_argument, NULL, 'c' },

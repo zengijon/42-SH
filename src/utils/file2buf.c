@@ -46,3 +46,18 @@ char *expand_special_var(char *buffer, char *val_list)
     }
     return res[0] == 0 ? buffer : res;
 }
+
+
+char *stdin2buf(void)
+{
+    size_t len;
+    char *buffer = hcalloc(101, sizeof(char));
+    size_t le = 0;
+    while ((len = read(0, buffer + le, 100) && (int)len != 0)
+    {
+        le += len;
+        buffer = hrealloc(buffer, le + len);
+    }
+    buffer[le] = '\0';
+    return buffer;
+}
