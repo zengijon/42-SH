@@ -1,0 +1,20 @@
+==============CD BASIC TEST================
+- category: CD BASIC
+  name: simple cd ..
+  input: pwd; cd .. ; pwd
+
+- category: CD BASIC
+  name: simple cd 
+  input: pwd; cd ; pwd
+
+- category: CD BASIC
+  name: too many ../
+  input: pwd; cd ../../../../../; pwd
+
+- category: CD BASIC
+  name: many cd will it failed ? 
+  input: pwd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd;cd; pwd
+
+- category: CD BASIC
+  name: simple cd in a dir
+  input: pwd; cd tests; pwd

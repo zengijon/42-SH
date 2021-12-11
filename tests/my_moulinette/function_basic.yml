@@ -1,0 +1,40 @@
+=============FUNCTION BASIC TESTS==============
+
+- category: FUNCTION BASIC
+  name: simple function call
+  input: fun() \n echo truc \n fun
+
+- category: FUNCTION BASIC
+  name: call the first arg
+  input: fun() \n echo $1 \n fun lol
+
+- category: FUNCTION BASIC
+  name: function with an if
+  input: fun(); { \n if echo 1 ; then ; echo non; fi \n} \n fun
+
+===========FUNCTION WITH UNSET================
+
+- category: FUCNTION WITH UNSET BASIC
+  name: simple unset check the return code
+  input: fun()\n echo truc\ fun unset -f fun
+
+- category: FUNCTION WITH UNSET BASIC
+  name: multiple unset
+  input: fun(); echo 1; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun; unset -f fun
+
+- category: FUNCTION WITH UNSET BASIC
+  name: bad unset fun must be usable after
+  input: fun() \n echo truc \n unset fun; unset fun; unset fun; unset fun; fun
+
+- category: FUNCTION WITH UNSET BASIC
+  name: bad option for unset
+  input: fun(); echo truc; unset -v fun
+  
+- category: FUCNTION WITH UNSET BASIC
+  name: bad unset
+  input: fun(); echo truc; unset fun; unset -v fun; fun
+
+- category: FUNCTION WITH UNSET BASIC
+  name: bad name for unset
+  input: unset fun
+  
