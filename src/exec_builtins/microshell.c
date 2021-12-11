@@ -25,10 +25,10 @@ int microshell(char *cmd, char **argv)
         errx(1, "fork failed");
     if (pid == 0)
     {
-        if (strcmp(cmd, "cat") == 0)
-        {
-            return execlp("/bin/sh", "blandsfkjh", "-c", "cat -e", NULL);
-        }
+//        if (strcmp(cmd, "cat") == 0)
+//        {
+//            return execlp("/bin/sh", "blandsfkjh", "-c", "cat -e", NULL);
+//        }
         return execvp(cmd, argv);
     }
 

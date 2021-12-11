@@ -8,6 +8,8 @@
 
 #include "builtins.h"
 
+extern char **environ;
+
 int is_valid_name(char *name)
 {
     size_t len = strlen(name);
@@ -60,9 +62,9 @@ int my_export(char **params, struct exec_struct *e_x)
     if (params[1] == NULL)
         return 0;
     if (strcmp(params[1], "-p") == 0) // need to print the name + value of the exported variable
-        return 0;// print_var_env();
+        return 0; // don't know
     if (is_valid_name(params[1]) == 1)
-        return exporting_var(params[1], e_x); // name[=word] => ifndef define it
+        return exporting_var(params[1], e_x);
     return 0;
 }
 
