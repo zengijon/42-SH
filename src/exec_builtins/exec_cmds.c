@@ -104,15 +104,13 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
 
 int exec_cmds(char *cmd, char **parameters, struct exec_struct *e_x)
 {
-    int nb_cmd = 3;
     if (strlen(cmd) == 0)
         return 127;
-    for (int i = 0; i < nb_cmd; ++i)
-    {
-        if (strcmp(cmd, all_cmd[i]) == 0)
-            return microshell(cmd, parameters);
-    }
-    return exec_builtins(cmd, parameters, e_x);
+    int res = 0;
+    if ((res = exec_builtins(cmd, parameters, e_x)) == 127)
+        return microshell(cmd, parameters);
+    return res;
+
 }
 
 //int main(void)
