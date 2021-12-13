@@ -57,7 +57,7 @@ int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x)
     int res = 0;
     struct list *list;
     struct lexer *lex =
-        lexer_new(expand_special_var(buffer, get_value_in_vl(e_x, "*")));
+        lexer_new(expand_special_var(buffer, get_value_in_vl(e_x, "*")), e_x);
 
     while ((list = build_list(lex)) != NULL)
     {

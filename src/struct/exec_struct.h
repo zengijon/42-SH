@@ -17,6 +17,14 @@ struct exec_struct
     struct fun_list *f_l;
     int f_l_len;
     int loop_nb;
+    struct alias_list *a_l;
+    int a_l_size;
+};
+
+struct alias_list
+{
+    char *name;
+    char *value;
 };
 
 struct redir

@@ -14,7 +14,7 @@
 
 //struct free_list *list_malloc = NULL;
 
-struct lexer *lexer_new(const char *input)
+struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
 {
     struct lexer *res = hcalloc(1, sizeof(struct lexer));
     res->input = input;
@@ -152,6 +152,7 @@ struct lexer *lexer_new(const char *input)
         res->current_tok->value = value;
         res->end = k;
     }
+    res->e_x = e_x;
     return res;
 }
 
@@ -176,7 +177,7 @@ struct token *lexer_peek(struct lexer *lexer)
         return token_new(TOKEN_EOF);
     }
     i += skipspace(&lexer->input[i]);
-    struct lexer *tmp = lexer_new(lexer->input + i);
+    struct lexer *tmp = lexer_new(lexer->input + i, lexer->e_x);
     return tmp->current_tok;
 }
 struct token *lexer_peek_rec(struct lexer *lexer, int n)
@@ -195,7 +196,7 @@ struct token *lexer_peek_rec(struct lexer *lexer, int n)
         return token_new(TOKEN_EOF);
     }
     i += skipspace(&lexer->input[i]);
-    struct lexer *tmp = lexer_new(lexer->input + i);
+    struct lexer *tmp = lexer_new(lexer->input + i, lexer->e_x);
     if (n == 1)
         return tmp->current_tok;
     else
