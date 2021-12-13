@@ -429,6 +429,30 @@ struct token *lexer_pop(struct lexer *res)
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
         while (input[k] != '\0' && is_separator(&input[k], separator) != 0)
         {
+            if (input[k] == '\'')
+            {
+                value[j++] = input[k++];
+                while (input[k] != '\0' && input[k] != '\'')
+                    value[j++] = input[k++];
+                if (input[k] == '\0')
+                    res->current_tok->type = TOKEN_ERROR;
+            }
+            if (input[k] == '`')
+            {
+                value[j++] = input[k++];
+                while (input[k] != '\0' && input[k] != '`')
+                    value[j++] = input[k++];
+                if (input[k] == '\0')
+                    res->current_tok->type = TOKEN_ERROR;
+            }
+            if (input[k] == '"')
+            {
+                value[j++] = input[k++];
+                while (input[k] != '\0' && input[k] != '"')
+                    value[j++] = input[k++];
+                if (input[k] == '\0')
+                    res->current_tok->type = TOKEN_ERROR;
+            }
             if (input[k] == '$' && input[k + 1] == '(')
             {
                 int is_sub = 1;
@@ -460,6 +484,8 @@ struct token *lexer_pop(struct lexer *res)
     if (res->current_tok->type != TOKEN_WORDS && tmp_token->type == TOKEN_WORDS)
     {
         res = generate_alias_(res, tmp_token);
+        struct lexer *tmp2 = res;
+        tmp2++;
     }
     return tmp;
 }
