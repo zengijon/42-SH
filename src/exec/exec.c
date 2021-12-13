@@ -154,7 +154,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         int wstatus;
         int child_pid = waitpid(pid, &wstatus, 0);
         if (child_pid == -1)
-            errx(1, "error in subshell wait");
+            errx(2, "error in subshell wait");
         while (ex_l->r_l_size-- > 0)
             reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
         ex_l->r_l_size = 0;

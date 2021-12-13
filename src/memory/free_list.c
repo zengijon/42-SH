@@ -8,7 +8,7 @@ void list_add(void *ptr)
 {
     struct free_list *res = calloc(sizeof(struct free_list), 1);
     if (!res)
-        errx(1, "Can't calloc");
+        errx(2, "Can't calloc");
     res->ptr = ptr;
     res->next = list_malloc;
     list_malloc = res;

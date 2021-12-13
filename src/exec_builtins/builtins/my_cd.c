@@ -60,7 +60,7 @@ int is_valid_d_coma(char *arg)
         while (i < len)
         {
             //if (count >= nb_tok_path)
-                //errx(1, "sequence of ../ is too long");
+                //errx(2, "sequence of ../ is too long");
 
             if (arg[i] == '.' && i + 1 < len && arg[i + 1] == '.')
             {
@@ -104,7 +104,10 @@ const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, i
     {
         char *old_path = find_e_x(e_x, "OLDPWD");
         if (old_path == NULL)
-            errx(1, "OLDPWD not inizialized");
+        {
+            fprintf(stderr, "OLDPWD not inizialized\n");
+            return NULL;
+        }
         *need_pwd = 1;
         return old_path;
     }
