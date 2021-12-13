@@ -112,6 +112,8 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
         return exec_42sh(file2buf(parameters[1]), 0, e_x);
     else if (strcmp(cmd, "unset") == 0)
         return my_unset(parameters, e_x);
+//    else if (strcmp(cmd, "alias") == 0)
+//        return alias(parameters, e_x);
     else if (strcmp(cmd, "true") == 0)
         return 0;
     else if (strcmp(cmd, "false") == 0)

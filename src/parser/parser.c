@@ -4,13 +4,6 @@
 
 #include "parser.h"
 
-#include <err.h>
-#include <fnmatch.h>
-#include <string.h>
-
-#include "../exec/variable_expention.h"
-#include "../memory/hmalloc.h"
-
 struct list_next *build_list_next(struct lexer *lex)
 {
     struct list_next *res = hcalloc(1, sizeof(struct list_next));
