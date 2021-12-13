@@ -47,6 +47,7 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
     assign_var("IFS", "\n", e_x);
     assign_var("OLDPWD", get_path(),e_x);
     assign_var("PWD", get_path(), e_x);
+    assign_var("HOME", getenv("HOME"), e_x);
     return e_x;
 }
 
