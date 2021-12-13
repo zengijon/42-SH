@@ -72,16 +72,20 @@
   name: erreur qui n'a rien a faire la
   input: if true; then echo ok; fi | if true then echo ko fi | if true; then echo ko; fi 
 
-- category: PIPE BASIC
-  name:
-  input: 
+- category: PIPE BASIC 
+  name: return code 1
+  input: true | false
 
-- category: PIPE BASIC
-  name:
-  input: 
+- category: PIPE BASIC 
+  name: return code 0
+  input: false | true
 
-- category: PIPE BASIC
-  name:
-  input: 
+- category: PIPE BASIC 
+  name: pipe cat 
+  input: ls /home/ | cat -e
+
+- category: PIPE BASIC 
+  name: pipe cat cat
+  input: ls /home/ | cat -e | cat -e
 
 

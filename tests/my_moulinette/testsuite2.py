@@ -7,10 +7,12 @@ from typing import cast
 import termcolor
 import yaml
 
-basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cmd_echo_tests.yml"]
-error_files = ["if_error_tests.yml", "cmd_error_var.yml"]
+basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cmd_echo_tests.yml", "cmd_for_tests.yml"]
+error_files = ["if_error_tests.yml", "cmd_error_var.yml", "cmd_error_redir.yml"]
 hard_files = []
-script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh"]
+script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh", "shell_script/for/simple_for_1.sh", 
+                "shell_script/if/hard_if_1.sh", "shell_script/if/hard_if_2.sh", "shell_script/if/simple_if_multiple_newlines.sh", "shell_script/if/simple_if.sh", 
+                "shell_script/redir/pipe.sh", "shell_script/redir/redir_basics.sh"]
 
 TEST_OK = f"[ {termcolor.colored('OK', 'green')} ]"
 TEST_KO = f"[ {termcolor.colored('KO', 'red')} ]"
@@ -40,7 +42,7 @@ def my_diff(expected: str, actual: str):
 
 
 def running(shell: str, stdin: str) -> sp.CompletedProcess:
-    return sp.run([shell], input=stdin, capture_output=True, text=True)
+    return sp.run([shell, stdin], capture_output=True, text=True)
 
 
 def running_process(shell: str, stdin: str) -> sp.CompletedProcess:
@@ -88,22 +90,26 @@ if __name__ == "__main__":
 
     cat = ""
 
-    for file_test in tests_files:
+    if type_of_test != "script":
+        for file_test in tests_files:
 
-        with open(file_test, "r") as our_yaml:
-            tests_list = list(yaml.safe_load(our_yaml))
+            with open(file_test, "r") as our_yaml:
+                tests_list = list(yaml.safe_load(our_yaml))
 
-        for test in tests_list:
-            if cat != test["category"]:
-                cat = test["category"]
-                print(f"\n============{cat}============")
+            for test in tests_list:
+                if cat != test["category"]:
+                    cat = test["category"]
+                    print(f"\n============{cat}============")
 
-            our_input = test["input"]
-            name = test["name"]
+                our_input = test["input"]
+                name = test["name"]
 
-            process_dash = running("dash", our_input)
-            if type_of_test == "script":
-                process_42sh = running(path_42sh, our_input)
-            else:
+                process_dash = running("dash", our_input)
                 process_42sh = running_process(path_42sh, our_input)
-            my_check_output(process_dash, process_42sh, 0, name, our_input)
+                my_check_output(process_dash, process_42sh, 0, name, our_input)
+    else:
+        print("\n============SCRIPT TESTS============")
+        for script in script_files:
+            process_dash = running("dash", script)
+            process_42sh = running(path_42sh, script)
+            my_check_output(process_dash, process_42sh, 0, script, script)
