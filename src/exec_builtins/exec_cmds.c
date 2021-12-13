@@ -1,12 +1,13 @@
 #include "exec_cmds.h"
 
+#include <err.h>
 #include <string.h>
 
 #include "../memory/hmalloc.h"
+#include "../utils/file2buf.h"
 #include "../utils/usefull_fonction.h"
 #include "builtins/builtins.h"
 #include "microshell.h"
-#include "../utils/file2buf.h"
 
 char *all_cmd[] = { "ls", "pwd", "cat" };
 
@@ -91,16 +92,20 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
         return my_export(parameters, e_x);
     else if (strcmp(cmd, "continue") == 0)
     {
+        if (e_x->loop_nb == 0)
+            return 0;
         int val = (parameters[1] == NULL ? 1 : atoi(parameters[1])); // possible segfault when parameters[1] is NULL
         if (val <= 0)
-            return 2;
+            errx(2, "break parameters < 1");
         return 1000 - 1 + (val > e_x->loop_nb ? e_x->loop_nb : val);
     }
     else if (strcmp(cmd, "break") == 0)
     {
+        if (e_x->loop_nb == 0)
+            return 0;
         int val = parameters[1] == NULL ? 1 : atoi(parameters[1]); // possible segfault when parameters[1] is NULL
         if (val <= 0)
-            return 2;
+            errx(2, "break parameters < 1");
         return 1000000 - 1 + (val > e_x->loop_nb ? e_x->loop_nb : val);
     }
     else if (strcmp(cmd, ".") == 0)
