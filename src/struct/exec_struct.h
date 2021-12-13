@@ -16,6 +16,7 @@ struct exec_struct
     int v_l_size;
     struct fun_list *f_l;
     int f_l_len;
+    int loop_nb;
 };
 
 struct redir

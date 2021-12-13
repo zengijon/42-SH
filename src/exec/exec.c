@@ -18,7 +18,7 @@
 int exec_list_next(struct list_next *l_n, struct exec_struct *ex_s)
 {
     int res = exec_and_or(l_n->a_o, ex_s);
-    if (l_n->next == NULL)
+    if (l_n->next == NULL || res >= 1000)
         return res;
     else
         return exec_list_next(l_n->next, ex_s);
@@ -29,7 +29,7 @@ int exec_list(struct list *l, struct exec_struct *ex_l)
 {
     assert(l != 0);
     int res = exec_and_or(l->a_o, ex_l);
-    if (l->next == NULL)
+    if (l->next == NULL || res >= 1000)
         return res;
     else
         return exec_list_next(l->next, ex_l);
@@ -45,7 +45,7 @@ int exec_and_or_next(struct and_or_next *a_o, int p_res,
     else
         res = p_res && exec_pipeline(a_o->pipeline, ex_l);
 
-    if (a_o->next == NULL)
+    if (a_o->next == NULL || res >= 1000)
         return res;
     else
         return exec_and_or_next(a_o->next, res, ex_l);
@@ -54,7 +54,7 @@ int exec_and_or_next(struct and_or_next *a_o, int p_res,
 int exec_and_or(struct and_or *a_o, struct exec_struct *ex_l)
 {
     int res = exec_pipeline(a_o->pipeline, ex_l);
-    if (a_o->next == NULL)
+    if (a_o->next == NULL || res >= 1000)
         return res;
     else
         return exec_and_or_next(a_o->next, res, ex_l);
@@ -75,11 +75,15 @@ int exec_pipeline(struct pipeline *p, struct exec_struct *ex_l)
     if (p->next != NULL)
     {
         res = my_pipe(p->cmd, p->next, ex_l);
+        if ( res >= 1000)
+            return res;
         return p->negation == 0 ? res : !res;
     }
     else
     {
         res = exec_command(p->cmd, ex_l);
+        if ( res >= 1000)
+            return res;
         return p->negation == 0 ? res : !res;
     }
 }
@@ -244,7 +248,7 @@ int exec_compound_next(struct compound_next *cp_list, struct exec_struct *ex_l)
     int res = 0;
     if (cp_list->a_o != NULL)
         res = exec_and_or(cp_list->a_o, ex_l);
-    if (cp_list->next == NULL)
+    if (cp_list->next == NULL || res >= 1000)
         return res;
     else
         return exec_compound_next(cp_list->next, ex_l);
@@ -254,7 +258,7 @@ int exec_compound_next(struct compound_next *cp_list, struct exec_struct *ex_l)
 int exec_compound_list(struct compound_list *cp_list, struct exec_struct *ex_l)
 {
     int res = exec_and_or(cp_list->and_or, ex_l);
-    if (cp_list->next == NULL)
+    if (cp_list->next == NULL || res >= 1000)
         return res;
     else
         return exec_compound_next(cp_list->next, ex_l);
@@ -262,6 +266,7 @@ int exec_compound_list(struct compound_list *cp_list, struct exec_struct *ex_l)
 
 int exec_rule_for(struct rule_for *r_f, struct exec_struct *ex_l)
 {
+    ex_l->loop_nb++;
     int res = 0;
     for (int i = 0; i < r_f->wl_s; i++)
     {
@@ -271,25 +276,88 @@ int exec_rule_for(struct rule_for *r_f, struct exec_struct *ex_l)
         //            ;
         assign_var(r_f->word, r_f->word_list[i], ex_l);
         res = exec_do_group(r_f->do_gp, ex_l);
+        if (res >= 1000000)
+        {
+            if (res-- == 1000000)
+            {
+                res = 0;
+                break;
+            }
+            break;
+        }
+        if (res >= 1000)
+        {
+            if (res-- == 1000)
+            {
+                res = 0;
+                continue;
+            }
+            break;
+        }
     }
+    ex_l->loop_nb--;
     return res;
 }
 
 int exec_rule_while(struct rule_while *r_w, struct exec_struct *ex_l)
 {
     assert(r_w);
+    ex_l->loop_nb++;
     int res = 0;
     while (exec_compound_list(r_w->cp_list, ex_l) == 0)
+    {
         res = exec_do_group(r_w->do_gp, ex_l);
+        if (res >= 1000000)
+        {
+            if (res-- == 1000000)
+            {
+                res = 0;
+                break;
+            }
+            break;
+        }
+        if (res >= 1000)
+        {
+            if (res-- == 1000)
+            {
+                res = 0;
+                continue;
+            }
+            break;
+        }
+    }
+    ex_l->loop_nb--;
     return res;
 }
 
 int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
 {
     assert(r_u);
+    ex_l->loop_nb++;
     int res = 0;
     while (exec_compound_list(r_u->cp_list, ex_l) == 0)
+    {
         res = exec_do_group(r_u->do_gp, ex_l);
+        if (res >= 1000000)
+        {
+            if (res-- == 1000000)
+            {
+                res = 0;
+                break;
+            }
+                break;
+        }
+        if (res >= 1000)
+        {
+            if (res-- == 1000)
+            {
+                res = 0;
+                continue;
+            }
+                break;
+        }
+    }
+    ex_l->loop_nb--;
     return res;
 }
 

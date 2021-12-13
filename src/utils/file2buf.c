@@ -11,6 +11,8 @@
 
 char *file2buf(char *filename)
 {
+    if (filename == NULL)
+        return NULL;
     size_t len;
     FILE *fd = fopen(filename, "r");
     if (!fd)

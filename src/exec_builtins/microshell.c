@@ -7,7 +7,6 @@
 
 int microshell(char *cmd, char **argv)
 {
-    printf("--%s\n", cmd);
     int pid = fork();
     if (pid == -1)
         errx(1, "fork failed");

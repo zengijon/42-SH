@@ -52,6 +52,8 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
 
 int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x)
 {
+    if (buffer == NULL)
+        return 2;
     int res = 0;
     struct list *list;
     struct lexer *lex =

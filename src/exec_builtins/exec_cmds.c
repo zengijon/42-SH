@@ -6,6 +6,7 @@
 #include "../utils/usefull_fonction.h"
 #include "builtins/builtins.h"
 #include "microshell.h"
+#include "../utils/file2buf.h"
 
 char *all_cmd[] = { "ls", "pwd", "cat" };
 
@@ -65,6 +66,8 @@ int exec_function(int indic, char **parameters, struct exec_struct *e_x)
     return res;
 }
 
+int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x);
+
 int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
 {
     int indic = 0;
@@ -87,11 +90,21 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
     else if (strcmp(cmd, "export") == 0)
         return my_export(parameters, e_x);
     else if (strcmp(cmd, "continue") == 0)
-        return 0;
+    {
+        int val = (parameters[1] == NULL ? 1 : atoi(parameters[1])); // possible segfault when parameters[1] is NULL
+        if (val <= 0)
+            return 2;
+        return 1000 - 1 + (val > e_x->loop_nb ? e_x->loop_nb : val);
+    }
     else if (strcmp(cmd, "break") == 0)
-        return 0;
-    else if (strcmp(cmd, "dot") == 0)
-        return 0;
+    {
+        int val = parameters[1] == NULL ? 1 : atoi(parameters[1]); // possible segfault when parameters[1] is NULL
+        if (val <= 0)
+            return 2;
+        return 1000000 - 1 + (val > e_x->loop_nb ? e_x->loop_nb : val);
+    }
+    else if (strcmp(cmd, ".") == 0)
+        return exec_42sh(file2buf(parameters[1]), 0, e_x);
     else if (strcmp(cmd, "unset") == 0)
         return my_unset(parameters, e_x);
     else if (strcmp(cmd, "true") == 0)
