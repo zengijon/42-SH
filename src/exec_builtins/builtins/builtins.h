@@ -14,5 +14,5 @@ int my_cd(char **argv, struct exec_struct *e_x);
 int my_unset(char **params, struct exec_struct *e_x);
 int my_exit(char **parameters);
 int my_export(char **params, struct exec_struct *e_x);
-
+int my_pwd(struct exec_struct *e_x);
 #endif // INC_42SHEEEE_BUILTINS_H

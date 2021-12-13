@@ -116,6 +116,8 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
         return 0;
     else if (strcmp(cmd, "false") == 0)
         return 1;
+    else if (strcmp(cmd, "pwd") == 0)
+        return my_pwd(e_x);
     else if ((indic = indic_search_name(cmd, e_x)) != -1)
         return exec_function(indic, parameters, e_x);
     else

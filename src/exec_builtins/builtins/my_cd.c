@@ -9,25 +9,21 @@
 #include <err.h>
 #include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <sys/stat.h>
 #include <unistd.h>
-
-#include "../../struct/exec_struct.h"
 #include "../../memory/hmalloc.h"
 
 char *final_path(char *name, char *current_path)
 {
-    char *path = hcalloc(1, strlen(name) + strlen(current_path) + 7); // null terminated //possible segfault name= null
+    char *path = hcalloc(1, strlen(name) + strlen(current_path) + 18);
     path = strcat(path, current_path);
     if (current_path[strlen(current_path)] != '/')
         path = strcat(path, "/");
-    path = strcat(path, name); // path abs
+    path = strcat(path, name);
     return path;
 }
 
-size_t len_path(char *current_path)
+size_t len_path(const char *current_path)
 {
     size_t nb = 0;
     if (current_path != NULL)
@@ -46,26 +42,11 @@ int is_valid_dir(char *path)
     DIR *pDir = opendir(path);
     if (pDir == NULL)
     {
-        printf ("Cannot open directory\n");
+        //printf ("Cannot open directory\n");
         return 0;
     }
     closedir (pDir);
     return 1;
-}
-
-int is_valid_symlink(char *path)
-{
-    struct stat buf;
-
-    if (stat(path, &buf) < 0)
-    {
-        return 0;
-    }
-
-    if (S_ISLNK(buf.st_mode) == 1)
-        return 1;
-    else
-        return 0;
 }
 
 int is_valid_d_coma(char *arg, size_t nb_tok_path)
@@ -134,39 +115,65 @@ const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct
     if (arg[0] == '.')
     {
         if (strlen(arg) > 1 && isalpha(arg[1]) != 0)
-            return is_valid_dir(path) == 1 ? arg : NULL; // hidden dir
+            return is_valid_dir(path) == 1 ? arg : NULL;
 
-        return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL; // sequence of ../
+        return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL;
     }
     else
-    {
-//        if (is_valid_symlink(path) == 1)
-//        {
-//            return arg;
-//        }
         return is_valid_dir(path) == 1 ? arg : NULL;
+}
+
+void change_pwd_var(char *current_path, const char *arg_cd, struct exec_struct *e_x)
+{
+    if (strcmp(arg_cd, ".") == 0)
+        assign_var("OLDPWD", current_path, e_x);
+
+    else if (strcmp(arg_cd, "..") == 0 || strcmp(arg_cd, "../") == 0)
+    {
+        char s[2048] = { 0 };
+        getcwd(s, 2048);
+        assign_var("OLDPWD", s, e_x);
     }
+    else if (arg_cd[0] == '.' && arg_cd[1] == '.')
+    {
+        char s[2048] = { 0 };
+        getcwd(s, 2048);
+        assign_var("OLDPWD", s, e_x);
+    }
+    else if (strcmp(arg_cd, "-") == 0)
+        ;
+    else
+    {
+        char * temp = final_path(strdup(arg_cd), current_path);
+        assign_var("OLDPWD", temp, e_x);
+    }
+}
+
+int my_pwd(struct exec_struct *e_x)
+{
+    printf("%s\n",find_old_path(e_x, "OLDPWD"));
+    return 0;
 }
 
 int my_cd(char **argv, struct exec_struct *e_x)
 {
-    char s[2048] = { 0 };
     int need_pwd = 0;
-    char *current_path = getcwd(s, 2048);
+    char *current_path = find_old_path(e_x, "OLDPWD");
 
-    if (current_path == NULL)
-        errx(1, "getcwd failed");
     size_t len_current_path = len_path(current_path);
+
     const char *arg_cd = get_cd_arg(argv[1], current_path, len_current_path, e_x, &need_pwd);
 
     if (arg_cd == NULL)
-        errx(1, "This is not a valid operator"); //to be change
-    assign_var("OLDPWD", current_path, e_x);
+        errx(2, "This is not a valid operator");
+
     if (chdir(arg_cd) == -1)
-        errx(1, "Chdir failed");
+        errx(2, "Chdir failed");
+
+    change_pwd_var(current_path, arg_cd, e_x);
 
     if (need_pwd == 1)
-        printf("%s\n", getcwd(s, 2048));
+        printf("%s\n", current_path);
 
     return 0;
 }
