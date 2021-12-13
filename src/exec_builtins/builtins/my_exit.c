@@ -17,9 +17,9 @@ int my_exit(char **parameters)
         if (0 <= nb && 255 >= nb)
             exit(nb);
 
-        long long quotient = nb / 255;
-        long long res = nb % 255 - quotient;
-        printf("%lld\n",res);
+        long long res = nb % 255 - (nb / 255);
+
+        printf("%lld\n", res);
         exit(res);
     }
 }
