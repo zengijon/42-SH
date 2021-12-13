@@ -91,17 +91,5 @@
   input: exit 127
 
 - category: OTHER KIND OF TESTS
-  name:
-  input:
-
-- category: OTHER KIND OF TESTS
-  name:
-  input:
-
-- category: OTHER KIND OF TESTS
-  name:
-  input:
-
-- category: OTHER KIND OF TESTS
-  name:
-  input: 
+  name: while true
+  input: while true; do echo lol;  done
