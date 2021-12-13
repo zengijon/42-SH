@@ -456,10 +456,12 @@ struct token *lexer_pop(struct lexer *res)
         res->current_tok->value = value;
         res->end = k;
     }
+    struct token *tmp_token = lexer_peek(res);
+    if (res->current_tok->type != TOKEN_WORDS && tmp_token->type == TOKEN_WORDS)
+    {
+        res = generate_alias_(res, tmp_token);
+    }
     return tmp;
-    //     tok = lexer_pop(lexer);
-    //     printf("%d\n", tok->type); //9
-    //     tok = lexer_pop(lexer);
 }
 
 //int main(void)

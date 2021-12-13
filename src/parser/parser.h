@@ -1,9 +1,14 @@
 #pragma once
 
+#include <err.h>
+#include <fnmatch.h>
 #include <stdlib.h>
+#include <string.h>
 
+#include "../exec/variable_expention.h"
 #include "../lexer/lexer.h"
 #include "../lexer/token.h"
+#include "../memory/hmalloc.h"
 #include "../struct/grammar_struct.h"
 
 struct list_next *build_list_next(struct lexer *lex);

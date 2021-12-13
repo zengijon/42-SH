@@ -112,6 +112,8 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
         return exec_42sh(file2buf(parameters[1]), 0, e_x);
     else if (strcmp(cmd, "unset") == 0)
         return my_unset(parameters, e_x);
+    else if (strcmp(cmd, "alias") == 0)
+        return generate_alias(e_x, parameters);
     else if (strcmp(cmd, "true") == 0)
         return 0;
     else if (strcmp(cmd, "false") == 0)
@@ -121,7 +123,10 @@ int exec_builtins(char *cmd, char **parameters, struct exec_struct *e_x)
     else if ((indic = indic_search_name(cmd, e_x)) != -1)
         return exec_function(indic, parameters, e_x);
     else
-        return 127; // pb si la fonction n'existe plus il faut le dire et pas
+    {
+        fprintf(stderr, "%s: command not found\n", cmd);
+        return 127;
+    } // pb si la fonction n'existe plus il faut le dire et pas
                     // renvoye 127 + finir avec 0
 }
 
