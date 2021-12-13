@@ -1,6 +1,7 @@
 #pragma once
 
 #include <stddef.h>
+#include "token.h"
 // skip spaces
 size_t skipspace(const char *input);
 
@@ -25,4 +26,4 @@ struct lexer *gestion_redir(struct lexer *lexer, const char *input);
 
 struct lexer *build_command_sub(struct lexer *lexer, const char *input);
 
-struct lexer *generate_alias(struct lexer *lexer, struct token *token);
+struct lexer *generate_alias_(struct lexer *lexer, struct token *token);

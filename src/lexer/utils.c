@@ -201,7 +201,7 @@ const char *build_input(struct lexer *lexer, char *value, struct token *token)
 {
     int i = 0;
     char *buffer = hcalloc(strlen(value) + strlen(lexer->input) + 1, sizeof(char));
-    while (i != lexer->end)
+    while (i != (int) lexer->end)
     {
         buffer[i] = lexer->input[i];
         ++i;
@@ -211,7 +211,7 @@ const char *build_input(struct lexer *lexer, char *value, struct token *token)
     return buffer;
 }
 
-struct lexer *generate_alias(struct lexer *lexer, struct token *token)
+struct lexer *generate_alias_(struct lexer *lexer, struct token *token)
 {
     for (int i = 0; i < lexer->e_x->a_l_size; ++i)
     {

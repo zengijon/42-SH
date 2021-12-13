@@ -57,9 +57,9 @@ void add_alias_list(struct exec_struct *ex_l, char *name, char *value)
 
 int generate_alias(struct exec_struct *e_x, char **parameters)
 {
-    for (int i = 0; parameters[i] != 0; ++i)
+    for (int i = 1; parameters[i] != 0; ++i)
     {
-        if (parameters[i] || fnmatch("*=*", parameters[i], 0) != 0
+        if (fnmatch("*=*", parameters[i], 0) != 0
             || parameters[i][0] == '=')
             return 1;
         char *name = strtok(parameters[i], "=");

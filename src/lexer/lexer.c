@@ -1,4 +1,4 @@
-//#define _GNU_SOURCE //should be removed for mason
+#define _GNU_SOURCE //should be removed for mason
 
 #include "lexer.h"
 
@@ -459,7 +459,7 @@ struct token *lexer_pop(struct lexer *res)
     struct token *tmp_token = lexer_peek(res);
     if (res->current_tok->type != TOKEN_WORDS && tmp_token->type == TOKEN_WORDS)
     {
-        res = generate_alias(res, tmp_token);
+        res = generate_alias_(res, tmp_token);
     }
     return tmp;
 }
