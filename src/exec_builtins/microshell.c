@@ -17,5 +17,5 @@ int microshell(char *cmd, char **argv)
     int child_pid = waitpid(pid, &wstatus, 0);
     if (child_pid == -1)
         errx(2, "waitpid error");
-    return wstatus;
+    return wstatus > 127 ? 127 : wstatus;
 }
