@@ -63,10 +63,32 @@ int exec_and_or(struct and_or *a_o, struct exec_struct *ex_l)
 int exec_pipeline_next(struct pipeline_next *p,
                        struct exec_struct *ex_l) // argmument possibly missing
 {
+    int res;
     if (p->next != NULL)
-        return my_pipe(p->cmd, p->next, ex_l);
+    {
+        int pipefd[2];
+        pipe(pipefd);
+        struct redir *piperedir = hcalloc(1 , sizeof(struct redir));
+        esp_redir("1", my_itoa(pipefd[1], hcalloc(1,8)),piperedir,1);
+        exec_command(p->cmd, ex_l);
+        reinit_redir(piperedir);
+        piperedir = hcalloc(1 , sizeof(struct redir));
+        esp_redir("0",my_itoa(pipefd[0], hcalloc(1,8)),piperedir,1);
+        res = exec_pipeline_next(p->next, ex_l);
+        reinit_redir(piperedir);
+        if ( res >= 1000)
+            return res;
+        assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
+        return res;
+    }
     else
-        return exec_command(p->cmd, ex_l);
+    {
+        res = exec_command(p->cmd, ex_l);
+        if ( res >= 1000)
+            return res;
+        assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
+        return res;
+    }
 }
 
 int exec_pipeline(struct pipeline *p, struct exec_struct *ex_l)
@@ -74,7 +96,17 @@ int exec_pipeline(struct pipeline *p, struct exec_struct *ex_l)
     int res;
     if (p->next != NULL)
     {
-        res = my_pipe(p->cmd, p->next, ex_l);
+        int pipefd[2];
+        pipe(pipefd);
+        struct redir *piperedir = hcalloc(1 , sizeof(struct redir));
+        esp_redir("1", my_itoa(pipefd[1], hcalloc(1,8)),piperedir,1);
+        exec_command(p->cmd, ex_l);
+        reinit_redir(piperedir);
+        piperedir = hcalloc(1 , sizeof(struct redir));
+        esp_redir("0",my_itoa(pipefd[0], hcalloc(1,8)),piperedir,1);
+        res = exec_pipeline_next(p->next, ex_l);
+        reinit_redir(piperedir);
+
         if ( res >= 1000)
             return res;
         assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
