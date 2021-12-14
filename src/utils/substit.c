@@ -59,7 +59,7 @@ int exec_subshell2(char *buffer, struct exec_struct *e_x, char **buf)
         //*buf = hrealloc(*buf, le * 2 + 1);
     }
     char *tmp = hcalloc(strlen(*buf) + 8192, sizeof(char));
-    strncpy(tmp,*buf, strlen(*buf) - 1);
+    strncpy(tmp,*buf, ((int) strlen(*buf)) - 1 < 0 ? 0 : strlen(*buf) - 1);
     *buf = strcat(tmp, search_for_dollar(buffer + k, e_x));
     remove("fabbec_42");
     return res;
@@ -82,7 +82,7 @@ int exec_subshell(char *buffer, struct exec_struct *e_x, char **buf)
         //*buf = hrealloc(*buf, le * 2 + 1);
     }
     char *tmp = hcalloc(strlen(*buf) + 8192, sizeof(char));
-    strncpy(tmp,*buf, strlen(*buf) - 1);
+    strncpy(tmp,*buf, ((int) strlen(*buf)) - 1 < 0 ? 0 : strlen(*buf) - 1);
     *buf = strcat(tmp, search_for_dollar(buffer + k, e_x));
     remove("fabbec_42");
     return res;
