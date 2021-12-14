@@ -124,7 +124,7 @@ const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, i
             return is_valid_dir(path) == 1 ? arg : NULL;
 
         //return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL;
-        return is_valid_d_coma(arg) == 1 ? arg : NULL;
+        return arg; //is_valid_d_coma(arg) == 1 ? arg : NULL;
     }
     else
         return is_valid_dir(path) == 1 ? arg : NULL;
