@@ -1,4 +1,7 @@
-==============CD BASIC TEST================
+# CD TESTS WITH -c OPTION
+
+#==============CD BASIC TEST================
+
 - category: CD BASIC
   name: simple cd ..
   input: pwd; cd .. ; pwd
