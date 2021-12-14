@@ -80,12 +80,17 @@ char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
 { // unacurate buffer size
     char *res = hcalloc(1, dollar_ind - start + 8096);
     strncpy(res, start, dollar_ind - start - 1);
+    if (*(dollar_ind - 1) == '`')
+    {
+        char *buf = NULL;
+        exec_subshell2(dollar_ind, e_x, &buf); // valleur de retour peux échouer
+        return strcat(res, buf);
+    }
     if (dollar_ind[0] == '(' && dollar_ind[1] != '(')
     {
         char *buf = NULL;
         exec_subshell(dollar_ind + 1, e_x, &buf); // valleur de retour peux échouer
         return strcat(res, buf);
-        return buf;
     }
     char *rest = NULL;
     for (int i = 0; i < e_x->v_l_size; ++i)
@@ -116,7 +121,7 @@ char *search_for_dollar(char *word, struct exec_struct *e_x)
             double_ = !double_;
         if (double_ == 0 && word[i] == '\'')
             single = !single;
-        if (single == 0 && word[i] == '$' && word[i + 1] != '"'
+        if (single == 0 && (word[i] == '$' || word[i] == '`') && word[i + 1] != '"'
             && word[i + 1] != '\'' && word[i + 1] != '\\')
             return expend(word, word + i + 1, e_x);
     }

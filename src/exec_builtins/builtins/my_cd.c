@@ -178,7 +178,7 @@ int my_cd(char **argv, struct exec_struct *e_x)
 
     if (arg_cd == NULL)
     {
-        fprintf(stderr, "This is not a valid operator\n");
+        fprintf(stderr, "This is not a valid path name argument\n");
         return 2;
     }
 

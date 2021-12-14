@@ -77,6 +77,7 @@ int exec_pipeline(struct pipeline *p, struct exec_struct *ex_l)
         res = my_pipe(p->cmd, p->next, ex_l);
         if ( res >= 1000)
             return res;
+        assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
         return p->negation == 0 ? res : !res;
     }
     else
@@ -84,6 +85,7 @@ int exec_pipeline(struct pipeline *p, struct exec_struct *ex_l)
         res = exec_command(p->cmd, ex_l);
         if ( res >= 1000)
             return res;
+        assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
         return p->negation == 0 ? res : !res;
     }
 }
@@ -126,7 +128,10 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     //            if ((res = exec_redir(cmd->list_elt[i]->redirect, ex_l)) != 0)
     //                return res;
     if (cmd->size_elt < 1)
+    {
+        assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
         return res;
+    }
     char **list = hcalloc(cmd->size_elt + 1, sizeof(char *));
     int j = 0;
     for (int i = 0; i < cmd->size_elt; ++i)
@@ -141,6 +146,11 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
+    if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "continue") == 0)
+        assign_var("?","0", ex_l);
+    assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
+    if (res == 127)
+        fprintf(stderr, "%s: command not found\n", cmd->list_elt[0]->word);
     return res;
 }
 
