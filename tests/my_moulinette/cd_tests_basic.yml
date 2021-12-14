@@ -1,4 +1,4 @@
-==============CD BASIC TEST================
+#==============CD BASIC TEST================
 - category: CD BASIC
   name: simple cd ..
   input: pwd; cd .. ; pwd
