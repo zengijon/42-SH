@@ -19,7 +19,6 @@ int my_exit(char **parameters)
 
         long long res = nb % 255 - (nb / 255);
 
-        printf("%lld\n", res);
         exit(res);
     }
 }

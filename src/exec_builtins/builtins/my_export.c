@@ -39,16 +39,29 @@ char *find_value_with_name(struct exec_struct *e_x, char *name)
             return e_x->v_l[i].value;
     return NULL;
 }
-
+int is_equal(char *str)
+{
+    size_t len = strlen(str);
+    for (size_t i = 0; i < len; ++i)
+        if (str[i] == '=')
+            return 1;
+    return 0;
+}
 int exporting_var(char *params, struct exec_struct *e_x)
 {
-    char *name = strtok(params, "=");
+    char *name;
     char *value;
-    if (params == NULL)
-        value = find_value_with_name(e_x, params);
-
-    else
+    if (is_equal(params) == 1)
+    {
+        name = strtok(params, "=");
         value = strtok(NULL, "\0");
+    }
+    else
+    {
+        name = params;
+        value = find_value_with_name(e_x, params);
+    }
+
     setenv(name, value, 1);
     printf("export %s=%s\n", name, value);
     return 0;
