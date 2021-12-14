@@ -90,32 +90,3 @@
   name: var $IFS
   input: echo $IFS
 
-#==================VAR WITH UNSET=====================
-
-- category: WITH UNSET
-  name: unset a valid var with no option
-  input: a=1; unset a
-
-- category: WITH UNSET
-  name: unset var with an option
-  input: a=1; unset -v a
-
-- category: WITH UNSET
-  name: bad option
-  input: a=1; unset -f a
-  
-- category: WITH UNSET
-  name: unset an unvalid var
-  input: unset a
-
-- category: WITH UNSET
-  name: many unset
-  input: a=1; unset a; unset a; unset a; unset a; unset a; unset a; unset a; unset a; unset a; unset a ; unset a ;unset a ;unset a ; unset a ;unset a ;unset a ;unset a ;unset a 
-
-- category: WITH UNSET
-  name: no name
-  input: unset;
-
-- category: WITH UNSET
-  name: many no name unset
-  input: unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unsert; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; unset; ynset; unset; unset; unset; unset; unset; unset; unset; unset; unset;

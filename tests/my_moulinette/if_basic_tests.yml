@@ -83,9 +83,3 @@
 - category: IF BASIC
   name: echo if complicated wrong with final echo
   input: if echo fi; then echo then; fi ; echo test ;
-
-#============OTHER KIND OF BASIC TESTS============
-
-- category: OTHER KIND OF TESTS
-  name: exit 127
-  input: exit 127

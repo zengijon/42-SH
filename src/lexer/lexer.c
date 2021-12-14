@@ -1,4 +1,4 @@
-//#define _GNU_SOURCE //should be removed for mason
+#define _GNU_SOURCE // should be removed for mason
 
 #include "lexer.h"
 
@@ -20,17 +20,6 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
     res->pos = skipspace(input);
     res->current_tok = hcalloc(1, sizeof(struct token));
     struct separator *separator = build_separator_list();
-    int i = res->pos;
-    while (res->input[i] != '\0'
-           && (res->input[i] == ' '
-               || (res->input[i] == '\\'
-                   && (res->input[i + 1] == '\n' || res->input[i + 1] == '\t'))))
-    {
-        if (res->input[i] == '\\')
-            ++i;
-        i++;
-    }
-    res->pos = i;
     if (input[res->pos] == '\0')
         res->current_tok->type = TOKEN_EOF;
     else if (is_token(&input[res->pos], "if", 2) == 0
@@ -317,15 +306,8 @@ struct token *lexer_pop(struct lexer *res)
     tmp->type = res->current_tok->type;
     tmp->value = res->current_tok->value;
     size_t i = res->end;
-    while (res->input[i] != '\0'
-           && (res->input[i] == ' '
-               || (res->input[i] == '\\'
-                   && (res->input[i + 1] == '\n' || res->input[i + 1] == '\t'))))
-    {
-        if (res->input[i] == '\\')
-            ++i;
+    while (res->input[i] != '\0' && res->input[i] == ' ')
         i++;
-    }
     if (res->input[i] == '\0')
     {
         res->current_tok->type = TOKEN_EOF;
