@@ -1,6 +1,7 @@
 #pragma once
 
 #include "token.h"
+#include "../struct/exec_struct.h"
 
 struct lexer
 {
@@ -8,6 +9,7 @@ struct lexer
     size_t pos; ///< The current offset inside the input data
     size_t end; ///< end ok the token
     struct token *current_tok; ///< The next token, if processed
+    struct exec_struct *e_x;
 };
 
 struct separator
@@ -19,7 +21,7 @@ struct separator
 /**
  * \brief Creates a new lexer given an input string.
  */
-struct lexer *lexer_new(const char *input);
+struct lexer *lexer_new(const char *input, struct exec_struct *e_x);
 
 /**
  ** \brief Free the given lexer, but not its input.

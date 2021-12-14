@@ -108,7 +108,7 @@ int is_separator(const char *input, struct separator *separator)
 
 int is_token(const char *input, char *token, int n)
 {
-    char *test = hcalloc(n + 1, 1);
+    char *test = hcalloc(n + 1, 10);
     strcpy(test, token);
     if (strncmp(input, test, n) == 0)
         return 0;
@@ -194,5 +194,32 @@ struct lexer *build_command_sub(struct lexer *lexer, const char *input)
     if (input[i] == '\0')
         lexer->current_tok->type = TOKEN_ERROR;
     lexer->end = lexer->pos + i;
+    return lexer;
+}
+
+const char *build_input(struct lexer *lexer, char *value, struct token *token)
+{
+    int i = 0;
+    char *buffer = hcalloc(strlen(value) + strlen(lexer->input) + 1, sizeof(char));
+    while (i != (int) lexer->end)
+    {
+        buffer[i] = lexer->input[i];
+        ++i;
+    }
+    buffer = strcat(buffer, value);
+    buffer = strcat(buffer, &lexer->input[lexer->end + strlen(token->value)]);
+    return buffer;
+}
+
+struct lexer *generate_alias_(struct lexer *lexer, struct token *token)
+{
+    for (int i = 0; i < lexer->e_x->a_l_size; ++i)
+    {
+        if (strcmp(token->value, lexer->e_x->a_l[i].name) == 0)
+        {
+            const char *new_input = build_input(lexer, lexer->e_x->a_l[i].value, token);
+            lexer->input = new_input;
+        }
+    }
     return lexer;
 }

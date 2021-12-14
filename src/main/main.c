@@ -18,10 +18,10 @@ char *get_path(void)
 {
     char s[2048] = { 0 };
     getcwd(s, 2048);
-    if (s == NULL)
-        errx(1, "getcwd failed");
+//    if (s == NULL)
+//        errx(1, "getcwd failed");
 
-    char *res = hcalloc(1, strlen(s) + 1);
+    char *res = hcalloc(1, strlen(s) + 5);
 
     memccpy(res, s, '\0', strlen(s));
 
@@ -32,7 +32,7 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
 {
     char *A_starval = hcalloc(15536, 1);
     struct exec_struct *e_x = hcalloc(1, sizeof(struct exec_struct));
-    for (int i = optind; i <= argc - optind; ++i)
+    for (int i = optind; i < argc; ++i)
     {
         assign_var(my_itoa(i - optind, hcalloc(1, 8)), argv[i], e_x);
         if (i != optind)
@@ -45,17 +45,20 @@ struct exec_struct *build_exec_struct(int argc, char **argv)
     assign_var("#", my_itoa(argc - optind - 1, hcalloc(1, 8)), e_x);
     assign_var("$", my_itoa(getpid(), hcalloc(1, 8)), e_x);
     assign_var("IFS", "\n", e_x);
-    //assign_var("OLDPWD", get_path(),e_x);
-    //assign_var("PWD", get_path(), e_x);
+    assign_var("OLDPWD", get_path(),e_x);
+    assign_var("PWD", get_path(), e_x);
+    assign_var("HOME", getenv("HOME"), e_x);
     return e_x;
 }
 
 int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x)
 {
+    if (buffer == NULL)
+        return 2;
     int res = 0;
     struct list *list;
     struct lexer *lex =
-        lexer_new(expand_special_var(buffer, get_value_in_vl(e_x, "*")));
+        lexer_new(expand_special_var(buffer, get_value_in_vl(e_x, "*")), e_x);
 
     while ((list = build_list(lex)) != NULL)
     {
@@ -69,7 +72,15 @@ int exec_42sh(char *buffer, int pretty_print, struct exec_struct *e_x)
 int main(int argc, char **argv)
 {
     if (argc == 1)
-        return 0;
+    {
+        if (isatty(STDIN_FILENO) == 1)
+        {
+            fprintf(stderr, "need input to run a programme\n");
+            return 2;
+        }
+        char *buffer = stdin2buf();
+        return exec_42sh(buffer, 0, build_exec_struct(argc, argv));
+    }
     static const struct option longOpts[] = {
         { "pretty_print", no_argument, NULL, 'p' },
         { "cmd", required_argument, NULL, 'c' },
