@@ -5,10 +5,6 @@
   input: for i in {1..10}; do echo $i; done
 
 - category: FOR BASIC WEIRD TESTS
-  name: echo all files
-  input: for i in *; do echo $i; done
-
-- category: FOR BASIC WEIRD TESTS
   name: wrong syntax 3
   input: for bad do echo $bad; done
 
