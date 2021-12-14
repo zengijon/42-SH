@@ -47,7 +47,7 @@ int exec_subshell2(char *buffer, struct exec_struct *e_x, char **buf)
     int len;
     char *subshell_buff = build_shell_buffer2(buffer);
     int k = strlen(subshell_buff) - 11;
-    int res = exec_42sh(subshell_buff, 1, e_x);//include ??
+    int res = exec_42sh(subshell_buff, 0, e_x);//include ??
     FILE *file = fopen("fabbec_42", "r");
     int le = 0;
     *buf = hcalloc(100 + 8192, sizeof(char));
@@ -70,7 +70,7 @@ int exec_subshell(char *buffer, struct exec_struct *e_x, char **buf)
     int len;
     char *subshell_buff = build_shell_buffer(buffer);
     int k = strlen(subshell_buff) - 11;
-    int res = exec_42sh(subshell_buff, 1, e_x);//include ??
+    int res = exec_42sh(subshell_buff, 0, e_x);//include ??
     FILE *file = fopen("fabbec_42", "r");
     int le = 0;
     *buf = hcalloc(100 + 8192, sizeof(char));
