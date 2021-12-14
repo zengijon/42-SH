@@ -1,0 +1,101 @@
+#=============EXIT CODE============
+
+- category: EXIT CODE VERY BASIC
+  name: exit without arg
+  input: exit
+
+- category: EXIT CODE VERY BASIC
+  name: exit equal 0
+  input: exit 0
+
+- category: EXIT CODE VERY BASIC
+  name: exit code under 256
+  input: exit 50
+
+- category: EXIT CODE VERY BASIC
+  name: exit code under 256
+  input: exit 100
+
+- category: EXIT CODE VERY BASIC
+  name: exit code under 256
+  input: exit 200
+
+- category: EXIT CODE VERY BASIC
+  name: exit code under 256
+  input: exit 255
+
+- category: EXIT CODE
+  name: exit code greater than 255
+  input: exit 300
+
+- category: EXIT CODE
+  name: exit greater than 255
+  input: exit 400
+
+- category: EXIT CODE
+  name: exit code greater than 255
+  input: exit 500
+
+- category: EXIT CODE
+  name: exit greater than 255
+  input: exit 1 000
+
+- category: EXIT CODE
+  name: exit code greater than 1000
+  input: exit 1 500
+
+- category: EXIT CODE
+  name: exit code greater than 1000
+  input: exit 2 000
+
+- category: EXIT CODE
+  name: exit greater than 1000
+  input: exit 3 000
+
+- category: EXIT CODE
+  name: exit greater than 1000
+  input: exit 5 000
+
+- category: EXIT CODE HARD
+  name: exit code greater than 10000
+  input: exit 10 000
+
+- category: EXIT CODE HARD
+  name: exit greater than 10000
+  input: exit 20 000
+
+- category: EXIT CODE VERY HARD
+  name: exit code greater than 100000
+  input: exit 100 000
+
+- category: EXIT CODE VERY HARD
+  name: exit greater than 1000
+  input: exit 200 000
+
+- category: EXIT CODE HARDEST
+  name: exit lim code
+  input: exit 2147483647
+
+
+#===========EXIT IN SOMETHING===========
+
+- category: EXIT IN IF
+  name: exit is the condition
+  input: if exit 0 ; then; echo "ne devrait pas etre echo"; fi
+
+- category: EXIT IN IF
+  name: exit in the then
+  input: if echo 1; then; exit 255; fi
+
+- category: EXIT IN FOR
+  name: exit is in in
+  input: a=b; for a in b c d g exit; do ; echo $a; done
+
+- category: EXIT IN FOR
+  name: exit in for but expanded
+  input: for a in b c d $(exit 0); do; echo $a; done
+
+- category: EXIT IN WHILE
+  name: exit in the condition while
+  input: while $(exit 0); do ; echo ne devrait pas etre la; done
+

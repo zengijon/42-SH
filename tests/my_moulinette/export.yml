@@ -1,0 +1,34 @@
+#=====EXPORT=======
+
+- category: EASY EXPORT
+  name: simple var export
+  input: abc=non; export abc; echo $abc; unset abs;
+
+- category: VERIFY UNSET
+  name: veryfy if abs has been removed
+  input: abs
+
+- category: EASY EXPORT
+  name: export a variable which is exit
+  input: a=$(exit 0); export a; a
+
+- category: VERIFY EXPORT
+  name: unset the exit function
+  input: unset a
+
+- category: EXPORT FUNCTION
+  name: export a variable which is a function
+  input: a=$(echo truc); export a; a;unset a
+
+- category: EXPORT A NEW VAR
+  name: simple var
+  input: a=b; export a; echo $a; unset -v a
+
+- category: EXPORT A NEW VAR
+  name: export a echo
+  input: export a=$(echo truc); a; unset -v a
+
+- category: EXPORT A NEW VAR
+  name: var special
+  input: export a=$@; echo $a; unset a
+
