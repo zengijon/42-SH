@@ -4,7 +4,7 @@ fi
 
 
 ninja -C builddir
-cp builddir/42sh tests/my_moulinette/
+cp builddir/42sh tests/my_moulinette/42sh
 cd tests/my_moulinette/
 rm -rf *~
 if [ $# -ne 1 ]
