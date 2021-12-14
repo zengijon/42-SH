@@ -13,6 +13,7 @@
 int my_pipe(struct command *cmd, struct pipeline_next *next,
             struct exec_struct *e_x) /// mis des const
 {
+    int res;
     pid_t child_pid;
     pid_t child_pid2;
 
@@ -56,7 +57,7 @@ int my_pipe(struct command *cmd, struct pipeline_next *next,
 
             /// execute la commande de right_side
             exec_pipeline_next(next, e_x);
-            exit(0);
+            exit(exec_pipeline_next(next, e_x));
             ///
         }
         else
@@ -67,9 +68,9 @@ int my_pipe(struct command *cmd, struct pipeline_next *next,
 
             if (val2 == -1)
                 errx(2, "Waitpid 2 failed");
-
+            res = wstatus;
             close(pipefd[0]);
         }
     }
-    return 0;
+    return res;
 }
