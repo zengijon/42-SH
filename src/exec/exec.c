@@ -143,14 +143,14 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), list,
                     ex_l); // Not in this file
+    if (res >= 127)
+        fprintf(stderr, "%s: command not found\n", cmd->list_elt[0]->word);
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
     if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "continue") == 0)
         assign_var("?","0", ex_l);
     assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
-    if (res == 127)
-        fprintf(stderr, "%s: command not found\n", cmd->list_elt[0]->word);
     return res;
 }
 
@@ -200,7 +200,7 @@ int exec_redir(struct redirection *r, struct exec_struct *ex_l)
     ex_l->r_l = hrealloc(ex_l->r_l, ++ex_l->r_l_size * sizeof(struct redir));
     if (fnmatch("*<", r->redir_type, 0) == 0)
         return simple_redir(strtok(r->redir_type, "><|& "), r->word,
-                            &ex_l->r_l[ex_l->r_l_size - 1], "w");
+                            &ex_l->r_l[ex_l->r_l_size - 1], "r");
     if (fnmatch("*>&", r->redir_type, 0) == 0)
         return esp_redir(strtok(r->redir_type, "><|& "), r->word,
                          &ex_l->r_l[ex_l->r_l_size - 1], 1);
