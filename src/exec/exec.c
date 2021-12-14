@@ -149,6 +149,8 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "continue") == 0)
         assign_var("?","0", ex_l);
     assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
+    if (res == 127)
+        fprintf(stderr, "%s: command not found\n", cmd->list_elt[0]->word);
     return res;
 }
 

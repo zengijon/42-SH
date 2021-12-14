@@ -12,7 +12,10 @@
 char *file2buf(char *filename)
 {
     if (filename == NULL)
+    {
+        fprintf(stderr, "missing argument for source\n");
         return NULL;
+    }
     size_t len;
     FILE *fd = fopen(filename, "r");
     if (!fd)

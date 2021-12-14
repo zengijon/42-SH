@@ -415,7 +415,7 @@ struct rule_for *build_rule_for(struct lexer *lex)
             res->word_list =
                 hrealloc(res->word_list, ++(res->wl_s) * sizeof(char *));
             res->word_list[res->wl_s - 1] = lexer_pop(lex)->value;
-            //            printf("%s", res->word_list[res->wl_s - 1]);
+            //           printf("%s", res->word_list[res->wl_s - 1]);
         }
         if (lex->current_tok->type != TOKEN_PTCOMA
             && lex->current_tok->type != TOKEN_NEWLINE)
