@@ -70,5 +70,18 @@
 
 - category: PIPE BASIC
   name: erreur qui n'a rien a faire la
-  input: if true; then echo ok; fi | if true then echo ko fi | if true; then echo ko; fi
-  
+  input: if true; then echo ok; fi | if true then echo ko fi | if true; then echo ko; fi 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+- category: PIPE BASIC
+  name:
+  input: 
+
+

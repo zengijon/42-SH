@@ -1,4 +1,4 @@
-#=============FUNCTION BASIC TESTS==============
+=============FUNCTION BASIC TESTS==============
 
 - category: FUNCTION BASIC
   name: simple function call
@@ -12,7 +12,7 @@
   name: function with an if
   input: fun(); { \n if echo 1 ; then ; echo non; fi \n} \n fun
 
-#===========FUNCTION WITH UNSET================
+===========FUNCTION WITH UNSET================
 
 - category: FUCNTION WITH UNSET BASIC
   name: simple unset check the return code

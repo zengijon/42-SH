@@ -7,11 +7,16 @@ from typing import cast
 import termcolor
 import yaml
 
-basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cmd_echo_tests.yml", "cd_tests_basic.yml", "cmd_for_tests.yml", "cmd_pipe.yml", "function_basic.yml", "pipe_basic_tests.yml", "exit.yml", "export.yml"]
+basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cmd_echo_tests.yml"]
 error_files = ["if_error_tests.yml", "cmd_error_var.yml"]
 hard_files = []
+<<<<<<< HEAD
+script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh", 
+                "shell_script/complex_script/pipe_if_for.sh", "shell_script/complex_script/pipe_if_for_2.sh", "shell_script/complex_script/pipe_if_for_3.sh"]
+=======
 script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh", "shell_script/complex_script/pipe_if_for.sh", 
                 "shell_script/complex_script/pipe_if_for_2.sh", "shell_script/complex_script/pipe_if_for_3.sh", "shell_script/redir/pipe.sh", "shell_script/redir/redir_basics.sh", "shell_script/for/simple_for_1.sh"]
+>>>>>>> 788fac083e8f375d8223dd0c1cb283e4344fd3e3
 
 TEST_OK = f"[ {termcolor.colored('OK', 'green')} ]"
 TEST_KO = f"[ {termcolor.colored('KO', 'red')} ]"
@@ -41,7 +46,7 @@ def my_diff(expected: str, actual: str):
 
 
 def running(shell: str, stdin: str) -> sp.CompletedProcess:
-    return sp.run([shell], input=stdin, capture_output=True, text=True, timeout=1)
+    return sp.run([shell], input=stdin, capture_output=True, text=True, timeout=1, shell=True)
 
 
 def running_process(shell: str, stdin: str) -> sp.CompletedProcess:
@@ -55,7 +60,7 @@ def my_check_output(expected: sp.CompletedProcess, actual: sp.CompletedProcess, 
         flag += 1
 
     if (flag == 0):
-        print(f"{TEST_OK} {name}")
+        print(f"{TEST_OK} {name}\n")
     else:
         print(f"{TEST_KO} {name}\n")
         print(f"INPUT: {input}")
@@ -89,38 +94,61 @@ if __name__ == "__main__":
 
     cat = ""
 
+
+
     for file_test in tests_files:
 
-        with open(file_test, "r") as our_yaml:
-            tests_list = list(yaml.safe_load(our_yaml))
+        if type_of_test == "script":
+            list_path = file_test.split("/")
+            name_script = list_path[len(list_path) - 1]
 
-        for test in tests_list:
             flag_timeout = 0
-            if cat != test["category"]:
-                cat = test["category"]
-                print(f"\n============{cat}============")
 
-            our_input = test["input"]
-            name = test["name"]
             try:
-                process_dash = running("dash", our_input)
+                process_dash = running("dash", file_test)
             except sp.TimeoutExpired:
                 flag_timeout += 1
 
-            if type_of_test == "script":
+            try:
+                process_42sh = sp.run(['./42sh', file_test], capture_output=True, text=True, timeout=1)
+            except sp.TimeoutExpired:
+                flag_timeout += 1
+
+            if flag_timeout == 1:
+                print(f"{TEST_KO} {name_script}\n One of them timed out...\n")
+            elif flag_timeout == 2:
+                print(f"{TEST_OK} {name_script}\n")
+            else:
+                my_check_output(process_dash, process_42sh, 0, name_script, file_test)
+
+        else:
+
+
+            with open(file_test, "r") as our_yaml:
+                tests_list = list(yaml.safe_load(our_yaml))
+
+            for test in tests_list:
+                flag_timeout = 0
+                if cat != test["category"]:
+                    cat = test["category"]
+                    print(f"\n============{cat}============")
+
+                our_input = test["input"]
+                name = test["name"]
+
                 try:
-                    process_42sh = running(path_42sh, our_input)
+                    process_dash = running("dash", our_input)
                 except sp.TimeoutExpired:
                     flag_timeout += 1
-            else:
+
                 try:
                     process_42sh = running_process(path_42sh, our_input)
                 except sp.TimeoutExpired:
                     flag_timeout += 1
 
-            if flag_timeout == 1:
-                print(f"{TEST_KO} {name}\n")
-            elif flag_timeout == 2:
-                print(f"{TEST_OK} {name}")
-            else:
-                my_check_output(process_dash, process_42sh, 0, name, our_input)
+                if flag_timeout == 1:
+                    print(f"{TEST_KO} {name}\n")
+                elif flag_timeout == 2:
+                    print(f"{TEST_OK} {name}")
+                else:
+                    my_check_output(process_dash, process_42sh, 0, name, our_input)

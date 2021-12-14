@@ -20,5 +20,5 @@
 
 - category: PIPE BASIC TESTS
   name: pipe bracket
-  input: \{ echo te | cat | cat ; \} | cat -e
+  input: { echo te | cat | cat ; } | cat -e
 

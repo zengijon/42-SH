@@ -1,9 +1,0 @@
-echo "Hello" > test
-cat < message
-echo "Error" 1>&2
-echo "Error" >&2
-echo "Sorry" > test
-cat test
-echo "At the End" >> test
-cat test
-echo "test" >> test2
