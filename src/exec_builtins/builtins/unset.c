@@ -9,7 +9,8 @@
 
 int remove_var(int i, struct exec_struct *e_x)
 {
-    assign_var(e_x->v_l[i].name, hcalloc(1, 1), e_x);
+    if (unsetenv(e_x->v_l[i].name) == -1)
+        assign_var(e_x->v_l[i].name, hcalloc(1, 1), e_x);
     return 0;
 }
 
@@ -29,10 +30,12 @@ int remove_elt(struct exec_struct *e_x, char *name)
 
 int my_unset(char **params, struct exec_struct *e_x) // print d'une maniere speciale les variables set dans l'environement
 {
-    if (params[1] == NULL || params[2] == NULL)
+    if (params[1] == NULL)
         return 0;
     if (strcmp(params[1], "-v") == 0)
     {
+        if (params[2] == NULL)
+            return 0;
         for (int i = 0; e_x->v_l_size; ++i)
         {
             if (e_x->v_l[i].name == NULL)
@@ -43,6 +46,8 @@ int my_unset(char **params, struct exec_struct *e_x) // print d'une maniere spec
     }
     else if (strcmp(params[1], "-f") == 0)
     {
+        if (params[2] == NULL)
+            return 0;
         for (int i = 0; e_x->f_l_len; ++i)
         {
             if (e_x->f_l[i].name == NULL)
