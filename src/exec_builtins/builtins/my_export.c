@@ -64,6 +64,7 @@ int exporting_var(char *params, struct exec_struct *e_x)
 
     setenv(name, value, 1);
     //printf("export %s=%s\n", name, value);
+    ///////
     return 0;
 }
 
