@@ -7,7 +7,7 @@ from typing import cast
 import termcolor
 import yaml
 
-basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cd_tests_basic.yml", "cmd_for_tests.yml", "cmd_pipe.yml", "function_basic.yml", "pipe_basic_tests.yml"]
+basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cd_tests_basic.yml", "cmd_for_tests.yml", "cmd_pipe.yml", "function_basic.yml", "pipe_basic_tests.yml", "export.yml", "exit.yml"]
 error_files = ["if_error_tests.yml", "cmd_error_var.yml"]
 hard_files = []
 script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh", "shell_script/complex_script/pipe_if_for.sh", 
