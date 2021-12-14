@@ -36,7 +36,7 @@ int my_unset(char **params, struct exec_struct *e_x) // print d'une maniere spec
     {
         if (params[2] == NULL)
             return 0;
-        for (int i = 0; e_x->v_l_size; ++i)
+        for (int i = 0; i < e_x->v_l_size; ++i)
         {
             if (e_x->v_l[i].name == NULL)
                 break;

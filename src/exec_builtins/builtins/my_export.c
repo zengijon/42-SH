@@ -62,7 +62,11 @@ int exporting_var(char *params, struct exec_struct *e_x)
         value = find_value_with_name(e_x, params);
     }
 
+    if (name == NULL || value == NULL)
+        return 0;
     setenv(name, value, 1);
+    //printf("export %s=%s\n", name, value);
+    /////
 
     return 0;
 }
