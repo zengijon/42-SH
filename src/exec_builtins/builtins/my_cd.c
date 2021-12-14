@@ -60,7 +60,7 @@ int is_valid_d_coma(char *arg)
         while (i < len)
         {
             //if (count >= nb_tok_path)
-                //errx(1, "sequence of ../ is too long");
+                //errx(2, "sequence of ../ is too long");
 
             if (arg[i] == '.' && i + 1 < len && arg[i + 1] == '.')
             {
@@ -104,7 +104,10 @@ const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, i
     {
         char *old_path = find_e_x(e_x, "OLDPWD");
         if (old_path == NULL)
-            errx(1, "OLDPWD not inizialized");
+        {
+            fprintf(stderr, "OLDPWD not inizialized\n");
+            return NULL;
+        }
         *need_pwd = 1;
         return old_path;
     }
@@ -121,7 +124,7 @@ const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, i
             return is_valid_dir(path) == 1 ? arg : NULL;
 
         //return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL;
-        return is_valid_d_coma(arg) == 1 ? arg : NULL;
+        return arg; //is_valid_d_coma(arg) == 1 ? arg : NULL;
     }
     else
         return is_valid_dir(path) == 1 ? arg : NULL;
@@ -175,7 +178,7 @@ int my_cd(char **argv, struct exec_struct *e_x)
 
     if (arg_cd == NULL)
     {
-        fprintf(stderr, "This is not a valid operator\n");
+        fprintf(stderr, "This is not a valid path name argument\n");
         return 2;
     }
 

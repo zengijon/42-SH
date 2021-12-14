@@ -12,11 +12,14 @@
 char *file2buf(char *filename)
 {
     if (filename == NULL)
+    {
+        fprintf(stderr, "missing argument for source\n");
         return NULL;
+    }
     size_t len;
     FILE *fd = fopen(filename, "r");
     if (!fd)
-        errx(1, "file doesnt exist");
+        errx(2, "file doesnt exist");
     char *buffer = hcalloc(101, sizeof(char));
     size_t le = 0;
     while ((len = fread(buffer + le, 1, 100, fd)) && (int)len != 0)

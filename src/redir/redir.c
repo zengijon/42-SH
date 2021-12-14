@@ -41,13 +41,14 @@ void reinit_redir(struct redir *redir)
     close(redir->old_fd);
     dup2(redir->new_fd, redir->old_fd);
     close(redir->new_fd);
-    fclose(redir->file);
+    if (redir->file != NULL)
+        fclose(redir->file);
 }
 
 int append_redir(char *io, char *file, struct redir *redir) // >>
 {
     int io_nb;
-    if (io[0] == '\0')
+    if (io == NULL)
         io_nb = 1;
     else
         io_nb = atoi(io);

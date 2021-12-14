@@ -28,7 +28,7 @@ struct rule_case *build_case(struct lexer *lex)
 
         if (lex->current_tok->type != TOKEN_WORDS
             || strcmp("in", lex->current_tok->value) != 0)
-            errx(1, "Missing in in case");
+            errx(2, "Missing in in case");
         lexer_pop(lex);
 
         while (lex->current_tok->type = TOKEN_NEWLINE)
@@ -41,7 +41,7 @@ struct rule_case *build_case(struct lexer *lex)
         lexer_pop(lex);
         return res;
     }
-    errx(1, "Missing word after case");
+    errx(2, "Missing word after case");
 }
 
 struct case_clause *build_case_clause(struct lexer *lex)
@@ -96,7 +96,7 @@ struct case_item *build_case_item(struct lexer *lex)
     return res;
 }
 if (is_smth)
-    errx(1, "missing word after (");
+    errx(2, "missing word after (");
 else
     return NULL;
 }

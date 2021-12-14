@@ -22,7 +22,7 @@ int my_pipe(struct command *cmd, struct pipeline_next *next,
     child_pid = fork();
 
     if (child_pid == -1)
-        errx(1, "fork failed");
+        errx(2, "fork failed");
 
     if (child_pid == 0)
     {
@@ -41,12 +41,12 @@ int my_pipe(struct command *cmd, struct pipeline_next *next,
         int wstatus;
         int val = waitpid(child_pid, &wstatus, 0);
         if (val == -1)
-            errx(1, "Waitpid failed");
+            errx(2, "Waitpid failed");
 
         child_pid2 = fork();
 
         if (child_pid2 == -1)
-            errx(1, "fork 2 failed");
+            errx(2, "fork 2 failed");
 
         if (child_pid2 == 0)
         {
@@ -66,7 +66,7 @@ int my_pipe(struct command *cmd, struct pipeline_next *next,
             int val2 = waitpid(child_pid2, &wstatus2, 0);
 
             if (val2 == -1)
-                errx(1, "Waitpid 2 failed");
+                errx(2, "Waitpid 2 failed");
 
             close(pipefd[0]);
         }

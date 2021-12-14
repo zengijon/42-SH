@@ -9,13 +9,13 @@ int microshell(char *cmd, char **argv)
 {
     int pid = fork();
     if (pid == -1)
-        errx(1, "fork failed");
+        errx(2, "fork failed");
     if (pid == 0)
         exit(execvp(cmd, argv));
 
     int wstatus;
     int child_pid = waitpid(pid, &wstatus, 0);
     if (child_pid == -1)
-        errx(1, "waitpid error");
+        errx(2, "waitpid error");
     return wstatus;
 }

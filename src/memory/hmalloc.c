@@ -6,7 +6,7 @@ void *hmalloc(size_t size)
 {
     void *ptr = malloc(size);
     if (!ptr)
-        errx(1, "memory exausted");
+        errx(2, "memory exausted");
     list_add(ptr);
     return ptr;
 }
@@ -15,7 +15,7 @@ void *hcalloc(size_t nmb, size_t size)
 {
     void *ptr = calloc(nmb, size);
     if (!ptr)
-        errx(1, "memory exausted");
+        errx(2, "memory exausted");
     list_add(ptr);
     return ptr;
 }
@@ -24,7 +24,7 @@ void *hrealloc(void *ptr, size_t size)
 {
     void *ptr2 = realloc(ptr, size * sizeof(char *));
     if (!ptr2)
-        errx(1, "memory exausted");
+        errx(2, "memory exausted");
     list_add(ptr2);
     if (ptr != NULL)
         list_remove(ptr);

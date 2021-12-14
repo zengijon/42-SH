@@ -149,6 +149,8 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "continue") == 0)
         assign_var("?","0", ex_l);
     assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
+    if (res == 127)
+        fprintf(stderr, "%s: command not found\n", cmd->list_elt[0]->word);
     return res;
 }
 
@@ -162,7 +164,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         int wstatus;
         int child_pid = waitpid(pid, &wstatus, 0);
         if (child_pid == -1)
-            errx(1, "error in subshell wait");
+            errx(2, "error in subshell wait");
         while (ex_l->r_l_size-- > 0)
             reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
         ex_l->r_l_size = 0;
@@ -196,14 +198,9 @@ int exec_redir(struct redirection *r, struct exec_struct *ex_l)
     if (r == NULL)
         return 0;
     ex_l->r_l = hrealloc(ex_l->r_l, ++ex_l->r_l_size * sizeof(struct redir));
-    if (fnmatch("*>", r->redir_type, 0) == 0
-        || fnmatch("<>", r->redir_type, 0) == 0
-        || fnmatch(">|", r->redir_type, 0) == 0)
-        return simple_redir(strtok(r->redir_type, "><|& "), r->word,
-                            &ex_l->r_l[ex_l->r_l_size - 1], "w");
     if (fnmatch("*<", r->redir_type, 0) == 0)
         return simple_redir(strtok(r->redir_type, "><|& "), r->word,
-                            &ex_l->r_l[ex_l->r_l_size - 1], "w");
+                            &ex_l->r_l[ex_l->r_l_size - 1], "r");
     if (fnmatch("*>&", r->redir_type, 0) == 0)
         return esp_redir(strtok(r->redir_type, "><|& "), r->word,
                          &ex_l->r_l[ex_l->r_l_size - 1], 1);
@@ -213,6 +210,11 @@ int exec_redir(struct redirection *r, struct exec_struct *ex_l)
     if (fnmatch("*>>", r->redir_type, 0) == 0)
         return append_redir(strtok(r->redir_type, "><|& "), r->word,
                             &ex_l->r_l[ex_l->r_l_size - 1]);
+    if (fnmatch("*>", r->redir_type, 0) == 0
+        || fnmatch("<>", r->redir_type, 0) == 0
+        || fnmatch(">|", r->redir_type, 0) == 0)
+        return simple_redir(strtok(r->redir_type, "><|& "), r->word,
+                            &ex_l->r_l[ex_l->r_l_size - 1], "w");
     assert(0);
 }
 

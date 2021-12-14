@@ -40,7 +40,7 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
         lexer->current_tok->value = str;
     }
     else
-        errx(1, "missing single quote");
+        errx(2, "missing single quote");
     return lexer;
 }
 

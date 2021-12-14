@@ -19,7 +19,7 @@ char *get_path(void)
     char s[2048] = { 0 };
     getcwd(s, 2048);
 //    if (s == NULL)
-//        errx(1, "getcwd failed");
+//        errx(2, "getcwd failed");
 
     char *res = hcalloc(1, strlen(s) + 5);
 
@@ -110,11 +110,11 @@ int main(int argc, char **argv)
             pretty_print = 1;
             break;
         default:
-            errx(1, "bad option");
+            errx(2, "bad option");
         }
     }
     if (!c && argc <= optind)
-        errx(1, "missing argv"); // errx(1, "missing parameter"); //handel
+        errx(2, "missing argv"); // errx(2, "missing parameter"); //handel
                                  // reading stdin
     if (!c)
         buffer = file2buf(argv[optind]);
