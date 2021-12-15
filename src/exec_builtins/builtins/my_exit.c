@@ -12,7 +12,7 @@ int is_number(char *word)
 {
     for (size_t i = 0; i < strlen(word); ++i)
     {
-        if ('0' >= word[i] && word[i] <= '9')
+        if ('0' <= word[i] && word[i] <= '9')
             ;
         else
             return 0;

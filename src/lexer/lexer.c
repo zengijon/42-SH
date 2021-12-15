@@ -129,6 +129,11 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
         res->current_tok->type = TOKEN_PA_OPEN;
         res->end = res->pos + 1;
     }
+    else if (input[res->pos] == '!')
+    {
+        res->current_tok->type = TOKEN_NEG;
+        res->end = res->pos + 1;
+    }
     else if (input[res->pos] == ')')
     {
         res->current_tok->type = TOKEN_PA_CLOSE;
