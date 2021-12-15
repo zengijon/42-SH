@@ -23,66 +23,14 @@ char *final_path(char *name, char *current_path)
     return path;
 }
 
-//size_t len_path(const char *current_path)
-//{
-//    size_t nb = 0;
-//    if (current_path != NULL)
-//    {
-//        for (int i = 0; current_path[i] != '\0'; ++i)
-//        {
-//            if (current_path[i] == '/')
-//                nb+= 1;
-//        }
-//    }
-//    return nb;
-//}
-
 int is_valid_dir(char *path)
 {
     DIR *pDir = opendir(path);
     if (pDir == NULL)
-    {
-        //printf ("Cannot open directory\n");
         return 0;
-    }
+
     closedir (pDir);
     return 1;
-}
-
-//int is_valid_d_coma(char *arg, size_t nb_tok_path);
-int is_valid_d_coma(char *arg)
-{
-    size_t len = strlen(arg);
-    size_t count = 0;
-    size_t i = 0;
-    if (len % 3 == 0)
-    {
-        while (i < len)
-        {
-            //if (count >= nb_tok_path)
-                //errx(2, "sequence of ../ is too long");
-
-            if (arg[i] == '.' && i + 1 < len && arg[i + 1] == '.')
-            {
-                i += 2;
-                if (i <= len && arg[i] == '/')
-                {
-                    i++;
-                    count++;
-                }
-                else
-                {
-                    if (i != len)
-                        return 0;
-                    return 1; // can finish without a /
-                }
-            }
-            else
-                return 0;
-        }
-        return 1;
-    }
-    return 0; // not a sequence of ../
 }
 
 char *find_e_x(struct exec_struct *e_x, char *name)
@@ -93,13 +41,14 @@ char *find_e_x(struct exec_struct *e_x, char *name)
     return NULL;
 }
 
-//const char *get_cd_arg(char *arg, char *current_path, size_t nb_tok_path, struct exec_struct *e_x, int *need_pwd);
 const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, int *need_pwd)
 
 {
     if (arg == NULL || strcmp(arg, ";") == 0)
         return find_e_x(e_x, "HOME");
+
     char *path = final_path(arg, current_path);
+
     if (strcmp(arg, "-") == 0)
     {
         char *old_path = find_e_x(e_x, "OLDPWD");
@@ -123,8 +72,7 @@ const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, i
         if (strlen(arg) > 1 && isalpha(arg[1]) != 0)
             return is_valid_dir(path) == 1 ? arg : NULL;
 
-        //return is_valid_d_coma(arg, nb_tok_path) == 1 ? arg : NULL;
-        return arg; //is_valid_d_coma(arg) == 1 ? arg : NULL;
+        return arg; // suite de ../../  blabla
     }
     else
         return is_valid_dir(path) == 1 ? arg : NULL;
@@ -132,49 +80,62 @@ const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, i
 
 void change_pwd_var(char *current_path, const char *arg_cd, struct exec_struct *e_x)
 {
-    if (strcmp(arg_cd, ".") == 0 || strcmp(arg_cd, ";") == 0)
-        assign_var("OLDPWD", current_path, e_x);
-
-    else if (strcmp(arg_cd, "..") == 0 || strcmp(arg_cd, "../") == 0)
+    if (strcmp(arg_cd, ".") == 0 || strcmp(arg_cd, ";") == 0) // on ne change pas de working dir
     {
-        char s[2048] = { 0 };
-        getcwd(s, 2048);
-        assign_var("OLDPWD", s, e_x);
+        assign_var("OLDPWD", find_e_x(e_x, "PWD"), e_x);
     }
-    else if (arg_cd[0] == '.' && arg_cd[1] == '.')
+
+    else if (strcmp(arg_cd, "..") == 0 || strcmp(arg_cd, "../") == 0) // on recule de 1
     {
-        char s[2048] = { 0 };
-        getcwd(s, 2048);
-        assign_var("OLDPWD", s, e_x);
+        char *s = getenv("PWD");
+        assign_var("OLDPWD", find_e_x(e_x, "PWD"), e_x);
+        assign_var("PWD", s, e_x);
+    }
+    else if (arg_cd[0] == '.' && arg_cd[1] == '.') // str de ../
+    {
+        char *s = getenv("PWD");
+        assign_var("OLDPWD", find_e_x(e_x, "PWD"), e_x);
+        assign_var("PWD", s, e_x);
     }
     else if (strcmp(arg_cd, "-") == 0)
-        ;
+    {
+        char *temp = find_e_x(e_x, "OLDPWD");
+        assign_var("OLDPWD", find_e_x(e_x, "PWD"), e_x);
+        assign_var("PWD", temp, e_x);
+    }
     else if (strcmp(arg_cd, find_e_x(e_x, "OLDPWD")) == 0)
-        ;
+    {
+        char *temp = find_e_x(e_x, "OLDPWD");
+        assign_var("OLDPWD", find_e_x(e_x, "PWD"), e_x);
+        assign_var("PWD", temp, e_x);
+    }
     else if (strcmp(arg_cd, find_e_x(e_x, "HOME")) == 0)
-        ;
+    {
+        char *temp = find_e_x(e_x, "PWD");
+        assign_var("PWD", (char *) arg_cd, e_x);
+        assign_var("OLDPWD", temp, e_x);
+    }
     else
     {
-        char * temp = final_path((char *)arg_cd, current_path);
+        char *temp = find_e_x(e_x, "PWD");
+        char *res = final_path((char *)arg_cd, current_path);
         assign_var("OLDPWD", temp, e_x);
+        assign_var("PWD", res, e_x);
     }
 }
 
 int my_pwd(struct exec_struct *e_x)
 {
-    printf("%s\n",find_e_x(e_x, "OLDPWD"));
+    printf("%s\n",find_e_x(e_x, "PWD"));
     return 0;
 }
-///// si on lit un fichier dans le main on lit le path du sh et pas du fichier
+
 int my_cd(char **argv, struct exec_struct *e_x)
 {
     int need_pwd = 0;
-    char *current_path = find_e_x(e_x, "OLDPWD");
+    char *current_path = find_e_x(e_x, "PWD"); // path avant changement
 
-    //size_t len_current_path = len_path(current_path);
-
-    //const char *arg_cd = get_cd_arg(argv[1], current_path, len_current_path, e_x, &need_pwd);
-    const char *arg_cd = get_cd_arg(argv[1], current_path, e_x, &need_pwd);
+    const char *arg_cd = get_cd_arg(argv[1], current_path, e_x, &need_pwd); // arg apres cd valid ou pas
 
     if (arg_cd == NULL)
     {
@@ -182,17 +143,17 @@ int my_cd(char **argv, struct exec_struct *e_x)
         return 2;
     }
 
-    if (chdir(arg_cd) == -1)
+    char *temp = final_path((char *) arg_cd, current_path);
+    if (chdir(arg_cd) == -1) // change le working dir
     {
-        fprintf(stderr, "Chdir failed\n");
-        return 2;
+        if (chdir(temp) == -1)
+        {
+            fprintf(stderr, "Chdir failed\n");
+            return 2;
+        }
     }
 
-    change_pwd_var(current_path, arg_cd, e_x);
-
-//    char s[2048] = { 0 };
-//    getcwd(s, 2048);
-//    printf("---%s\n", s);
+    change_pwd_var(current_path, arg_cd, e_x); // met a jour OLDPWD et PWD
 
     if (need_pwd == 1)
         printf("%s\n", current_path);
