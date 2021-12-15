@@ -69,6 +69,12 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
         res->current_tok->type = TOKEN_WHILE;
         res->end = res->pos + 5;
     }
+    else if (is_token(&input[res->pos], "until", 5) == 0
+             && (is_separator(input + res->pos + 5, separator) == 0))
+    {
+        res->current_tok->type = TOKEN_UNTIL;
+        res->end = res->pos + 5;
+    }
     else if (is_token(&input[res->pos], "for", 3) == 0
              && (is_separator(input + res->pos + 3, separator) == 0))
     {
@@ -286,6 +292,7 @@ struct token *lexer_peek(struct lexer *lexer)
     struct lexer *tmp = lexer_new(lexer->input + i, lexer->e_x);
     return tmp->current_tok;
 }
+
 struct token *lexer_peek_rec(struct lexer *lexer, int n)
 {
     struct separator *separator = build_separator_list();

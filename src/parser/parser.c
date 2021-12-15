@@ -33,7 +33,11 @@ struct list *build_list(struct lexer *lex)
         lexer_pop(lex);
     res->a_o = build_and_or(lex);
     if (res->a_o == NULL)
+    {
+        if (lex->current_tok->type != TOKEN_EOF)
+            errx(2,"inapropriate beging token");
         return NULL;
+    }
     if (lex->current_tok->type == TOKEN_PTCOMA)
         ;
     else if (lex->current_tok->type == TOKEN_ESP)
