@@ -25,9 +25,9 @@ char *get_value_in_vl(struct exec_struct *e_x, char *name)
 char *get_path(void)
 {
     char s[2048] = { 0 };
-    getcwd(s, 2048);
-    if (s == NULL)
-        errx(1, "getcwd failed");
+//    getcwd(s, 2048);
+//    if (s == NULL)
+//        errx(1, "getcwd failed");
 
     char *res = hcalloc(1, strlen(s) + 5);
 
