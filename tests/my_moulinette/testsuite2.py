@@ -11,7 +11,7 @@ basic_files = ["if_basic_tests.yml", "cmd_var.yml", "cd_tests_basic.yml", "cmd_f
 error_files = ["if_error_tests.yml", "cmd_error_var.yml"]
 echo_files = ["cmd_echo_tests.yml"]
 script_files = ["shell_script/cmd_var/arg_basics.sh", "shell_script/cmd_var/nega.sh", "shell_script/cmd_var/IFS_1.sh", "shell_script/complex_script/pipe_if_for.sh", 
-                "shell_script/complex_script/pipe_if_for_2.sh", "shell_script/complex_script/pipe_if_for_3.sh", "shell_script/redir/pipe.sh", "shell_script/redir/redir_basics.sh", "shell_script/for/simple_for_1.sh"]
+                "shell_script/complex_script/pipe_if_for_2.sh", "shell_script/complex_script/pipe_if_for_3.sh", "shell_script/redir/pipe.sh", "shell_script/redir/redir_basics.sh","shell_script/redir/redir_basics_2.sh", "shell_script/for/simple_for_1.sh"]
 
 TEST_OK = f"[ {termcolor.colored('OK', 'green')} ]"
 TEST_KO = f"[ {termcolor.colored('KO', 'red')} ]"
@@ -134,10 +134,16 @@ if __name__ == "__main__":
                 our_input = test["input"]
                 name = test["name"]
 
-                try:
-                    process_dash = running("dash", our_input)
-                except sp.TimeoutExpired:
-                    flag_timeout += 1
+                if type_of_test == "echo":
+                    try:
+                        process_dash = running("bash", our_input)
+                    except sp.TimeoutExpired:
+                        flag_timeout += 1
+                else:
+                    try:
+                        process_dash = running("dash", our_input)
+                    except sp.TimeoutExpired:
+                        flag_timeout += 1
 
                 try:
                     process_42sh = running_process(path_42sh, our_input)

@@ -109,3 +109,128 @@
   name: echo -n kernel
   input: echo -n kernel
 
+
+#==================ECHO -e TESTS===========
+
+- category: ECHO -e TESTS
+  name: empty echo -e
+  input: echo -e
+  
+- category: ECHO -e TESTS
+  name: normal echo -e
+  input: echo -e coucou
+  
+- category: ECHO -e TESTS
+  name: echo -e backslash 1
+  input: echo -e \\t\\n
+  
+- category: ECHO -e TESTS
+  name: echo -e backslash 2
+  input: echo -e \\n\\t\\\\
+  
+- category: ECHO -e TESTS
+  name: echo -e backslash 3
+  input: echo -e tr\tuc
+  
+- category: ECHO -e TESTS
+  name: echo -e backslash 4
+  input: echo -e \\\\
+  
+- category: ECHO -e TESTS
+  name: echo -e all quoting
+  input: echo -e "\d""\g""\h"
+  
+- category: ECHO -e TESTS
+  name: echo -e quoting
+  input: echo -e '\\d\\g\\h\\i'
+
+#==================ECHO NO OPTION TESTS===========
+
+- category: ECHO NO OPTION TESTS
+  name: empty echo no option
+  input: echo
+  
+- category: ECHO NO OPTION TESTS
+  name: normal echo no option
+  input: echo coucou
+  
+- category: ECHO NO OPTION TESTS
+  name: echo no option backslash 1
+  input: echo \\t\\n
+  
+- category: ECHO NO OPTION TESTS
+  name: echo no option backslash 2
+  input: echo \\n\\t\\\\
+  
+- category: ECHO NO OPTION TESTS
+  name: echo no option backslash 3
+  input: echo tr\tuc
+  
+- category: ECHO NO OPTION TESTS
+  name: echo no option backslash 4
+  input: echo \\\\
+  
+- category: ECHO NO OPTION TESTS
+  name: echo no option all quoting
+  input: echo "\d""\g""\h"
+  
+- category: ECHO NO OPTION TESTS
+  name: echo no option quoting
+  input: echo '\\d\\g\\h\\i'
+
+#=============ECHO DOUBLE QUOTES================
+
+- category: ECHO DOUBLES QUOTES
+  name: echo basic double quotes
+  input: echo "coucou"
+  
+- category: ECHO DOUBLES QUOTES
+  name: double quotes 2 words
+  input: echo "coucou   toi"
+
+- category: ECHO DOUBLES QUOTES
+  name: echo double quotes
+  input: echo "coucou\""
+  
+- category: ECHO DOUBLES QUOTES
+  name: simple in double quotes
+  input: echo "coucou'toi"
+
+- category: ECHO DOUBLES QUOTES
+  name: 2 simple in double quotes
+  input: echo "coucou'toi'"
+  
+- category: ECHO DOUBLES QUOTES
+  name: double and simple quotes
+  input: echo "coucou" 'toi'
+
+
+#=============ECHO SINGLE QUOTES================
+
+- category: ECHO SINGLE QUOTES
+  name: echo basic double quotes
+  input: echo 'coucou'
+  
+- category: ECHO SINGLE QUOTES
+  name: echo basic double double quotes
+  input: echo 'coucou' 'toi'
+
+- category: ECHO SINGLE QUOTES
+  name: echo simple quotes
+  input: echo 'coucou\''
+  
+- category: ECHO SINGLE QUOTES
+  name: double in simple quotes
+  input: echo 'coucou"toi'
+
+- category: ECHO SINGLE QUOTES
+  name: 2 double in simple quotes
+  input: echo 'coucou"toi"'
+  
+- category: ECHO SINGLE QUOTES
+  name: double and simple quotes
+  input: echo 'coucou' "toi"
+
+
+
+
