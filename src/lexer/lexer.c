@@ -313,11 +313,11 @@ struct token *lexer_peek_rec(struct lexer *lexer, int n)
 struct token *lexer_pop(struct lexer *res)
 {
     struct separator *separator = build_separator_list();
-    if (res->input[res->pos] == '\'')
-    {
-        separator->nb_separator = 1;
-        separator->separators[0] = "'";
-    }
+//    if (res->input[res->pos] == '\'')
+//    {
+//        separator->nb_separator = 1;
+//        separator->separators[0] = "'";
+//    }
     struct token *tmp = hcalloc(1, sizeof(struct token));
     tmp->type = res->current_tok->type;
     tmp->value = res->current_tok->value;

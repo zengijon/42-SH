@@ -206,7 +206,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         while (ex_l->r_l_size-- > 0)
             reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
         ex_l->r_l_size = 0;
-        return wstatus;
+        return WEXITSTATUS(wstatus);
     }
     if (cmd->c_p != NULL)
         return exec_compound_list(cmd->c_p, ex_l);
