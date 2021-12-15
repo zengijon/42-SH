@@ -97,7 +97,7 @@ char *find_e_x(struct exec_struct *e_x, char *name)
 const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, int *need_pwd)
 
 {
-    if (arg == NULL)
+    if (arg == NULL || strcmp(arg, ";") == 0)
         return find_e_x(e_x, "HOME");
     char *path = final_path(arg, current_path);
     if (strcmp(arg, "-") == 0)
@@ -132,7 +132,7 @@ const char *get_cd_arg(char *arg, char *current_path, struct exec_struct *e_x, i
 
 void change_pwd_var(char *current_path, const char *arg_cd, struct exec_struct *e_x)
 {
-    if (strcmp(arg_cd, ".") == 0)
+    if (strcmp(arg_cd, ".") == 0 || strcmp(arg_cd, ";") == 0)
         assign_var("OLDPWD", current_path, e_x);
 
     else if (strcmp(arg_cd, "..") == 0 || strcmp(arg_cd, "../") == 0)
@@ -149,7 +149,7 @@ void change_pwd_var(char *current_path, const char *arg_cd, struct exec_struct *
     }
     else if (strcmp(arg_cd, "-") == 0)
         ;
-    else if (strcmp(arg_cd, "/home") == 0)
+    else if (strcmp(arg_cd, find_e_x(e_x, "OLDPWD")) == 0)
         ;
     else if (strcmp(arg_cd, find_e_x(e_x, "HOME")) == 0)
         ;
@@ -165,7 +165,7 @@ int my_pwd(struct exec_struct *e_x)
     printf("%s\n",find_e_x(e_x, "OLDPWD"));
     return 0;
 }
-
+///// si on lit un fichier dans le main on lit le path du sh et pas du fichier
 int my_cd(char **argv, struct exec_struct *e_x)
 {
     int need_pwd = 0;
