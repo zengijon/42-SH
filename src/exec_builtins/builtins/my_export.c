@@ -64,10 +64,8 @@ int exporting_var(char *params, struct exec_struct *e_x)
 
     if (name == NULL || value == NULL)
         return 0;
-    setenv(name, value, 1);
-    //printf("export %s=%s\n", name, value);
-    /////
 
+    setenv(name, value, 1);
     return 0;
 }
 
@@ -80,6 +78,6 @@ int my_export(char **params, struct exec_struct *e_x)
     if (is_valid_name(params[1]) == 1)
         return exporting_var(params[1], e_x);
     else
-        errx(2, "Bad name for export");
+        errx(1, "Bad name for export");
 }
 
