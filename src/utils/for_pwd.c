@@ -42,7 +42,7 @@ void concat(char *res, char *token)
 char *good_path(int indic, char **argv, char *pwd_env)
 {
     //int nb_dir = nb_dirr(argv[indic]);
-    char *res = hcalloc(1, strlen(pwd_env) + strlen(argv[indic] + 20));
+    char *res = hcalloc(1, strlen(pwd_env) + strlen(argv[indic]) + 25);
     memccpy(res, pwd_env, '\0',strlen(pwd_env));
     char *token = strtok(argv[indic], "/");
     while (token != NULL)
