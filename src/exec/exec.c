@@ -1,19 +1,6 @@
 #include "../exec/exec.h"
 
-#include <err.h>
-#include <fnmatch.h>
-#include <stdio.h>
-#include <sys/wait.h>
 
-#include "../exec_builtins/exec_cmds.h"
-#include "../lexer/lexer.h"
-#include "../memory/hmalloc.h"
-#include "../redir/redir.h"
-#include "../utils/usefull_fonction.h"
-#include "assert.h"
-#include "mypipe.h"
-#include "string.h"
-#include "variable_expention.h"
 
 int exec_list_next(struct list_next *l_n, struct exec_struct *ex_s)
 {

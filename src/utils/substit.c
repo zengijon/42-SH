@@ -70,30 +70,27 @@ char *build_shell_buffer3(char *subshell)
 int exec_subshell3(char *buffer, struct exec_struct *e_x, char **buf)
 {
     int len;
-    char *subshell_buff = build_shell_buffer2(buffer);
+    char *subshell_buff = build_shell_buffer(buffer);
     int k = strlen(subshell_buff) - 11;
-
     int pipefd[2];
     pipe(pipefd);
     struct redir *piperedir = hcalloc(1 , sizeof(struct redir));
     esp_redir("1", my_itoa(pipefd[1], hcalloc(1,8)),piperedir,1);
     int res = exec_42sh(subshell_buff, 0, e_x);//include ??
-    reinit_redir(piperedir);
-
-    FILE *file = fopen("fabbec_42", "r");
     int le = 0;
     *buf = hcalloc(100 + 8192, sizeof(char));
-    while ((len = read(fileno(file), *buf + le, 100)) && len != 0)
+    close(pipefd[1]);
+    while ((len = read(pipefd[0], *buf + le, 100)) > 0)
     {
         if ( len == -1)
             errx(2, "read error");
         le += len;
         //*buf = hrealloc(*buf, le * 2 + 1);
     }
+    reinit_redir(piperedir);
     char *tmp = hcalloc(strlen(*buf) + 8192, sizeof(char));
     strncpy(tmp,*buf, ((int) strlen(*buf)) - 1 < 0 ? 0 : strlen(*buf) - 1);
     *buf = strcat(tmp, search_for_dollar(buffer + k, e_x));
-    remove("fabbec_42");
     return res;
 }
 
