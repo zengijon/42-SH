@@ -175,7 +175,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), list,
                     ex_l); // Not in this file
-    if (res >= 127)
+    if (res == 127)
     {
         fprintf(stderr, "%s: command not found\n", cmd->list_elt[0]->word);
     }
@@ -379,7 +379,7 @@ int exec_rule_until(struct rule_until *r_u, struct exec_struct *ex_l)
     assert(r_u);
     ex_l->loop_nb++;
     int res = 0;
-    while (exec_compound_list(r_u->cp_list, ex_l) == 0)
+    while (exec_compound_list(r_u->cp_list, ex_l) == 1)
     {
         res = exec_do_group(r_u->do_gp, ex_l);
         if (res >= 1000000)

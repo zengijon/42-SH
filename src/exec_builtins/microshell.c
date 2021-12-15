@@ -11,11 +11,14 @@ int microshell(char *cmd, char **argv)
     if (pid == -1)
         errx(2, "fork failed");
     if (pid == 0)
-        exit(execvp(cmd, argv));
+    {
+        int res = execvp(cmd, argv);
+        exit(res == -1 ? 127 : res);
+    }
 
     int wstatus;
     int child_pid = waitpid(pid, &wstatus, 0);
     if (child_pid == -1)
         errx(2, "waitpid error");
-    return wstatus > 127 ? 127 : wstatus;
+    return WEXITSTATUS(wstatus);
 }
