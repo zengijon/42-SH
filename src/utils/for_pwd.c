@@ -62,12 +62,12 @@ char *good_path(int indic, char **argv, char *pwd_env)
     return res;
 }
 
-char *get_path(int indic, char **argv)
+char *get_path(int indic, char **argv, int is_not_file)
 {
     char *res;
     char *temp = getenv("PWD");
 
-    if (indic != -1)
+    if (indic != -1 && is_not_file == 0)
         res = good_path(indic, argv, temp);
     else
     {
