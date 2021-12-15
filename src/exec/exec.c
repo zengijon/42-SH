@@ -173,8 +173,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     for (int i = 0; i < cmd->size_elt; ++i)
     {
         char *tmp = NULL;
-        if ((tmp = remove_sep(cmd->list_elt[i]->word, ex_l)) != 0
-            && strlen(tmp) > 0)
+        if ((tmp = remove_sep(cmd->list_elt[i]->word, ex_l)) != 0)
             list[j++] = tmp;
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), list,
@@ -186,7 +185,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
-    if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "continue") == 0)
+    if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "break") == 0)
         assign_var("?","0", ex_l);
     assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
     return res;
