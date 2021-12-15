@@ -135,15 +135,19 @@ int exec_command(struct command *cmd, struct exec_struct *ex_l)
         if ((res = exec_redir(cmd->redir2[i], ex_l)) != 0)
             return res;
     }
-    if (cmd->s_cmd != NULL)
-        return exec_simple_command(cmd->s_cmd, ex_l);
-    if (cmd->sh_cmd != NULL)
-        return exec_shell_command(cmd->sh_cmd, ex_l);
-    if (cmd->fun != NULL)
-        return exec_fundec(cmd->fun, ex_l);
-    while (ex_l->r_l_size-- > 0)
-        reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
+    int nb_redir = ex_l->r_l_size;
+    struct redir *redir = ex_l->r_l;
+    ex_l->r_l = NULL;
     ex_l->r_l_size = 0;
+    if (cmd->s_cmd != NULL)
+        res =  exec_simple_command(cmd->s_cmd, ex_l);
+    else if (cmd->sh_cmd != NULL)
+        res = exec_shell_command(cmd->sh_cmd, ex_l);
+    else if (cmd->fun != NULL)
+        res = exec_fundec(cmd->fun, ex_l);
+    while (nb_redir-- > 0)
+        reinit_redir(&redir[nb_redir]);
+    nb_redir = 0;
     return res;
 }
 
