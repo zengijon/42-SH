@@ -468,6 +468,9 @@ struct do_group *build_do_group(struct lexer *lex)
 {
     struct do_group *res = hcalloc(1, sizeof(struct do_group));
 
+    while (lex->current_tok->type == TOKEN_NEWLINE)
+        lexer_pop(lex);
+    
     if (lex->current_tok->type != TOKEN_DO)
         return NULL;
     lexer_pop(lex);
