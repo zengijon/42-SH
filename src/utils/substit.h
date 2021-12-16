@@ -10,6 +10,7 @@
 char *build_shell_buffer(char *subshell);
 
 char *build_shell_buffer2(char *subshell);
+int exec_subshell4(char *buffer, struct exec_struct *e_x, char **buf);
 
 int exec_subshell(char *buffer, struct exec_struct *e_x, char **buf);
 int exec_subshell2(char *buffer, struct exec_struct *e_x, char **buf);

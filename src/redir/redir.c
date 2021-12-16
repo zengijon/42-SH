@@ -76,7 +76,7 @@ int esp_redir(char *io, char *fd_esp, struct redir *redir, int flag)
         return 1;
     int fd_nb = atoi(fd_esp);
     int new_fd = dup(io_nb);
-    close(io_nb);
+    //close(io_nb);
     dup2(fd_nb, io_nb);
     close(fd_nb);
     redir->new_fd = new_fd;
