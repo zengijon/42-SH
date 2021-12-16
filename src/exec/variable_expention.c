@@ -83,13 +83,13 @@ char *expend(char *start, char *dollar_ind, struct exec_struct *e_x)
     if (*(dollar_ind - 1) == '`')
     {
         char *buf = NULL;
-        exec_subshell2(dollar_ind, e_x, &buf); // valleur de retour peux échouer
+        exec_subshell4(dollar_ind, e_x, &buf); // valleur de retour peux échouer
         return strcat(res, buf);
     }
     if (dollar_ind[0] == '(' && dollar_ind[1] != '(')
     {
         char *buf = NULL;
-        exec_subshell(dollar_ind + 1, e_x, &buf); // valleur de retour peux échouer
+        exec_subshell3(dollar_ind + 1, e_x, &buf); // valleur de retour peux échouer
         return strcat(res, buf);
     }
     char *rest = NULL;
