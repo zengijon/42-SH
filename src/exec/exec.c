@@ -1,19 +1,6 @@
 #include "../exec/exec.h"
 
-#include <err.h>
-#include <fnmatch.h>
-#include <stdio.h>
-#include <sys/wait.h>
 
-#include "../exec_builtins/exec_cmds.h"
-#include "../lexer/lexer.h"
-#include "../memory/hmalloc.h"
-#include "../redir/redir.h"
-#include "../utils/usefull_fonction.h"
-#include "assert.h"
-#include "mypipe.h"
-#include "string.h"
-#include "variable_expention.h"
 
 int exec_list_next(struct list_next *l_n, struct exec_struct *ex_s)
 {
@@ -173,8 +160,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     for (int i = 0; i < cmd->size_elt; ++i)
     {
         char *tmp = NULL;
-        if ((tmp = remove_sep(cmd->list_elt[i]->word, ex_l)) != 0
-            && strlen(tmp) > 0)
+        if ((tmp = remove_sep(cmd->list_elt[i]->word, ex_l)) != 0)
             list[j++] = tmp;
     }
     res = exec_cmds(remove_sep(cmd->list_elt[0]->word, ex_l), list,
@@ -186,7 +172,7 @@ int exec_simple_command(struct simple_command *cmd, struct exec_struct *ex_l)
     while (ex_l->r_l_size-- > 0)
         reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
     ex_l->r_l_size = 0;
-    if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "continue") == 0)
+    if (strcmp(cmd->list_elt[0]->word, "continue") == 0 || strcmp(cmd->list_elt[0]->word, "break") == 0)
         assign_var("?","0", ex_l);
     assign_var("?",my_itoa(res, hcalloc(1,8)), ex_l);
     return res;
@@ -206,7 +192,7 @@ int exec_shell_command(struct shell_command *cmd, struct exec_struct *ex_l)
         while (ex_l->r_l_size-- > 0)
             reinit_redir(&ex_l->r_l[ex_l->r_l_size]);
         ex_l->r_l_size = 0;
-        return wstatus;
+        return WEXITSTATUS(wstatus);
     }
     if (cmd->c_p != NULL)
         return exec_compound_list(cmd->c_p, ex_l);

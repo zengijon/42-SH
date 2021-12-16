@@ -119,6 +119,11 @@ char *search_for_dollar(char *word, struct exec_struct *e_x)
         return hcalloc(1,1);
     for (int i = 0; word[i] != 0 && i < (int) (strlen(word) - 1); i++)
     {
+        if (!single && word[i] == '\\')
+        {
+            i++;
+            continue;
+        }
         if (word[i] == '"')
             double_ = !double_;
         if (double_ == 0 && word[i] == '\'')
@@ -151,7 +156,7 @@ char *remove_sep(char *word, struct exec_struct *e_x)
         if ((word[i] == '\"' && single == 0)
             || (word[i] == '\'' && double_ == 0))
             ;
-        else if (word[i] == '\\')
+        else if (!single && (!double_ || word[i + 1] == '"' || word[i + 1] == '\\') && word[i] == '\\')
         {
             if ((res[j++] = word[++i]) == 0)
                 return res;

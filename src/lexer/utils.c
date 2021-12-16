@@ -28,8 +28,6 @@ struct lexer *gestion_quote(struct lexer *lexer, const char *input)
     strcat(str, "'");
     while (input[i] != '\0' && input[i] != '\'')
     {
-        if (input[i] == '\\')
-            i++;
         str[j++] = input[i++];
     }
     strcat(str, "'");

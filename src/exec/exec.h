@@ -1,6 +1,20 @@
 #pragma once
 #include "../struct/exec_struct.h"
 #include "../struct/grammar_struct.h"
+#include <err.h>
+#include <fnmatch.h>
+#include <stdio.h>
+#include <sys/wait.h>
+
+#include "../exec_builtins/exec_cmds.h"
+#include "../lexer/lexer.h"
+#include "../memory/hmalloc.h"
+#include "../redir/redir.h"
+#include "../utils/usefull_fonction.h"
+#include "assert.h"
+#include "mypipe.h"
+#include "string.h"
+#include "variable_expention.h"
 
 int exec_list(struct list *l, struct exec_struct *ex_l);
 

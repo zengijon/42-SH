@@ -155,7 +155,9 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
         gestion_redir(res, input + res->pos);
     }
     else
+
     {
+        res->current_tok->type = TOKEN_WORDS;
         size_t j = 0;
         size_t k = res->pos;
         char *value = hcalloc(strlen(input) + 1, sizeof(char));
@@ -172,10 +174,8 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
                         break;
                     }
                     value[j++] = input[k++];
-                    value[j++] = input[k++];
                 }
-                if (input[k] == '\0')
-                    res->current_tok->type = TOKEN_ERROR;
+                value[j++] = input[k++];
             }
             else if (input[k] == '`')
             {
@@ -198,15 +198,16 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
                 value[j++] = input[k++];
                 while (input[k] != '"')
                 {
-                    if (input[k] == '\0')
+                    if (input[k] == '\\')
+                        value[j++] = input[k++];
+                    else if (input[k] == '\0')
                     {
                         res->current_tok->type = TOKEN_ERROR;
                         break;
                     }
                     value[j++] = input[k++];
                 }
-                if (input[k] == '\0')
-                    res->current_tok->type = TOKEN_ERROR;
+                value[j++] = input[k++];
             }
             else if (input[k] == '$' && input[k + 1] == '(')
             {
@@ -254,18 +255,6 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
             else
                 value[j++] = input[k++];
         }
-        res->current_tok->value = value;
-        res->end = k;
-
-        //            if (input[k] == '\\')
-        //            {
-        //                value[j++] = input[k++];
-        //                value[j++] = input[k++];
-        //            }
-        //            else
-        //                value[j++] = input[k++];
-        //        }
-        res->current_tok->type = TOKEN_WORDS;
         res->current_tok->value = value;
         res->end = k;
     }
@@ -324,11 +313,11 @@ struct token *lexer_peek_rec(struct lexer *lexer, int n)
 struct token *lexer_pop(struct lexer *res)
 {
     struct separator *separator = build_separator_list();
-    if (res->input[res->pos] == '\'')
-    {
-        separator->nb_separator = 1;
-        separator->separators[0] = "'";
-    }
+    //    if (res->input[res->pos] == '\'')
+    //    {
+    //        separator->nb_separator = 1;
+    //        separator->separators[0] = "'";
+    //    }
     struct token *tmp = hcalloc(1, sizeof(struct token));
     tmp->type = res->current_tok->type;
     tmp->value = res->current_tok->value;
@@ -539,10 +528,10 @@ struct token *lexer_pop(struct lexer *res)
     else if (strncmp(&input[res->pos], "&", 1) == 0
              || strncmp(&input[res->pos], "|", 1) == 0)
         res = gestion_and_or(res, &input[res->pos]);
-    else if (strncmp(&input[res->pos], "\"", 1) == 0)
-        res = gestion_double_quote(res, &input[res->pos]);
-    else if (strncmp(&input[res->pos], "'", 1) == 0)
-        res = gestion_quote(res, &input[res->pos]);
+    //    else if (strncmp(&input[res->pos], "\"", 1) == 0)
+    //        res = gestion_double_quote(res, &input[res->pos]);
+    //    else if (strncmp(&input[res->pos], "'", 1) == 0)
+    //        res = gestion_quote(res, &input[res->pos]);
     else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH)
              == 0)
         gestion_redir(res, input + res->pos);
@@ -565,10 +554,8 @@ struct token *lexer_pop(struct lexer *res)
                         break;
                     }
                     value[j++] = input[k++];
-                    value[j++] = input[k++];
                 }
-                if (input[k] == '\0')
-                    res->current_tok->type = TOKEN_ERROR;
+                value[j++] = input[k++];
             }
             else if (input[k] == '`')
             {
@@ -591,15 +578,16 @@ struct token *lexer_pop(struct lexer *res)
                 value[j++] = input[k++];
                 while (input[k] != '"')
                 {
-                    if (input[k] == '\0')
+                    if (input[k] == '\\')
+                        value[j++] = input[k++];
+                    else if (input[k] == '\0')
                     {
                         res->current_tok->type = TOKEN_ERROR;
                         break;
                     }
                     value[j++] = input[k++];
                 }
-                if (input[k] == '\0')
-                    res->current_tok->type = TOKEN_ERROR;
+                value[j++] = input[k++];
             }
             else if (input[k] == '$' && input[k + 1] == '(')
             {
