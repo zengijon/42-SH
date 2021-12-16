@@ -23,6 +23,15 @@
   name: simple cd in a dir
   input: pwd; cd tests; pwd
 
+
+- category: CD BASIC
+  name: simple cd in multiple dir
+  input: pwd; cd tests/my_moulinette/shell_script/cmd_var; pwd;
+
+- category: CD BASIC
+  name: simple cd in multiple dir and go cd
+  input: pwd; cd tests/my_moulinette/shell_script/cmd_var; pwd; cd ; pwd
+
 - category: CD BASIC
   name: cd doesn't exist
   input: pwd; cd yolo; pwd
