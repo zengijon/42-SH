@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
+#include <err.h>
 
 #include "../memory/free_list.h"
 #include "../memory/hmalloc.h"
@@ -170,8 +171,7 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
-                        break;
+		      errx(2,"mISSING SINGLE AUOTE");
                     }
                     value[j++] = input[k++];
                 }
@@ -184,7 +184,7 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     value[j++] = input[k++];
@@ -200,7 +200,7 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
                         value[j++] = input[k++];
                     else if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     value[j++] = input[k++];
@@ -216,7 +216,7 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     if (input[k] == '(')
@@ -235,7 +235,7 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     if (input[k] == '{')
@@ -548,8 +548,7 @@ struct token *lexer_pop(struct lexer *res)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
-                        break;
+		      errx(2,"ueygdueygdueygd");
                     }
                     value[j++] = input[k++];
                 }
@@ -562,7 +561,7 @@ struct token *lexer_pop(struct lexer *res)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     value[j++] = input[k++];
@@ -578,7 +577,7 @@ struct token *lexer_pop(struct lexer *res)
                         value[j++] = input[k++];
                     else if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     value[j++] = input[k++];
@@ -594,7 +593,7 @@ struct token *lexer_pop(struct lexer *res)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     if (input[k] == '(')
@@ -613,7 +612,7 @@ struct token *lexer_pop(struct lexer *res)
                 {
                     if (input[k] == '\0')
                     {
-                        res->current_tok->type = TOKEN_ERROR;
+                        errx(2, "this is an error");
                         break;
                     }
                     if (input[k] == '{')

@@ -88,7 +88,7 @@ int main(int argc, char **argv)
         switch (opt)
         {
         case 'c':
-            buffer = hcalloc(sizeof(char), strlen(optarg) + 1);
+            buffer = hcalloc(sizeof(char), strlen(optarg) + 10);
             strcpy(buffer, optarg);
             c = 1;
             break;
