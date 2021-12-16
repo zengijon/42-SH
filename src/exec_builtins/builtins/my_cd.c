@@ -242,7 +242,7 @@ void change_pwd_var2(char *current_path, const char *arg_cd, struct exec_struct 
 {
     char *newpath = hcalloc(10, strlen(current_path));
     strcpy(newpath, current_path);
-    char *trash = hcalloc(1, strlen(arg_cd));
+    char *trash = hcalloc(1, strlen(arg_cd) * 10);
     strcpy(trash, arg_cd);
     char *tmp = NULL;
     tmp = strtok(trash, "/");
