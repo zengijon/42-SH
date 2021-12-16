@@ -10,6 +10,10 @@
 - category: CD BASIC
   name: too many ../
   input: pwd; cd ../../../../../; pwd
+  
+- category: CD BASIC
+  name: 2 ../
+  input: pwd; cd ../../; pwd
 
 - category: CD BASIC
   name: many cd will it failed ? 
@@ -18,3 +22,7 @@
 - category: CD BASIC
   name: simple cd in a dir
   input: pwd; cd tests; pwd
+
+- category: CD BASIC
+  name: cd doesn't exist
+  input: pwd; cd yolo; pwd
