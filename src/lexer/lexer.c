@@ -12,7 +12,7 @@
 #include "../memory/hmalloc.h"
 #include "utils.h"
 
-#define _GNU_SOURCE //should be removed for mason
+//#define _GNU_SOURCE //should be removed for mason
 #include <fnmatch.h>
 // struct free_list *list_malloc = NULL;
 
