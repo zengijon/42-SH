@@ -124,7 +124,7 @@ char *search_for_dollar(char *word, struct exec_struct *e_x)
             i++;
             continue;
         }
-        if (word[i] == '"')
+        if (single == 0 && word[i] == '"')
             double_ = !double_;
         if (double_ == 0 && word[i] == '\'')
             single = !single;
@@ -144,7 +144,7 @@ char *remove_sep(char *word, struct exec_struct *e_x)
     int j = 0;
     for (int i = 0; word[i] != 0; ++i)
     {
-        if (word[i] == '"')
+        if (single == 0 && word[i] == '"')
             double_ = !double_;
         if (double_ == 0 && word[i] == '\'')
             single = !single;

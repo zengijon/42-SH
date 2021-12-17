@@ -35,7 +35,7 @@ struct list *build_list(struct lexer *lex)
     if (res->a_o == NULL)
     {
         if (lex->current_tok->type != TOKEN_EOF)
-            errx(2,"inapropriate beging token");
+            errx(2, "inapropriate beging token");
         return NULL;
     }
     if (lex->current_tok->type == TOKEN_PTCOMA)
@@ -412,7 +412,11 @@ struct rule_for *build_rule_for(struct lexer *lex)
 
         if (lex->current_tok->type != TOKEN_WORDS
             || strcmp(lex->current_tok->value, "in") != 0) // TOKEN IN
-            errx(2, "missing 'in' in for");
+        {
+            if ((res->do_gp = build_do_group(lex)) == NULL)
+                errx(2, "missing 'in' in for");
+            return res;
+        }
         lexer_pop(lex);
         while (lex->current_tok->type == TOKEN_WORDS)
         {
@@ -470,8 +474,10 @@ struct do_group *build_do_group(struct lexer *lex)
 
     while (lex->current_tok->type == TOKEN_NEWLINE)
         lexer_pop(lex);
-    
-    if (lex->current_tok->type != TOKEN_DO)
+
+
+    if (lex->current_tok->type != TOKEN_DO && ! (lex->current_tok->type == TOKEN_WORDS
+                                               && strcmp(lex->current_tok->value, "do") == 0))
         return NULL;
     lexer_pop(lex);
 

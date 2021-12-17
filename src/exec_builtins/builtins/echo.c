@@ -30,7 +30,7 @@ char *replace_newline(char *token)
             strcat(tmp, "\t");
             ++i;
         }
-        else if (strncmp(&token[i], "\\", 1) == 0)
+        else if (strncmp(&token[i], "\\\\", 2) == 0)
         {
             strcat(tmp, "\\");
             ++i;
