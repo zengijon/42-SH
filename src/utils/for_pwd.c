@@ -1,12 +1,15 @@
 //
 // Created by jennie on 15/12/2021.
 //
+#define _X_OPEN_SOURCE 700
+
 
 #include "for_pwd.h"
 #include <string.h>
 #include "../memory/hmalloc.h"
 #include <stdio.h>
 #include <stddef.h>
+#include <unistd.h>
 //extern char *environ;
 
 //int is_valid_dir(char *path)
@@ -62,10 +65,25 @@ char *good_path(int indic, char **argv, char *pwd_env)
     return res;
 }
 
+char *get_current_wd(void)
+{
+    char *res = hcalloc(2049, 1);
+    int size = 2048;
+    while (getcwd(res, size) == NULL)
+    {
+        res = hrealloc(res, size * 2 + 1);
+        size *= 2;
+    }
+    return res;
+}
+
 char *get_path(int indic, char **argv, int is_not_file)
 {
     char *res;
     char *temp = getenv("PWD");
+
+    if (temp == NULL)
+        temp = get_current_wd();
 
     if (indic != -1 && is_not_file == 0)
         res = good_path(indic, argv, temp);

@@ -10,4 +10,4 @@ file(GLOB sources src/redir/redir.c src/exec/*.c src/exec_builtins/builtins/alia
 
 add_executable(42sheee ${sources} )
 
-target_link_libraries(42sheee PUBLIC)
+target_link_libraries(42sheee PUBLIC -fsanitize=address)

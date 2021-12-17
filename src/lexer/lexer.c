@@ -1,8 +1,8 @@
-//#define _GNU_SOURCE //should be removed for mason
+
 
 #include "lexer.h"
 
-#include <fnmatch.h>
+
 #include <stddef.h>
 #include <stdio.h>
 #include <string.h>
@@ -12,6 +12,8 @@
 #include "../memory/hmalloc.h"
 #include "utils.h"
 
+#define _GNU_SOURCE //should be removed for mason
+#include <fnmatch.h>
 // struct free_list *list_malloc = NULL;
 
 struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
