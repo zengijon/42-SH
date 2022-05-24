@@ -152,7 +152,7 @@ struct lexer *lexer_new(const char *input, struct exec_struct *e_x)
         res->current_tok->type = TOKEN_ACO_CLOSE;
         res->end = res->pos + 1;
     }
-    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH)
+    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, 0)
              == 0)
     {
         gestion_redir(res, input + res->pos);
@@ -532,7 +532,7 @@ struct token *lexer_pop(struct lexer *res)
     //        res = gestion_double_quote(res, &input[res->pos]);
     //    else if (strncmp(&input[res->pos], "'", 1) == 0)
     //        res = gestion_quote(res, &input[res->pos]);
-    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, FNM_EXTMATCH)
+    else if (fnmatch("*([0-9])[<>]?([<>|&])*", input + res->pos, 0)
              == 0)
         gestion_redir(res, input + res->pos);
     else

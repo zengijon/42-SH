@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(42sheeee C)
+project(42sh C)
 add_compile_options(-Wextra -Wall -pedantic -Werror)
 set(CMAKE_C_STANDARD 99)
 
@@ -8,6 +8,6 @@ file(GLOB sources src/redir/redir.c src/exec/*.c src/exec_builtins/builtins/alia
 
 #file(GLOB sources src/lexer/lexer.c src/lexer/token.c src/lexer/utils.c src/memory/hmalloc.c src/memory/free_list.c)
 
-add_executable(42sheee ${sources} )
+add_executable(42sh ${sources} )
 
-target_link_libraries(42sheee PUBLIC -fsanitize=address)
+target_link_libraries(42sh PUBLIC -fsanitize=address)

@@ -1,10 +1,5 @@
-if [ ! -d builddir ]; then
-    meson setup builddir;
-fi
-
-
-ninja -C builddir
-cp builddir/42sh tests/my_moulinette/42sh
+./build.sh
+cp cmake-build-debug/42sh tests/my_moulinette/42sh
 cd tests/my_moulinette/
 rm -rf *~
 if [ $# -ne 1 ]
